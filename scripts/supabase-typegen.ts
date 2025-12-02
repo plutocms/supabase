@@ -11,7 +11,7 @@ export async function generateSupabaseTypes() {
     ?.replace('https://', '')
   const _path = path.resolve(cwd(), './shared/types/supabase.ts')
 
-  consola.success(`Generating Supabase types for project: ${projectId}`)
+  consola.info(`Generating Supabase types for project: ${projectId}`)
 
   // Create file if it doesn't exist
   if (!fs.existsSync(_path)) {
