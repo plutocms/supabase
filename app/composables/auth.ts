@@ -2,7 +2,6 @@
 import { useRoute } from 'vue-router'
 
 export function useAuth() {
-  const toast = useToast()
   const supabase = useSupabaseClient()
   const user = useSupabaseUser()
   const route = useRoute()
@@ -27,12 +26,7 @@ export function useAuth() {
       })
 
       if (error) {
-        toast.add({
-          title: 'Uh oh! Something went wrong.',
-          description: error?.message,
-          icon: 'lucide:circle-x',
-          color: 'error',
-        })
+        console.error(`Error signing in user: ${error?.message}`)
 
         isSubmitting.value = false
 
@@ -45,12 +39,7 @@ export function useAuth() {
         console.error(error)
       }
 
-      toast.add({
-        title: 'Uh oh! Something went wrong.',
-        description: 'This was not your fault. It was ours.',
-        icon: 'lucide:circle-x',
-        color: 'error',
-      })
+      console.error(`Error during login: ${error}`)
 
       isSubmitting.value = false
     }
@@ -67,12 +56,7 @@ export function useAuth() {
     await nextTick()
 
     if (options?.showToast) {
-      toast.add({
-        title: 'Logged out',
-        description: 'You have been logged out successfully.',
-        icon: 'lucide:check',
-        color: 'success',
-      })
+      console.warn(`User logged out`)
     }
 
     if (options?.redirectTo) {
