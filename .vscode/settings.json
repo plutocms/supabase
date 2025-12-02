@@ -31,17 +31,6 @@
     "strings": true
   },
 
-  "cSpell.words": [
-    "bunx",
-    "defu",
-    "nuxt",
-    "nuxtjs",
-    "oklch",
-    "pinia",
-    "plutocms",
-    "tailwindcss"
-  ],
-
   "eslint.useFlatConfig": true,
   "eslint.validate": [
     "javascript",
