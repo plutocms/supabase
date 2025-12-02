@@ -1,3 +1,5 @@
+import { generateSupabaseTypes } from './scripts/supabase-typegen'
+
 export default defineNuxtConfig({
   modules: ['@nuxt/eslint', '@nuxtjs/supabase'],
 
@@ -11,6 +13,12 @@ export default defineNuxtConfig({
   },
 
   ignore: ['./scripts/**', './supabase/**'],
+
+  hooks: {
+    ready: () => {
+      generateSupabaseTypes()
+    },
+  },
 
   eslint: {
     config: {
