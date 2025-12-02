@@ -4,11 +4,31 @@ This layer integrates Supabase as a backend service for Pluto CMS, providing a r
 
 ## Installation
 
-To install the Supabase layer, include it via `extends` option in your `nuxt.config.ts`:
+Install the Supabase layer and include it via `extends` option in your `nuxt.config.ts`, it should come after the `@plutocms/pluto` layer:
+
+```bash
+# npm
+npm install @plutocms/supabase
+
+# yarn
+yarn add @plutocms/supabase
+
+# pnpm
+pnpm add @plutocms/supabase
+
+# bun
+bun add @plutocms/supabase
+```
 
 ```ts
+// nuxt.config.ts
 export default defineNuxtConfig({
-  extends: ['github:plutocms/supabase'],
+  extends: [
+    '@plutocms/pluto',
+
+    // Make sure to add the Supabase layer after the Pluto layer
+    '@plutocms/supabase',
+  ],
 })
 ```
 
@@ -18,6 +38,12 @@ Create a `.env` file in the root of your project and add the following environme
 SUPABASE_PROJECT_ID=your-project-id
 SUPABASE_URL=your-supabase-url
 SUPABASE_KEY=your-supabase-key
+```
+
+Login to your Supabase account via the CLI:
+
+```bash
+npx supabase login
 ```
 
 Then, initialize the Supabase client in your application to generate the necessary database schema:
@@ -49,5 +75,4 @@ The layer includes API routes for interacting with Supabase services, such as au
 
 ### Types
 
-- `SupabaseDatabase`: Type definitions for Supabase database interactions.
-- `User`: Type definition for user objects.
+- `Database`: Auto-imported type definitions for Supabase database interactions.
