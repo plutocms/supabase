@@ -4,6 +4,16 @@ This layer integrates Supabase as a backend service for Pluto CMS, providing a r
 
 ## Installation
 
+> [!NOTE]
+> Make sure you have a Supabase project set up. You will need the project ID, URL, and API key. You can find these in your [Supabase dashboard](https://supabase.com/dashboard).
+
+Create a `.env` file in the root of your project and add the following environment variables:
+
+```env
+SUPABASE_URL=your-supabase-url
+SUPABASE_KEY=your-supabase-key
+```
+
 Install the Supabase layer and include it via `extends` option in your `nuxt.config.ts`, it should come after the `@plutocms/pluto` layer:
 
 ```bash
@@ -30,26 +40,6 @@ export default defineNuxtConfig({
     '@plutocms/supabase',
   ],
 })
-```
-
-Create a `.env` file in the root of your project and add the following environment variables:
-
-```env
-SUPABASE_PROJECT_ID=your-project-id
-SUPABASE_URL=your-supabase-url
-SUPABASE_KEY=your-supabase-key
-```
-
-Login to your Supabase account via the CLI:
-
-```bash
-npx supabase login
-```
-
-Then, initialize the Supabase client in your application to generate the necessary database schema:
-
-```bash
-npx supabase init
 ```
 
 ## Features
