@@ -7,6 +7,31 @@ This layer integrates Supabase as a backend service for Pluto CMS, providing a r
 > [!NOTE]
 > Make sure you have a Supabase project set up. You will need the project ID, URL, and API key. You can find these in your [Supabase dashboard](https://supabase.com/dashboard).
 
+Install the `@nuxtjs/supabase` dependency and add an override to your `package.json`:
+
+```bash
+npm install @nuxtjs/supabase
+```
+
+```json
+{
+  "overrides": {
+    "cookie": "0.7.2"
+  }
+}
+```
+
+> [!WARNING]
+> For Yarn users, please use the `resolutions` field instead of `overrides`:
+
+```json
+{
+  "resolutions": {
+    "cookie": "0.7.2"
+  }
+}
+```
+
 Create a `.env` file in the root of your project and add the following environment variables:
 
 ```env
