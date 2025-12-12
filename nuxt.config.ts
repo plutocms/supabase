@@ -14,6 +14,12 @@ export default defineNuxtConfig({
 
   ignore: ['./scripts/**', './supabase/**'],
 
+  nitro: {
+    externals: {
+      inline: ['@supabase/supabase-js'],
+    },
+  },
+
   hooks: {
     ready: () => {
       generateSupabaseTypes()
