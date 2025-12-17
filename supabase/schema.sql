@@ -42,21 +42,10 @@ create table profiles (
   updated_at timestamp with time zone,
   first_name text,
   last_name text,
-  constraint username_length check (char_length(username) >= 3)
+  constraint first_name_length check (char_length(first_name) >= 3)
 );
 
 alter table public.profiles enable row level security;
-
--- Policies for profiles table
-create policy "Enable select for authenticated users only"
-on public.profiles
-to authenticated, dashboard_user
-using (auth.uid() = id);
-
-create policy "Enable insert for authenticated users only"
-on public.profiles
-for insert to authenticated
-with check (true);
 
 --- inserts a row into public.profiles
 create function public.handle_new_user()
@@ -65,8 +54,8 @@ language plpgsql
 security definer set search_path = ''
 as $$
 begin
-  insert into public.profiles (id, first_name, last_name, username)
-  values (new.id, new.raw_user_meta_data ->> 'first_name', new.raw_user_meta_data ->> 'last_name', new.raw_user_meta_data ->> 'username');
+  insert into public.profiles (id, first_name, last_name)
+  values (new.id, new.raw_user_meta_data ->> 'first_name', new.raw_user_meta_data ->> 'last_name');
   return new;
 end;
 $$;
