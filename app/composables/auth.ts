@@ -1,14 +1,11 @@
-// We use `useRoute` from `vue-router` to suppress Nuxt warnings.
-import { useRoute } from 'vue-router'
-
-export function useAuth() {
+export async function useAuth() {
   const supabase = useSupabaseClient()
-  const user = useSupabaseUser()
+  const user =
+    (await supabase.auth.getUser()).data.user?.identities?.[0]?.identity_data ??
+    null
   const route = useRoute()
 
-  const userData = computed(() => user.value?.user_metadata)
-
-  const isLoggedIn = computed<boolean>(() => !!user.value)
+  const isLoggedIn = computed<boolean>(() => !!user)
   const isSubmitting = ref<boolean>(false)
 
   interface LoginForm {
@@ -63,7 +60,7 @@ export function useAuth() {
       return navigateTo(`/admin/login?redirect=${options.redirectTo}`)
     }
 
-    if (route.path.startsWith('/admin')) {
+    if (route && route.path.startsWith('/admin')) {
       navigateTo('/admin/login')
     }
   }
@@ -72,7 +69,6 @@ export function useAuth() {
     isLoggedIn,
     isSubmitting,
     user,
-    userData,
     login,
     logout,
   }
