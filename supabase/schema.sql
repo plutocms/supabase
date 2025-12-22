@@ -47,6 +47,11 @@ create table profiles (
 
 alter table public.profiles enable row level security;
 
+create policy "Enable read access for authenticated users"
+on public.profiles
+to authenticated, dashboard_user
+for select using (true);
+
 --- inserts a row into public.profiles
 create function public.handle_new_user()
 returns trigger
