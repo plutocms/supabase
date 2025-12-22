@@ -26,3 +26,6 @@ logs
 # Lock files
 *-lock.*
 *.lock*
+
+# Custom
+shared/types/supabase.ts
