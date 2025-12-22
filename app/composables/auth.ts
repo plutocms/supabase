@@ -6,12 +6,12 @@ interface PlutoSupabaseAuthOptions {
 
 export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
   const supabase = useSupabaseClient()
-  const user =
-    (await supabase.auth.getUser()).data.user?.identities?.[0]?.identity_data ??
-    null
-  const route = useRoute()
+  const supabaseSession = useSupabaseSession()
 
-  const isLoggedIn = computed<boolean>(() => !!user)
+  const supabaseUser = await supabase.auth.getUser()
+
+  const user = computed(() => supabaseUser.data.user?.user_metadata ?? null)
+  const isLoggedIn = computed<boolean>(() => !!supabaseSession.value)
   const isSubmitting = ref<boolean>(false)
 
   interface LoginForm {
