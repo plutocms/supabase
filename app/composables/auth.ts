@@ -1,4 +1,10 @@
-export async function useAuth() {
+import type { RouteLocationNormalizedGeneric } from 'vue-router'
+
+interface PlutoSupabaseAuthOptions {
+  route?: RouteLocationNormalizedGeneric
+}
+
+export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
   const supabase = useSupabaseClient()
   const user =
     (await supabase.auth.getUser()).data.user?.identities?.[0]?.identity_data ??
@@ -30,7 +36,9 @@ export async function useAuth() {
         return
       }
 
-      navigateTo((route.query.redirect as string) ?? '/admin/home')
+      return navigateTo(
+        (authOptions?.route?.query.redirect as string) ?? '/admin/home'
+      )
     } catch (error) {
       if (import.meta.dev) {
         console.error(error)
@@ -50,8 +58,6 @@ export async function useAuth() {
   async function logout(options?: LogoutOptions) {
     await supabase.auth.signOut()
 
-    await nextTick()
-
     if (options?.showToast) {
       console.warn(`User logged out`)
     }
@@ -60,8 +66,8 @@ export async function useAuth() {
       return navigateTo(`/admin/login?redirect=${options.redirectTo}`)
     }
 
-    if (route && route.path.startsWith('/admin')) {
-      navigateTo('/admin/login')
+    if (authOptions?.route && authOptions.route.path.startsWith('/admin')) {
+      return navigateTo('/admin/login')
     }
   }
 
