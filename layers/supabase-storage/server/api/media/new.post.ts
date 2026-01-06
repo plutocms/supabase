@@ -1,4 +1,4 @@
-import { fileNameToKebabCase } from '#layers/pluto/shared/utils/string'
+import { fileNameToKebabCase } from '#layers/utils/shared/utils/string'
 import { serverSupabaseClient } from '#supabase/server'
 
 export default defineEventHandler(async (event) => {
