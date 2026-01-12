@@ -23,10 +23,6 @@ logs
 .env.*
 !.env.example
 
-# Lock files
-*-lock.*
-*.lock*
-
 # Custom
 shared/types/supabase.ts
 supabase/.temp
