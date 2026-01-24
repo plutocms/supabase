@@ -14,16 +14,24 @@
     "lint:fix": "eslint . --fix && prettier --write ."
   },
   "dependencies": {
-    "@nuxtjs/supabase": "^2.0.3",
-    "nuxt": "^4.2.2",
-    "vue": "^3.5.25",
-    "vue-router": "^4.6.3",
-    "yup": "^1.7.1"
+    "@nuxtjs/supabase": "2.0.3",
+    "yup": "1.7.1"
   },
   "devDependencies": {
+    "nuxt": "^4.3.0",
+    "vue": "3.5.25",
+    "vue-router": "4.6.3",
     "@antfu/eslint-config": "^6.2.0",
     "@nuxt/eslint": "^1.11.0",
     "eslint": "^9.39.1",
     "prettier": "^3.7.3"
-  }
+  },
+  "overrides": {
+    "@supabase/supabase-js": "2.87.1",
+    "cookie": "1.0.2"
+  },
+  "trustedDependencies": [
+    "@parcel/watcher",
+    "unrs-resolver"
+  ]
 }
