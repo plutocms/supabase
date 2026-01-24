@@ -7,12 +7,35 @@ This layer integrates Supabase as a backend service for Pluto CMS, providing a r
 > [!NOTE]
 > Make sure you have a Supabase project set up. You will need the project ID, URL, and API key. You can find these in your [Supabase dashboard](https://supabase.com/dashboard).
 
-1. Add an override to your `package.json` to ensure compatibility with the required versions of `cookie` and `@supabase/supabase-js`. This is necessary due to [a known issue](https://github.com/nuxt-modules/supabase/issues/488) with the `@nuxtjs/supabase` module. Make sure to recreate your `node_modules` after adding the override.
+1. Create a `.env` file in the root of your project and add the following environment variables:
+
+```env
+SUPABASE_URL=your-supabase-url
+SUPABASE_KEY=your-publishable-supabase-key
+```
+
+2. Add the `@nuxtjs/supabase` dependency to your project:
+
+```bash
+## NPM
+npm i @nuxtjs/supabase
+
+## Yarn
+yarn add @nuxtjs/supabase
+
+## PNPM
+pnpm add @nuxtjs/supabase
+
+## Bun
+bun add @nuxtjs/supabase
+```
+
+3. Add an override to your `package.json` to ensure compatibility with the required versions of `cookie` and `@supabase/supabase-js`. This is necessary due to [a known issue](https://github.com/nuxt-modules/supabase/issues/488) with the `@nuxtjs/supabase` module. Make sure to recreate your `node_modules` after adding the override.
 
 ```json
 {
   "overrides": {
-    "cookie": "1.0.2",
+    "cookie": "0.7.2",
     "@supabase/supabase-js": "2.87.1"
   }
 }
@@ -24,23 +47,10 @@ This layer integrates Supabase as a backend service for Pluto CMS, providing a r
 ```json
 {
   "resolutions": {
-    "cookie": "1.0.2",
+    "cookie": "0.7.2",
     "@supabase/supabase-js": "2.87.1"
   }
 }
-```
-
-2. Add the `@nuxtjs/supabase` dependency to your project:
-
-```bash
-npm install @nuxtjs/supabase
-```
-
-3. Create a `.env` file in the root of your project and add the following environment variables:
-
-```env
-SUPABASE_URL=your-supabase-url
-SUPABASE_KEY=your-publishable-supabase-key
 ```
 
 4. Include the Pluto Supabase layer via `extends` option in your `nuxt.config.ts`, it should come after the `plutocms/pluto` layer:
