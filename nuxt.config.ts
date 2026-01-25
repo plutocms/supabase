@@ -1,18 +1,18 @@
 import { generateSupabaseTypes } from './scripts/supabase-typegen'
 
 export default defineNuxtConfig({
-  $development: {
-    extends: ['../../plutocms/utils/', './layers/supabase-storage/'],
-  },
-
-  $production: {
-    extends: ['github:plutocms/utils', './layers/supabase-storage/'],
-  },
-
   modules: ['@nuxt/eslint', '@nuxtjs/supabase'],
+
+  $development: {
+    extends: ['../../plutocms/utils/', '../../plutocms/supabase-storage/'],
+  },
 
   $meta: {
     name: 'supabase',
+  },
+
+  $production: {
+    extends: ['github:plutocms/utils', 'github:plutocms/supabase-storage'],
   },
 
   runtimeConfig: {
