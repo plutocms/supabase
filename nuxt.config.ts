@@ -20,11 +20,15 @@ export default defineNuxtConfig({
     supabaseKey: process.env.SUPABASE_KEY,
   },
 
+  alias: {
+    cookie: 'cookie-es',
+  },
+
   ignore: ['./scripts/**', './supabase/**'],
 
   nitro: {
-    externals: {
-      inline: ['@supabase/supabase-js'],
+    alias: {
+      cookie: 'cookie-es',
     },
   },
 

@@ -26,10 +26,6 @@
     "vue": "3.5.25",
     "vue-router": "4.6.3"
   },
-  "overrides": {
-    "@supabase/supabase-js": "2.87.1",
-    "cookie": "1.0.2"
-  },
   "trustedDependencies": [
     "@parcel/watcher",
     "unrs-resolver"
