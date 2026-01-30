@@ -30,30 +30,7 @@ pnpm add @nuxtjs/supabase
 bun add @nuxtjs/supabase
 ```
 
-3. Add an override to your `package.json` to ensure compatibility with the required versions of `cookie` and `@supabase/supabase-js`. This is necessary due to [a known issue](https://github.com/nuxt-modules/supabase/issues/488) with the `@nuxtjs/supabase` module. Make sure to recreate your `node_modules` after adding the override.
-
-```json
-{
-  "overrides": {
-    "cookie": "0.7.2",
-    "@supabase/supabase-js": "2.87.1"
-  }
-}
-```
-
-> [!WARNING]
-> For Yarn users, please use the `resolutions` field instead of `overrides`:
-
-```json
-{
-  "resolutions": {
-    "cookie": "0.7.2",
-    "@supabase/supabase-js": "2.87.1"
-  }
-}
-```
-
-4. Include the Pluto Supabase layer via `extends` option in your `nuxt.config.ts`, it should come after the `plutocms/pluto` layer:
+3. Include the Pluto Supabase layer via `extends` option in your `nuxt.config.ts`, it should come after the `plutocms/pluto` layer:
 
 ```ts
 // nuxt.config.ts
