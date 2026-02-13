@@ -1,18 +1,16 @@
 import { generateSupabaseTypes } from './scripts/supabase-typegen'
 
-export default defineNuxtConfig({
-  modules: ['@nuxt/eslint', '@nuxtjs/supabase'],
+const cwd = process.cwd()
 
-  $development: {
-    extends: ['../../plutocms/utils/', '../../plutocms/supabase-storage/'],
-  },
+const isDev = cwd.includes('supabase')
+
+export default defineNuxtConfig({
+  extends: ['github:plutocms/utils', 'github:plutocms/supabase-storage'],
+
+  modules: ['@nuxt/eslint', !isDev ? '@nuxtjs/supabase' : null, '@nuxt/ui'],
 
   $meta: {
     name: 'supabase',
-  },
-
-  $production: {
-    extends: ['github:plutocms/utils', 'github:plutocms/supabase-storage'],
   },
 
   runtimeConfig: {
@@ -34,7 +32,9 @@ export default defineNuxtConfig({
 
   hooks: {
     ready: () => {
-      generateSupabaseTypes()
+      if (!isDev) {
+        generateSupabaseTypes()
+      }
     },
   },
 
@@ -47,17 +47,20 @@ export default defineNuxtConfig({
     },
   },
 
-  supabase: {
-    types: '~~/shared/types/supabase',
-    cookiePrefix: 'access_token',
+  // @ts-expect-error - Supabase module is only included in production mode
+  supabase: !isDev
+    ? {
+        types: '~~/shared/types/supabase',
+        cookiePrefix: 'access_token',
 
-    redirectOptions: {
-      login: '/admin/login',
-      callback: '/auth/confirm',
-      include: ['/admin/signup'],
-      saveRedirectToCookie: false,
-    },
+        redirectOptions: {
+          login: '/admin/login',
+          callback: '/auth/confirm',
+          include: ['/admin/signup'],
+          saveRedirectToCookie: false,
+        },
 
-    redirect: false,
-  },
+        redirect: false,
+      }
+    : undefined,
 })
