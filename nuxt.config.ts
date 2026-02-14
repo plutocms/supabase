@@ -1,5 +1,3 @@
-import { generateSupabaseTypes } from './scripts/supabase-typegen'
-
 const cwd = process.cwd()
 
 const isDev = cwd.includes('supabase')
@@ -30,14 +28,6 @@ export default defineNuxtConfig({
     },
   },
 
-  hooks: {
-    ready: () => {
-      if (!isDev) {
-        generateSupabaseTypes()
-      }
-    },
-  },
-
   eslint: {
     config: {
       nuxt: {
@@ -50,7 +40,7 @@ export default defineNuxtConfig({
   // @ts-expect-error - Supabase module is only included in production mode
   supabase: !isDev
     ? {
-        types: '~~/shared/types/supabase',
+        types: '#shared',
         cookiePrefix: 'access_token',
 
         redirectOptions: {
