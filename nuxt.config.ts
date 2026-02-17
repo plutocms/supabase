@@ -5,7 +5,7 @@ const isDev = cwd.includes('supabase')
 export default defineNuxtConfig({
   extends: ['github:plutocms/pluto', 'github:plutocms/utils'],
 
-  modules: ['@nuxt/eslint', !isDev ? '@nuxtjs/supabase' : null, '@nuxt/ui'],
+  modules: ['@nuxt/eslint', '@nuxtjs/supabase', '@nuxt/ui'],
 
   $meta: {
     name: 'supabase',
