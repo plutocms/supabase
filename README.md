@@ -14,31 +14,28 @@ SUPABASE_URL=your-supabase-url
 SUPABASE_KEY=your-publishable-supabase-key
 ```
 
-2. Add the `@nuxtjs/supabase` dependency to your project:
+2. Add the `@nuxtjs/supabase` and `supabase` dependencies to your project:
 
 ```bash
 ## NPM
-npm i @nuxtjs/supabase
+npm i @nuxtjs/supabase supabase
 
 ## Yarn
-yarn add @nuxtjs/supabase
+yarn add @nuxtjs/supabase supabase
 
 ## PNPM
-pnpm add @nuxtjs/supabase
+pnpm add @nuxtjs/supabase supabase
 
 ## Bun
-bun add @nuxtjs/supabase
+bun add @nuxtjs/supabase supabase
 ```
 
-3. Include the Pluto Supabase layer via `extends` option in your `nuxt.config.ts`, it should come after the `plutocms/pluto` layer:
+3. Include the Pluto Supabase layer via `extends` option in your `nuxt.config.ts`:
 
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
   extends: [
-    ['github:plutocms/pluto', { install: true }],
-
-    // Make sure to add the Supabase layer after the Pluto layer
     ['github:plutocms/supabase', { install: true }],
   ],
 })
@@ -51,16 +48,11 @@ export default defineNuxtConfig({
 This layer provides the following composables:
 
 - `useAuth`: Manage user authentication with Supabase.
-- `useMedia`: Handle media uploads and retrievals using Supabase Storage.
 
 ### API Routes
 
 The layer includes API routes for interacting with Supabase services, such as authentication and media management.
 
-- GET `/api/category/list`
-- POST `/api/category/new`
-- GET `/api/media/list`
-- POST `/api/media/new`
 - GET `/api/settings`
 - POST `/api/settings/update`
 - POST `/api/signup`
