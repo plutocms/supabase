@@ -7,7 +7,8 @@ begin
     create type TSettings as enum (
       'website_title',
       'website_url',
-      'website_description'
+      'website_description',
+      'first_setup'
     );
   end if;
 end
@@ -26,7 +27,8 @@ create table public.settings (
 insert into public.settings (setting_name, setting_value) values
 ('website_title', 'My Website'),
 ('website_url', 'https://mywebsite.test'),
-('website_description', 'This is my website.');
+('website_description', 'This is my website.'),
+('first_setup', 'true');
 
 alter table public.settings enable row level security;
 
