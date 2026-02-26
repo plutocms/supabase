@@ -56,6 +56,21 @@ export type Database = {
         }
         Relationships: []
       }
+      healthcheck: {
+        Row: {
+          first_setup: boolean
+          id: number
+        }
+        Insert: {
+          first_setup: boolean
+          id?: number
+        }
+        Update: {
+          first_setup?: boolean
+          id?: number
+        }
+        Relationships: []
+      }
       media: {
         Row: {
           alt: string | null
@@ -241,12 +256,11 @@ export type Database = {
     Enums: {
       Availability: "preorder" | "in_stock"
       Settings:
+        | "admin_email"
+        | "website_description"
         | "website_title"
         | "website_url"
-        | "website_description"
-        | "is_database_set"
-        | "is_website_set"
-        | "is_admin_set"
+        | "users_can_register"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -376,12 +390,11 @@ export const Constants = {
     Enums: {
       Availability: ["preorder", "in_stock"],
       Settings: [
+        "admin_email",
+        "website_description",
         "website_title",
         "website_url",
-        "website_description",
-        "is_database_set",
-        "is_website_set",
-        "is_admin_set",
+        "users_can_register",
       ],
     },
   },
