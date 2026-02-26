@@ -4,6 +4,7 @@ import withNuxt from './.nuxt/eslint.config.mjs'
 
 // See: https://eslint.vuejs.org/rules
 export default withNuxt(
+  // @ts-ignore - Antfu's config is ESM only, but Nuxt's ESLint config is CJS --- IGNORE ---
   antfu({
     rules: {
       'node/prefer-global/process': ['off', 'never'],
@@ -18,6 +19,9 @@ export default withNuxt(
           order: ['script', 'template', 'style'],
         },
       ],
+
+      'vue/multiline-html-element-content-newline': 'off',
+      'vue/html-closing-bracket-newline': 'off',
 
       'vue/html-self-closing': [
         'warn',
