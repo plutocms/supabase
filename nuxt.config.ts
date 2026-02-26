@@ -37,7 +37,6 @@ export default defineNuxtConfig({
     },
   },
 
-  // @ts-expect-error - Supabase module is only included in production mode
   supabase: !isDev
     ? {
         types: '#shared',
