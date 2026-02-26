@@ -58,15 +58,18 @@ export type Database = {
       }
       healthcheck: {
         Row: {
-          first_setup: boolean
+          config_name: Database["public"]["Enums"]["Healthcheck"]
+          config_value: string | null
           id: number
         }
         Insert: {
-          first_setup: boolean
+          config_name: Database["public"]["Enums"]["Healthcheck"]
+          config_value?: string | null
           id?: number
         }
         Update: {
-          first_setup?: boolean
+          config_name?: Database["public"]["Enums"]["Healthcheck"]
+          config_value?: string | null
           id?: number
         }
         Relationships: []
@@ -255,6 +258,7 @@ export type Database = {
     }
     Enums: {
       Availability: "preorder" | "in_stock"
+      Healthcheck: "first_setup"
       Settings:
         | "admin_email"
         | "website_description"
@@ -389,6 +393,7 @@ export const Constants = {
   public: {
     Enums: {
       Availability: ["preorder", "in_stock"],
+      Healthcheck: ["first_setup"],
       Settings: [
         "admin_email",
         "website_description",
