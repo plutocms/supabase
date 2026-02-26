@@ -56,6 +56,24 @@ export type Database = {
         }
         Relationships: []
       }
+      healthcheck: {
+        Row: {
+          config_name: Database["public"]["Enums"]["Healthcheck"]
+          config_value: string | null
+          id: number
+        }
+        Insert: {
+          config_name: Database["public"]["Enums"]["Healthcheck"]
+          config_value?: string | null
+          id?: number
+        }
+        Update: {
+          config_name?: Database["public"]["Enums"]["Healthcheck"]
+          config_value?: string | null
+          id?: number
+        }
+        Relationships: []
+      }
       media: {
         Row: {
           alt: string | null
@@ -240,13 +258,13 @@ export type Database = {
     }
     Enums: {
       Availability: "preorder" | "in_stock"
+      Healthcheck: "first_setup"
       Settings:
+        | "admin_email"
+        | "website_description"
         | "website_title"
         | "website_url"
-        | "website_description"
-        | "is_database_set"
-        | "is_website_set"
-        | "is_admin_set"
+        | "users_can_register"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -375,13 +393,13 @@ export const Constants = {
   public: {
     Enums: {
       Availability: ["preorder", "in_stock"],
+      Healthcheck: ["first_setup"],
       Settings: [
+        "admin_email",
+        "website_description",
         "website_title",
         "website_url",
-        "website_description",
-        "is_database_set",
-        "is_website_set",
-        "is_admin_set",
+        "users_can_register",
       ],
     },
   },
