@@ -9,10 +9,11 @@ export default defineEventHandler(async (event) => {
   const { data, error } = await client.from('healthcheck').select('*')
 
   if (error) {
-    throw createError({
-      statusCode: 500,
-      message: error.message,
-    })
+    return {
+      success: false,
+      message: 'Error retrieving healthcheck settings',
+      error: error.message,
+    }
   }
 
   // @ts-expect-error: Object.fromEntries may not infer the correct type
@@ -32,6 +33,7 @@ export default defineEventHandler(async (event) => {
 
   return {
     success: true,
+    message: 'Healthcheck settings retrieved successfully',
     is_first_setup: isFirstSetup.first_setup === 'true',
   }
 })
