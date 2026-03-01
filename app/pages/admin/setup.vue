@@ -10,6 +10,11 @@ useHead({
   title: 'Setup Wizard',
 })
 
+const config = useRuntimeConfig()
+const projectId = config.public.supabase.url
+  ?.split('https://')[1]
+  ?.split('.')[0]
+
 const toast = useToast()
 
 const items = ref<StepperItem[]>([
@@ -34,7 +39,9 @@ const stepper = useTemplateRef('stepper')
 const currentStep = ref<number>(0)
 
 const isSettingUpDatabase = ref(false)
+
 const databaseForm = ref({
+  connectionString: '',
   password: '',
 })
 
@@ -62,7 +69,10 @@ async function completeSetup() {
       method: 'POST',
       body: {
         baseUrl: window.location.origin,
-        password: databaseForm.value.password,
+        connectionString: databaseForm.value.connectionString.replace(
+          '[YOUR-PASSWORD]',
+          encodeURIComponent(databaseForm.value.password)
+        ),
       },
     })
 
@@ -128,13 +138,34 @@ function handleStepChange(step: number) {
                 class="flex flex-col gap-y-4"
                 @submit="handleStepChange(currentStep + 1)"
               >
+                <UFormField label="Supabase connection string" required>
+                  <UInput
+                    v-model="databaseForm.connectionString"
+                    :disabled="isSettingUpDatabase"
+                    placeholder="postgresql://"
+                    autofocus
+                    required
+                  />
+
+                  <template #help>
+                    You can find your connection string
+                    <ULink
+                      :to="`https://supabase.com/dashboard/project/${projectId}/database/settings?showConnect=true&method=transaction`"
+                      target="_blank"
+                      class="underline"
+                      external
+                    >
+                      clicking here </ULink
+                    >.
+                  </template>
+                </UFormField>
+
                 <UFormField label="Database password" required>
                   <UInput
                     v-model="databaseForm.password"
                     :disabled="isSettingUpDatabase"
                     type="password"
-                    placeholder="• • • • • • • •"
-                    autofocus
+                    placeholder="• • • • •"
                     required
                   />
                 </UFormField>

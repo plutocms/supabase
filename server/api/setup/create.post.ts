@@ -2,7 +2,7 @@ import postgres from 'postgres'
 
 interface Payload {
   baseUrl: string
-  password: string
+  connectionString: string
 }
 
 export default defineEventHandler(async (event) => {
@@ -16,12 +16,8 @@ export default defineEventHandler(async (event) => {
     schema = await schema.text()
   }
 
-  const REGION = 'us-west-1'
   const supabaseUrl = process.env.SUPABASE_URL
   const supabaseKey = process.env.SUPABASE_KEY
-  const supabaseId = supabaseUrl
-    ? supabaseUrl.split('//')[1]?.split('.')[0]
-    : null
 
   if (!supabaseUrl || !supabaseKey) {
     throw new Error(
@@ -29,15 +25,14 @@ export default defineEventHandler(async (event) => {
     )
   }
 
-  const encodedPassword = encodeURIComponent(body.password)
-  const connectionString = `postgresql://postgres.${supabaseId}:${encodedPassword}@aws-0-${REGION}.pooler.supabase.com:6543/postgres`
+  const connectionString = body.connectionString
 
   const sql = postgres(connectionString)
 
   try {
-    await sql.begin(async (sql) => {
+    /* await sql.begin(async (sql) => {
       await sql.unsafe(schema)
-    })
+    }) */
 
     // Set the first_setup flag in the healthcheck table to false
     await sql`
