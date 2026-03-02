@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@nuxtjs/supabase": "2.0.3",
+    "@plutocms/utils": "^0.0.1-alpha.3",
     "postgres": "^3.4.8",
     "supabase": "^2.76.15",
     "yup": "1.7.1"
