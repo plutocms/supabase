@@ -4,9 +4,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       const data = await $fetch('/api/settings/first_setup')
   
       if (
-        data.is_first_setup === true &&
+        (data.is_first_setup === true &&
         from.path.startsWith('/admin') &&
-        to.path !== '/admin/setup'
+        to.path !== '/admin/setup') ||
+        data.success === false
       ) {
         return navigateTo('/admin/setup')
       }
