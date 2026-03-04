@@ -1,7 +1,7 @@
 {
   "name": "@plutocms/supabase",
   "type": "module",
-  "version": "0.0.1-alpha.2",
+  "version": "0.0.1-alpha.3",
   "main": "./nuxt.config.ts",
   "scripts": {
     "build": "nuxt build",
