@@ -1,7 +1,3 @@
-const cwd = process.cwd()
-
-const isDev = cwd.includes('supabase')
-
 export default defineNuxtConfig({
   extends: [['@plutocms/pluto', { install: true }], '@plutocms/utils'],
 
@@ -37,19 +33,17 @@ export default defineNuxtConfig({
     },
   },
 
-  supabase: !isDev
-    ? {
-        types: '#shared',
-        cookiePrefix: 'access_token',
+  supabase: {
+    types: '#shared/types/supabase',
+    cookiePrefix: 'access_token',
 
-        redirectOptions: {
-          login: '/admin/login',
-          callback: '/auth/confirm',
-          include: ['/admin/signup'],
-          saveRedirectToCookie: false,
-        },
+    redirectOptions: {
+      login: '/admin/login',
+      callback: '/auth/confirm',
+      include: ['/admin/signup'],
+      saveRedirectToCookie: false,
+    },
 
-        redirect: false,
-      }
-    : undefined,
+    redirect: false,
+  },
 })
