@@ -30,9 +30,9 @@ export default defineEventHandler(async (event) => {
   const sql = postgres(connectionString)
 
   try {
-    /* await sql.begin(async (sql) => {
+    await sql.begin(async (sql) => {
       await sql.unsafe(schema)
-    }) */
+    })
 
     // Set the first_setup flag in the healthcheck table to false
     await sql`
