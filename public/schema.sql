@@ -1,17 +1,11 @@
 -- Supabase Schema SQL
 -- Settings
 --- Create enum type for settings
-do $$
-begin
-  if not exists (select 1 from pg_type where typname = 'tsettings') then
-    create type TSettings as enum (
-      'website_title',
-      'website_url',
-      'website_description'
-    );
-  end if;
-end
-$$;
+create type TSettings as enum (
+  'website_title',
+  'website_url',
+  'website_description'
+);
 
 --- Create settings table
 create table public.settings (
@@ -37,15 +31,9 @@ to authenticated, dashboard_user
 with check (true);
 
 --- Create enum type for healthcheck names
-do $$
-begin
-  if not exists (select 1 from pg_type where typname = 'thealthcheck') then
-    create type Healthcheck as enum (
-      'first_setup'
-    );
-  end if;
-end
-$$;
+create type Healthcheck as enum (
+  'first_setup'
+);
 
 --- Create healthcheck table (name/value format like settings)
 create table public.healthcheck (
