@@ -7,7 +7,7 @@ interface Payload {
 
 /**
  * Splits a SQL string into individual statements, correctly handling
- * $$ dollar-quoted blocks (used in functions, triggers, DO blocks).
+ * $$ dollar-quoted blocks, single-quoted strings, and -- comments.
  */
 function splitStatements(sql: string): string[] {
   const statements: string[] = []
@@ -24,6 +24,28 @@ function splitStatements(sql: string): string[] {
         if (sql[i] === '$' && sql[i + 1] === '$') {
           current += '$$'
           i += 2
+          break
+        }
+        current += sql[i]
+        i++
+      }
+      continue
+    }
+
+    // Check for single-quoted strings (handle '' escapes)
+    if (sql[i] === `'`) {
+      current += sql[i]
+      i++
+      while (i < sql.length) {
+        if (sql[i] === `'` && sql[i + 1] === `'`) {
+          // Escaped quote
+          current += `''`
+          i += 2
+          continue
+        }
+        if (sql[i] === `'`) {
+          current += sql[i]
+          i++
           break
         }
         current += sql[i]
@@ -99,8 +121,8 @@ export default defineEventHandler(async (event) => {
     // Set the first_setup flag in the healthcheck table to false
     await sql`
       UPDATE healthcheck
-      SET check_value = 'false'
-      WHERE check_name = 'first_setup';
+      SET config_value = 'false'
+      WHERE config_name = 'first_setup';
     `
 
     return {
