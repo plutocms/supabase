@@ -5,6 +5,66 @@ interface Payload {
   connectionString: string
 }
 
+/**
+ * Splits a SQL string into individual statements, correctly handling
+ * $$ dollar-quoted blocks (used in functions, triggers, DO blocks).
+ */
+function splitStatements(sql: string): string[] {
+  const statements: string[] = []
+  let current = ''
+  let i = 0
+
+  while (i < sql.length) {
+    // Check for dollar-quoting ($$)
+    if (sql[i] === '$' && sql[i + 1] === '$') {
+      current += '$$'
+      i += 2
+      // Read until closing $$
+      while (i < sql.length) {
+        if (sql[i] === '$' && sql[i + 1] === '$') {
+          current += '$$'
+          i += 2
+          break
+        }
+        current += sql[i]
+        i++
+      }
+      continue
+    }
+
+    // Check for single-line comments
+    if (sql[i] === '-' && sql[i + 1] === '-') {
+      while (i < sql.length && sql[i] !== '\n') {
+        current += sql[i]
+        i++
+      }
+      continue
+    }
+
+    // Statement terminator
+    if (sql[i] === ';') {
+      current += ';'
+      const trimmed = current.trim()
+      if (trimmed && trimmed !== ';') {
+        statements.push(trimmed)
+      }
+      current = ''
+      i++
+      continue
+    }
+
+    current += sql[i]
+    i++
+  }
+
+  const trimmed = current.trim()
+  if (trimmed && trimmed !== ';') {
+    statements.push(trimmed)
+  }
+
+  return statements
+}
+
 export default defineEventHandler(async (event) => {
   const body = await readBody<Payload>(event)
 
@@ -30,7 +90,11 @@ export default defineEventHandler(async (event) => {
   const sql = postgres(connectionString)
 
   try {
-    await sql.unsafe(schema)
+    const statements = splitStatements(schema)
+
+    for (const statement of statements) {
+      await sql.unsafe(statement)
+    }
 
     // Set the first_setup flag in the healthcheck table to false
     await sql`
