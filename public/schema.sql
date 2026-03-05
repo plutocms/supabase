@@ -117,13 +117,30 @@ begin
 end
 $$;
 
+-- Allow update access to healthcheck for authenticated users and dashboard_user
+do $$
+begin
+  if not exists (
+    select 1 from pg_policies where tablename = 'healthcheck' and policyname = 'Enable update for authenticated users on healthcheck'
+  ) then
+    create policy "Enable update for authenticated users on healthcheck"
+    on public.healthcheck
+    for update
+    to authenticated, dashboard_user
+    using (true)
+    with check (true);
+  end if;
+end
+$$;
+
 -- Profiles
 create table if not exists public.profiles (
   id uuid references auth.users on delete cascade not null primary key,
   updated_at timestamp with time zone,
-  first_name text,
-  last_name text,
-  constraint first_name_length check (char_length(first_name) >= 3)
+  username text,
+  display_name text,
+  is_admin boolean not null default false,
+  constraint username_length check (char_length(username) >= 3)
 );
 
 alter table public.profiles enable row level security;
@@ -149,8 +166,8 @@ language plpgsql
 security definer set search_path = ''
 as $$
 begin
-  insert into public.profiles (id, first_name, last_name)
-  values (new.id, new.raw_user_meta_data ->> 'first_name', new.raw_user_meta_data ->> 'last_name');
+  insert into public.profiles (id, username, display_name)
+  values (new.id, new.raw_user_meta_data ->> 'username', new.raw_user_meta_data ->> 'display_name');
   return new;
 end;
 $$;
