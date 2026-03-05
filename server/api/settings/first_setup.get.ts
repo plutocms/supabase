@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
 
   if (error) {
     return {
-      success: false,
+      success: false as const,
       message: 'Error retrieving healthcheck settings',
       error: error.message,
     }
@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
   })
 
   return {
-    success: true,
+    success: true as const,
     message: 'Healthcheck settings retrieved successfully',
     is_first_setup: isFirstSetup.first_setup === 'true',
   }
