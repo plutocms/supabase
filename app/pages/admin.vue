@@ -14,6 +14,7 @@ watch(visibility, async (current, previous) => {
   if (current === 'visible' && previous === 'hidden') {
     if (
       !isLoggedIn.value &&
+      !route.path.startsWith('/admin/setup') &&
       route.path.startsWith('/admin/') &&
       route.path !== '/admin/login' &&
       route.path !== '/admin/signup'
