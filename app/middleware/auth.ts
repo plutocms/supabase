@@ -1,5 +1,9 @@
+import type { RouteLocationNormalizedGeneric } from 'vue-router'
+
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  const { isLoggedIn, logout } = await useAuth({ route: to })
+  const { isLoggedIn, logout } = await useAuth({
+    route: to as RouteLocationNormalizedGeneric,
+  })
 
   if (
     isLoggedIn.value &&
