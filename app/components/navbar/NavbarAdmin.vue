@@ -24,7 +24,7 @@ const maybeDevUrl = computed(() => {
 const items = ref<DropdownMenuItem[][]>([
   [
     {
-      label: `${user.value?.first_name} ${user.value?.last_name}` || '',
+      label: `${user.value?.display_name} (${user.value?.username})` || 'User',
       avatar: {
         icon: 'lucide:user',
         class: 'bg-green-600',
@@ -53,7 +53,7 @@ const items = ref<DropdownMenuItem[][]>([
 
   [
     {
-      label: 'GitHub',
+      label: 'Pluto on GitHub',
       icon: 'i-simple-icons-github',
       type: 'link',
       to: 'https://github.com/ojvribeiro/pluto',
@@ -135,7 +135,7 @@ defineShortcuts(extractShortcuts(items.value))
           <UDropdownMenu
             :items="items"
             :ui="{
-              content: 'w-48',
+              content: 'w-64',
             }"
             :modal="false"
           >
@@ -148,7 +148,7 @@ defineShortcuts(extractShortcuts(items.value))
                     root: 'rounded-xl',
                     icon: 'text-white text-lg',
                   }"
-                  :alt="user?.first_name || ''"
+                  :alt="user?.value?.display_name || 'User Avatar'"
                   size="sm"
                   icon="lucide:user"
                   class="bg-green-600"
@@ -157,7 +157,7 @@ defineShortcuts(extractShortcuts(items.value))
                 <span
                   class="light:text-zinc-800 text-sm font-bold dark:text-white"
                 >
-                  {{ user?.first_name }}
+                  {{ user?.display_name.split(' ')[0] || 'User' }}
                 </span>
               </div>
             </button>
