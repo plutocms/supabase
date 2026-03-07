@@ -10,32 +10,68 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.12 (cd3cf9e)"
+    PostgrestVersion: "14.1"
   }
   public: {
     Tables: {
-      availability: {
+      healthcheck: {
         Row: {
-          created_at: string
+          config_name: Database["public"]["Enums"]["thealthcheck"]
+          config_value: string
           id: number
-          label: string | null
-          slug: string | null
         }
         Insert: {
-          created_at?: string
+          config_name: Database["public"]["Enums"]["thealthcheck"]
+          config_value: string
           id?: number
-          label?: string | null
-          slug?: string | null
         }
         Update: {
-          created_at?: string
+          config_name?: Database["public"]["Enums"]["thealthcheck"]
+          config_value?: string
           id?: number
-          label?: string | null
-          slug?: string | null
         }
         Relationships: []
       }
-      categories: {
+      pluto_migrations: {
+        Row: {
+          applied_at: string
+          id: number
+          layer_name: string
+        }
+        Insert: {
+          applied_at?: string
+          id?: number
+          layer_name: string
+        }
+        Update: {
+          applied_at?: string
+          id?: number
+          layer_name?: string
+        }
+        Relationships: []
+      }
+      product_availability: {
+        Row: {
+          created_at: string
+          id: number
+          label: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          id?: never
+          label: string
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          id?: never
+          label?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      product_categories: {
         Row: {
           description: string | null
           id: number
@@ -44,114 +80,46 @@ export type Database = {
         }
         Insert: {
           description?: string | null
-          id?: number
+          id?: never
           label: string
           slug: string
         }
         Update: {
           description?: string | null
-          id?: number
+          id?: never
           label?: string
           slug?: string
         }
         Relationships: []
       }
-      healthcheck: {
-        Row: {
-          config_name: Database["public"]["Enums"]["Healthcheck"]
-          config_value: string | null
-          id: number
-        }
-        Insert: {
-          config_name: Database["public"]["Enums"]["Healthcheck"]
-          config_value?: string | null
-          id?: number
-        }
-        Update: {
-          config_name?: Database["public"]["Enums"]["Healthcheck"]
-          config_value?: string | null
-          id?: number
-        }
-        Relationships: []
-      }
-      media: {
+      product_media: {
         Row: {
           alt: string | null
           created_at: string
           id: number
-          name: string | null
+          name: string
           product_id: number | null
         }
         Insert: {
           alt?: string | null
           created_at?: string
-          id?: number
-          name?: string | null
+          id?: never
+          name: string
           product_id?: number | null
         }
         Update: {
           alt?: string | null
           created_at?: string
-          id?: number
-          name?: string | null
+          id?: never
+          name?: string
           product_id?: number | null
         }
         Relationships: [
           {
-            foreignKeyName: "media_product_id_fkey"
+            foreignKeyName: "product_media_product_id_fkey"
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      posts: {
-        Row: {
-          author_id: string
-          content: string | null
-          created_at: string
-          deleted_at: string | null
-          excerpt: string | null
-          id: number
-          is_draft: boolean | null
-          published_at: string | null
-          slug: string
-          title: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          author_id: string
-          content?: string | null
-          created_at?: string
-          deleted_at?: string | null
-          excerpt?: string | null
-          id?: number
-          is_draft?: boolean | null
-          published_at?: string | null
-          slug: string
-          title?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          author_id?: string
-          content?: string | null
-          created_at?: string
-          deleted_at?: string | null
-          excerpt?: string | null
-          id?: number
-          is_draft?: boolean | null
-          published_at?: string | null
-          slug?: string
-          title?: string | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "posts_author_id_fkey"
-            columns: ["author_id"]
-            isOneToOne: true
-            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -172,9 +140,9 @@ export type Database = {
         Insert: {
           availability?: number | null
           category?: number | null
-          created_at: string
+          created_at?: string
           description?: string | null
-          id?: number
+          id?: never
           is_custom?: boolean
           name: string
           price: number
@@ -186,7 +154,7 @@ export type Database = {
           category?: number | null
           created_at?: string
           description?: string | null
-          id?: number
+          id?: never
           is_custom?: boolean
           name?: string
           price?: number
@@ -198,53 +166,59 @@ export type Database = {
             foreignKeyName: "products_availability_fkey"
             columns: ["availability"]
             isOneToOne: false
-            referencedRelation: "availability"
+            referencedRelation: "product_availability"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "products_category_fkey"
             columns: ["category"]
             isOneToOne: false
-            referencedRelation: "categories"
+            referencedRelation: "product_categories"
             referencedColumns: ["id"]
           },
         ]
       }
       profiles: {
         Row: {
-          first_name: string | null
+          display_name: string | null
+          email: string | null
           id: string
-          is_admin: boolean | null
-          last_name: string | null
+          is_admin: boolean
+          updated_at: string | null
+          username: string | null
         }
         Insert: {
-          first_name?: string | null
+          display_name?: string | null
+          email?: string | null
           id: string
-          is_admin?: boolean | null
-          last_name?: string | null
+          is_admin?: boolean
+          updated_at?: string | null
+          username?: string | null
         }
         Update: {
-          first_name?: string | null
+          display_name?: string | null
+          email?: string | null
           id?: string
-          is_admin?: boolean | null
-          last_name?: string | null
+          is_admin?: boolean
+          updated_at?: string | null
+          username?: string | null
         }
         Relationships: []
       }
       settings: {
         Row: {
           id: number
-          setting_name: Database["public"]["Enums"]["Settings"]
+          setting_name: Database["public"]["Enums"]["tsettings"]
           setting_value: string
         }
         Insert: {
           id?: number
-          setting_name: Database["public"]["Enums"]["Settings"]
+          setting_name: Database["public"]["Enums"]["tsettings"]
           setting_value: string
         }
         Update: {
           id?: number
-          setting_name?: Database["public"]["Enums"]["Settings"]
+          setting_name?: Database["public"]["Enums"]["tsettings"]
           setting_value?: string
         }
         Relationships: []
@@ -257,14 +231,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      Availability: "preorder" | "in_stock"
-      Healthcheck: "first_setup"
-      Settings:
-        | "admin_email"
-        | "website_description"
-        | "website_title"
-        | "website_url"
-        | "users_can_register"
+      thealthcheck: "first_setup"
+      tsettings: "website_title" | "website_url" | "website_description"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -392,15 +360,8 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      Availability: ["preorder", "in_stock"],
-      Healthcheck: ["first_setup"],
-      Settings: [
-        "admin_email",
-        "website_description",
-        "website_title",
-        "website_url",
-        "users_can_register",
-      ],
+      thealthcheck: ["first_setup"],
+      tsettings: ["website_title", "website_url", "website_description"],
     },
   },
 } as const
