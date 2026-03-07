@@ -1,3 +1,5 @@
+import { readFile, writeFile } from 'node:fs/promises'
+import { resolve } from 'node:path'
 import postgres from 'postgres'
 import { splitStatements } from '../../utils/sql'
 
@@ -41,6 +43,37 @@ export default defineEventHandler(async (event) => {
     await sql.unsafe(
       `UPDATE public.healthcheck SET config_value = 'false' WHERE config_name = 'first_setup'`
     )
+
+    // Record the core schema migration
+    await sql.unsafe(
+      `INSERT INTO public.pluto_migrations (layer_name)
+       VALUES ('core')
+       ON CONFLICT (layer_name) DO NOTHING`
+    )
+
+    // Persist connection string to .env for future layer migrations
+    const envPath = resolve(process.cwd(), '.env')
+    let envContent = ''
+    try {
+      envContent = await readFile(envPath, 'utf-8')
+    } catch {
+      // .env doesn't exist yet
+    }
+
+    if (envContent.includes('DATABASE_URL=')) {
+      envContent = envContent.replace(
+        /^DATABASE_URL=.*$/m,
+        `DATABASE_URL="${connectionString}"`
+      )
+    } else {
+      // Ensure there's a trailing newline before appending
+      if (envContent.length > 0 && !envContent.endsWith('\n')) {
+        envContent += '\n'
+      }
+      envContent += `DATABASE_URL="${connectionString}"\n`
+    }
+
+    await writeFile(envPath, envContent, 'utf-8')
 
     return {
       success: true,
