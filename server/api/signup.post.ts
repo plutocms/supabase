@@ -5,13 +5,19 @@ interface Payload {
   display_name: string
   email: string
   password: string
-  is_admin?: boolean
 }
 
 export default defineEventHandler(async (event) => {
   const client = await serverSupabaseClient<Database>(event)
 
   const body = await readBody<Payload>(event)
+
+  if (!body.username || body.username.length < 3) {
+    return {
+      success: false,
+      message: 'Username must be at least 3 characters.',
+    }
+  }
 
   const { data, error } = await client.auth.signUp({
     email: body.email,
@@ -20,7 +26,6 @@ export default defineEventHandler(async (event) => {
       data: {
         username: body.username,
         display_name: body.display_name,
-        is_admin: body.is_admin || false,
       },
     },
   })
@@ -30,20 +35,6 @@ export default defineEventHandler(async (event) => {
       success: false,
       message: error.message,
       error,
-    }
-  }
-
-  // Set the first_setup flag in the healthcheck table to false
-  const { error: healthcheckError } = await client
-    .from('healthcheck')
-    .update({ config_value: 'false' })
-    .eq('config_name', 'first_setup')
-
-  if (healthcheckError) {
-    return {
-      success: false,
-      message: healthcheckError.message,
-      error: healthcheckError,
     }
   }
 

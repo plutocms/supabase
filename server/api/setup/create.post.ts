@@ -118,6 +118,11 @@ export default defineEventHandler(async (event) => {
       await sql.unsafe(statement)
     }
 
+    // Mark first_setup as complete
+    await sql.unsafe(
+      `UPDATE public.healthcheck SET config_value = 'false' WHERE config_name = 'first_setup'`
+    )
+
     return {
       success: true,
       message: 'Database setup completed successfully.',

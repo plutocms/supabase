@@ -1,32 +1,36 @@
-export default defineNuxtRouteMiddleware(async (to, from) => {
-  if (to.path !== '/admin/setup' && to.path.startsWith('/admin')) {
-    try {
-      const data = await $fetch('/api/settings/first_setup')
+export default defineNuxtRouteMiddleware(async (to, _from) => {
+  if (!to.path.startsWith('/admin')) {
+    return
+  }
 
-      if (!data.success) {
+  try {
+    const data = await $fetch('/api/settings/first_setup')
+
+    if (!data.success) {
+      // Cannot determine setup state — send to setup page
+      if (to.path !== '/admin/setup') {
         return navigateTo('/admin/setup')
       }
+      return
+    }
 
-      if (
-        data.is_first_setup === true &&
-        from.path.startsWith('/admin') &&
-        to.path !== '/admin/setup'
-      ) {
+    if (data.is_first_setup) {
+      // Setup not done yet — only allow the setup page
+      if (to.path !== '/admin/setup') {
         return navigateTo('/admin/setup')
       }
-
-      if (
-        data.is_first_setup === false &&
-        from.path.startsWith('/admin') &&
-        to.path === '/admin/setup'
-      ) {
-        return navigateTo('/')
+    } else {
+      // Setup already done — block access to setup page
+      if (to.path === '/admin/setup') {
+        return navigateTo('/admin/login')
       }
-    } catch (error) {
-      if (import.meta.dev) {
-        console.error('Error checking first setup status:', error)
-      }
+    }
+  } catch (error) {
+    if (import.meta.dev) {
+      console.error('Error checking first setup status:', error)
+    }
 
+    if (to.path !== '/admin/setup') {
       return navigateTo('/admin/setup')
     }
   }

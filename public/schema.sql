@@ -106,12 +106,12 @@ alter table public.healthcheck enable row level security;
 do $$
 begin
   if not exists (
-    select 1 from pg_policies where tablename = 'healthcheck' and policyname = 'Enable read access for healthcheck to public and dashboard_user'
+    select 1 from pg_policies where tablename = 'healthcheck' and policyname = 'Enable read access for healthcheck to public'
   ) then
-    create policy "Enable read access for healthcheck to public and dashboard_user"
+    create policy "Enable read access for healthcheck to public"
     on public.healthcheck
     for select
-    to public, dashboard_user
+    to public
     using (true);
   end if;
 end
@@ -137,6 +137,7 @@ $$;
 create table if not exists public.profiles (
   id uuid references auth.users on delete cascade not null primary key,
   updated_at timestamp with time zone,
+  email text,
   username text,
   display_name text,
   is_admin boolean not null default false,
@@ -160,14 +161,29 @@ end
 $$;
 
 --- inserts a row into public.profiles
+--- automatically grants admin to the first user if no profiles exist yet
 create or replace function public.handle_new_user()
 returns trigger
 language plpgsql
 security definer set search_path = ''
 as $$
+declare
+  profile_count int;
+  should_be_admin boolean;
 begin
-  insert into public.profiles (id, username, display_name)
-  values (new.id, new.raw_user_meta_data ->> 'username', new.raw_user_meta_data ->> 'display_name');
+  select count(*) into profile_count from public.profiles;
+
+  should_be_admin := profile_count = 0
+    or coalesce((new.raw_user_meta_data ->> 'is_admin')::boolean, false);
+
+  insert into public.profiles (id, email, username, display_name, is_admin)
+  values (
+    new.id,
+    new.email,
+    new.raw_user_meta_data ->> 'username',
+    new.raw_user_meta_data ->> 'display_name',
+    should_be_admin
+  );
   return new;
 end;
 $$;

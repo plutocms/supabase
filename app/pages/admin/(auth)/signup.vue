@@ -9,8 +9,8 @@ useHead({
 
 const form = ref({
   email: '',
-  first_name: '',
-  last_name: '',
+  username: '',
+  display_name: '',
   password: '',
   confirm_password: '',
 })
@@ -32,8 +32,8 @@ async function submitForm() {
       method: 'POST',
       body: {
         email: form.value.email,
-        first_name: form.value.first_name,
-        last_name: form.value.last_name,
+        username: form.value.username,
+        display_name: form.value.display_name,
         password: form.value.password,
       },
     })
@@ -60,23 +60,27 @@ async function submitForm() {
               type="email"
               placeholder="victor@example.com"
               class="w-full"
+              required
             />
           </UFormField>
 
           <div class="flex gap-x-4">
-            <UFormField label="First Name">
+            <UFormField label="Username">
               <UInput
-                v-model="form.first_name"
-                placeholder="e.g: John"
+                v-model="form.username"
+                placeholder="e.g: johndoe"
                 class="w-full"
+                minlength="3"
+                required
               />
             </UFormField>
 
-            <UFormField label="Last Name">
+            <UFormField label="Display Name">
               <UInput
-                v-model="form.last_name"
-                placeholder="e.g: Doe"
+                v-model="form.display_name"
+                placeholder="e.g: John Doe"
                 class="w-full"
+                required
               />
             </UFormField>
           </div>
@@ -87,6 +91,7 @@ async function submitForm() {
               placeholder="••••"
               class="w-full"
               type="password"
+              required
             />
           </UFormField>
 
@@ -96,6 +101,7 @@ async function submitForm() {
               placeholder="••••"
               class="w-full"
               type="password"
+              required
             />
           </UFormField>
 

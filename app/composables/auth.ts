@@ -23,7 +23,7 @@ export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
     isSubmitting.value = true
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email: form.email,
         password: form.password,
       })
@@ -34,6 +34,22 @@ export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
         isSubmitting.value = false
 
         return
+      }
+
+      if (data.user && data.user.user_metadata.is_admin) {
+        // Set the first_setup flag in the healthcheck table to false
+        const { error: healthcheckError } = await supabase
+          .from('healthcheck')
+          .update({ config_value: 'false' })
+          .eq('config_name', 'first_setup')
+
+        if (healthcheckError) {
+          return {
+            success: false,
+            message: healthcheckError.message,
+            error: healthcheckError,
+          }
+        }
       }
 
       return navigateTo(
