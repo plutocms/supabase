@@ -5,6 +5,8 @@ interface PlutoSupabaseAuthOptions {
 }
 
 export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
+  const toast = useToast()
+
   const supabase = useSupabaseClient()
   const supabaseSession = useSupabaseSession()
 
@@ -30,6 +32,13 @@ export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
 
       if (error) {
         console.error(`Error signing in user: ${error?.message}`)
+
+        toast.add({
+          title: 'Could not log in',
+          description: error?.message,
+          icon: 'lucide:circle-x',
+          color: 'error',
+        })
 
         isSubmitting.value = false
 
@@ -76,6 +85,12 @@ export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
 
     if (options?.showToast) {
       console.warn(`User logged out`)
+
+      toast.add({
+        title: 'Logged out successfully',
+        icon: 'lucide:check',
+        color: 'success',
+      })
     }
 
     if (options?.redirectTo) {

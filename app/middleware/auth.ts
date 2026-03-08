@@ -19,6 +19,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (
     !isLoggedIn.value &&
     to.path.startsWith('/admin') &&
+    to.path !== '/admin/confirm' &&
     to.path !== '/admin/signup' &&
     to.path !== '/admin/login'
   ) {
