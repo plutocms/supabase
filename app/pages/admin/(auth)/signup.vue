@@ -108,7 +108,7 @@ async function submitForm() {
         <div class="flex flex-col gap-y-6">
           <h1 class="text-3xl font-bold">Create Account</h1>
 
-          <UFormField label="Email">
+          <UFormField label="Email" required>
             <UInput
               v-model="form.email"
               type="email"
@@ -119,7 +119,7 @@ async function submitForm() {
           </UFormField>
 
           <div class="flex gap-x-4">
-            <UFormField label="Username">
+            <UFormField label="Username" required>
               <UInput
                 v-model="form.username"
                 placeholder="e.g: johndoe"
@@ -129,7 +129,7 @@ async function submitForm() {
               />
             </UFormField>
 
-            <UFormField label="Display Name">
+            <UFormField label="Display Name" required>
               <UInput
                 v-model="form.display_name"
                 placeholder="e.g: John Doe"
@@ -139,7 +139,7 @@ async function submitForm() {
             </UFormField>
           </div>
 
-          <UFormField :error="!passwordMatch" label="Password">
+          <UFormField :error="!passwordMatch" label="Password" required>
             <UInput
               v-model="form.password"
               placeholder="••••"
@@ -149,7 +149,7 @@ async function submitForm() {
             />
           </UFormField>
 
-          <UFormField :error="!passwordMatch" label="Confirm Password">
+          <UFormField :error="!passwordMatch" label="Confirm Password" required>
             <UInput
               v-model="form.confirm_password"
               placeholder="••••"
