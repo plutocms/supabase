@@ -7,6 +7,8 @@ useHead({
   title: 'Sign Up',
 })
 
+const toast = useToast()
+
 const form = ref({
   email: '',
   username: '',
@@ -38,9 +40,24 @@ async function submitForm() {
       },
     })
 
-    navigateTo('/admin/login?rel=new')
+    toast.add({
+      title: 'Account created successfully',
+      description: 'You still need to verify your email before you can log in.',
+      icon: 'lucide:check',
+      color: 'success',
+    })
+
+    isEmailVerificationMessageVisible.value = true
   } catch (error) {
     console.error('Error signing up:', error)
+
+    toast.add({
+      title: 'Could not create account',
+      description:
+        error instanceof Error ? error.message : 'An unknown error occurred.',
+      icon: 'lucide:circle-x',
+      color: 'error',
+    })
   } finally {
     isSubmitting.value = false
   }
