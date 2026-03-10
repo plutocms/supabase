@@ -71,7 +71,7 @@ export type Database = {
         }
         Relationships: []
       }
-      product_categories: {
+      product_category: {
         Row: {
           description: string | null
           id: number
@@ -97,22 +97,31 @@ export type Database = {
           alt: string | null
           created_at: string
           id: number
+          mime_type: string | null
           name: string
           product_id: number | null
+          size: number | null
+          storage_path: string | null
         }
         Insert: {
           alt?: string | null
           created_at?: string
           id?: never
+          mime_type?: string | null
           name: string
           product_id?: number | null
+          size?: number | null
+          storage_path?: string | null
         }
         Update: {
           alt?: string | null
           created_at?: string
           id?: never
+          mime_type?: string | null
           name?: string
           product_id?: number | null
+          size?: number | null
+          storage_path?: string | null
         }
         Relationships: [
           {
@@ -173,7 +182,7 @@ export type Database = {
             foreignKeyName: "products_category_fkey"
             columns: ["category"]
             isOneToOne: false
-            referencedRelation: "product_categories"
+            referencedRelation: "product_category"
             referencedColumns: ["id"]
           },
         ]
