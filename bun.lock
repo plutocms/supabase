@@ -6,7 +6,7 @@
       "name": "supabase",
       "dependencies": {
         "@nuxt/ui": "^4.5.1",
-        "@nuxtjs/supabase": "2.0.3",
+        "@nuxtjs/supabase": "^2.0.4",
         "@plutocms/pluto": "^0.0.1-alpha.4",
         "@plutocms/utils": "^0.0.1-alpha.5",
         "postgres": "^3.4.8",
@@ -292,7 +292,7 @@
 
     "@nuxtjs/color-mode": ["@nuxtjs/color-mode@3.5.2", "", { "dependencies": { "@nuxt/kit": "^3.13.2", "pathe": "^1.1.2", "pkg-types": "^1.2.1", "semver": "^7.6.3" } }, "sha512-cC6RfgZh3guHBMLLjrBB2Uti5eUoGM9KyauOaYS9ETmxNWBMTvpgjvSiSJp1OFljIXPIqVTJ3xtJpSNZiO3ZaA=="],
 
-    "@nuxtjs/supabase": ["@nuxtjs/supabase@2.0.3", "", { "dependencies": { "@supabase/ssr": "^0.8.0", "@supabase/supabase-js": "^2.86.0", "defu": "^6.1.4", "pathe": "^2.0.3" } }, "sha512-zfhuOqhbQUijMd5rXS9qzzuVqBMU00gcJyvxFuTBXdS9TAk/gboQZxxX7EQp6eAi5asvtJNM+mwBKqzQwtZi7g=="],
+    "@nuxtjs/supabase": ["@nuxtjs/supabase@2.0.4", "", { "dependencies": { "@supabase/ssr": "^0.8.0", "@supabase/supabase-js": "^2.95.3", "defu": "^6.1.4", "pathe": "^2.0.3" } }, "sha512-Atud3nn5/HIPM/MrHJa/SsAHwl4d0AWSVkpGCLfzbCejU0p64JGJKnzwx49T9tD+ZKFXs8Fsfjh68KY3BWCvsQ=="],
 
     "@oxc-minify/binding-android-arm-eabi": ["@oxc-minify/binding-android-arm-eabi@0.112.0", "", { "os": "android", "cpu": "arm" }, "sha512-m7TGBR2hjsBJIN9UJ909KBoKsuogo6CuLsHKvUIBXdjI0JVHP8g4ZHeB+BJpGn5LJdeSGDfz9MWiuXrZDRzunw=="],
 
