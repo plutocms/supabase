@@ -5,10 +5,14 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     route: to as RouteLocationNormalizedGeneric,
   })
 
-  if (
-    isLoggedIn.value &&
-    (to.path === '/admin/login' || to.path === '/admin/signup')
-  ) {
+  const allowedUnauthenticatedPaths = [
+    '/admin/login',
+    '/admin/signup',
+    '/admin/confirm',
+    '/admin/setup',
+  ]
+
+  if (isLoggedIn.value && allowedUnauthenticatedPaths.includes(to.path)) {
     return navigateTo(
       to.query.redirect
         ? decodeURIComponent(to.query.redirect as string)
@@ -19,9 +23,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (
     !isLoggedIn.value &&
     to.path.startsWith('/admin') &&
-    to.path !== '/admin/confirm' &&
-    to.path !== '/admin/signup' &&
-    to.path !== '/admin/login'
+    !allowedUnauthenticatedPaths.includes(to.path)
   ) {
     if (from.query.redirect) {
       logout({ redirectTo: from.query.redirect as string, showToast: true })
