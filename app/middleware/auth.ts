@@ -26,9 +26,12 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     !allowedUnauthenticatedPaths.includes(to.path)
   ) {
     if (from.query.redirect) {
-      logout({ redirectTo: from.query.redirect as string, showToast: true })
+      return logout({
+        redirectTo: from.query.redirect as string,
+        showToast: true,
+      })
     } else {
-      logout()
+      return logout()
     }
   }
 })

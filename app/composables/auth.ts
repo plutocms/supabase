@@ -100,6 +100,8 @@ export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
     if (authOptions?.route && authOptions.route.path.startsWith('/admin')) {
       return navigateTo('/admin/login')
     }
+
+    return navigateTo('/admin/login')
   }
 
   return {
