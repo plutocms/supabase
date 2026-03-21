@@ -67,7 +67,7 @@ function submitForm() {
             </UFormField>
           </div>
 
-          <div>
+          <div class="flex items-center justify-between">
             <UButton
               variant="link"
               icon="lucide:arrow-left"
@@ -75,6 +75,10 @@ function submitForm() {
               class="px-0"
             >
               Back to Home
+            </UButton>
+
+            <UButton variant="link" to="/admin/forgot-password" class="px-0">
+              Forgot password?
             </UButton>
           </div>
         </div>

@@ -104,11 +104,77 @@ export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
     return navigateTo('/admin/login')
   }
 
+  async function requestPasswordReset(email: string) {
+    isSubmitting.value = true
+
+    try {
+      await $fetch('/api/auth/reset-password', {
+        method: 'POST',
+        body: { email },
+      })
+
+      return { success: true }
+    } catch (error) {
+      toast.add({
+        title: 'Could not send reset email',
+        description:
+          error instanceof Error ? error.message : 'An unknown error occurred.',
+        icon: 'lucide:circle-x',
+        color: 'error',
+      })
+
+      return { success: false }
+    } finally {
+      isSubmitting.value = false
+    }
+  }
+
+  async function updatePassword(password: string) {
+    isSubmitting.value = true
+
+    try {
+      const { error } = await supabase.auth.updateUser({ password })
+
+      if (error) {
+        toast.add({
+          title: 'Could not update password',
+          description: error.message,
+          icon: 'lucide:circle-x',
+          color: 'error',
+        })
+
+        return { success: false }
+      }
+
+      toast.add({
+        title: 'Password updated successfully',
+        icon: 'lucide:check',
+        color: 'success',
+      })
+
+      return { success: true }
+    } catch (error) {
+      toast.add({
+        title: 'Could not update password',
+        description:
+          error instanceof Error ? error.message : 'An unknown error occurred.',
+        icon: 'lucide:circle-x',
+        color: 'error',
+      })
+
+      return { success: false }
+    } finally {
+      isSubmitting.value = false
+    }
+  }
+
   return {
     isLoggedIn,
     isSubmitting,
     user,
     login,
     logout,
+    requestPasswordReset,
+    updatePassword,
   }
 }

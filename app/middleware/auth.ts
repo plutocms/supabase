@@ -10,6 +10,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     '/admin/signup',
     '/admin/confirm',
     '/admin/setup',
+    '/admin/forgot-password',
   ]
 
   if (isLoggedIn.value && allowedUnauthenticatedPaths.includes(to.path)) {
