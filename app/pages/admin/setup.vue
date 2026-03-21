@@ -124,7 +124,7 @@ function handleStepChange(step: number) {
 <template>
   <UApp>
     <div class="flex justify-center items-center h-screen">
-      <UCard class="w-[500px]">
+      <UCard class="w-125">
         <div class="flex flex-col gap-y-8">
           <UStepper ref="stepper" v-model="currentStep" :items="items" linear />
 
