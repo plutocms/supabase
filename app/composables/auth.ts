@@ -1,4 +1,7 @@
-import type { RouteLocationNormalizedGeneric } from 'vue-router'
+import type {
+  RouteLocationNormalizedGeneric,
+  RouteLocationRaw,
+} from 'vue-router'
 
 interface PlutoSupabaseAuthOptions {
   route?: RouteLocationNormalizedGeneric
@@ -15,6 +18,15 @@ export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
   const user = computed(() => supabaseUser.data.user?.user_metadata ?? null)
   const isLoggedIn = computed<boolean>(() => !!supabaseSession.value)
   const isSubmitting = ref<boolean>(false)
+
+  const allowedUnauthenticatedPaths: RouteLocationRaw[] = [
+    '/admin/login',
+    '/admin/signup',
+    '/admin/confirm',
+    '/admin/setup',
+    '/admin/forgot-password',
+    '/admin/update-password',
+  ]
 
   interface LoginForm {
     email: string
@@ -176,5 +188,6 @@ export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
     logout,
     requestPasswordReset,
     updatePassword,
+    allowedUnauthenticatedPaths,
   }
 }

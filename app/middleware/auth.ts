@@ -1,17 +1,9 @@
 import type { RouteLocationNormalizedGeneric } from 'vue-router'
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  const { isLoggedIn, logout } = await useAuth({
+  const { isLoggedIn, logout, allowedUnauthenticatedPaths } = await useAuth({
     route: to as RouteLocationNormalizedGeneric,
   })
-
-  const allowedUnauthenticatedPaths = [
-    '/admin/login',
-    '/admin/signup',
-    '/admin/confirm',
-    '/admin/setup',
-    '/admin/forgot-password',
-  ]
 
   if (isLoggedIn.value && allowedUnauthenticatedPaths.includes(to.path)) {
     return navigateTo(

@@ -5,7 +5,7 @@ definePageMeta({
 })
 
 const route = useRoute()
-const { isLoggedIn, logout } = await useAuth()
+const { isLoggedIn, logout, allowedUnauthenticatedPaths } = await useAuth()
 const toast = useToast()
 
 const visibility = useDocumentVisibility()
@@ -15,9 +15,7 @@ watch(visibility, async (current, previous) => {
     if (
       !isLoggedIn.value &&
       !route.path.startsWith('/admin/setup') &&
-      route.path.startsWith('/admin/') &&
-      route.path !== '/admin/login' &&
-      route.path !== '/admin/signup'
+      !allowedUnauthenticatedPaths.includes(route.path)
     ) {
       await logout({ redirectTo: route.path })
 
