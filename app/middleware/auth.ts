@@ -5,7 +5,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     route: to as RouteLocationNormalizedGeneric,
   })
 
-  if (isLoggedIn.value && allowedUnauthenticatedPaths.includes(to.path)) {
+  if (
+    isLoggedIn.value &&
+    allowedUnauthenticatedPaths.includes(to.path) &&
+    to.path !== '/admin/update-password'
+  ) {
     return navigateTo(
       to.query.redirect
         ? decodeURIComponent(to.query.redirect as string)
