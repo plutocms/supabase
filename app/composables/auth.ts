@@ -120,10 +120,20 @@ export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
     isSubmitting.value = true
 
     try {
-      await $fetch('/api/auth/reset-password', {
-        method: 'POST',
-        body: { email },
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/admin/update-password`,
       })
+
+      if (error) {
+        toast.add({
+          title: 'Could not send reset email',
+          description: error.message,
+          icon: 'lucide:circle-x',
+          color: 'error',
+        })
+
+        return { success: false }
+      }
 
       return { success: true }
     } catch (error) {
