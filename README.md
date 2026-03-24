@@ -35,9 +35,7 @@ bun add @nuxtjs/supabase supabase
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
-  extends: [
-    ['github:plutocms/supabase', { install: true }],
-  ],
+  extends: [['github:plutocms/supabase', { install: true }]],
 })
 ```
 
@@ -55,7 +53,7 @@ The layer includes API routes for interacting with Supabase services, such as au
 
 - GET `/api/settings`
 - POST `/api/settings/update`
-- POST `/api/signup`
+- POST `/api/auth/signup`
 
 ### Types
 

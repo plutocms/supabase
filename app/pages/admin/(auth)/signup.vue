@@ -33,7 +33,7 @@ async function submitForm() {
   isSubmitting.value = true
 
   try {
-    await $fetch('/api/signup', {
+    await $fetch('/api/auth/signup', {
       method: 'POST',
       body: {
         email: form.value.email,
