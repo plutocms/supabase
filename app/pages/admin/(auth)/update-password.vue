@@ -7,6 +7,18 @@ useHead({
   title: 'Update Password',
 })
 
+const route = useRoute()
+const supabase = useSupabaseClient()
+
+// Exchange the PKCE code for a session when arriving from a password reset email
+onMounted(async () => {
+  const code = route.query.code as string | undefined
+
+  if (code) {
+    await supabase.auth.exchangeCodeForSession(code)
+  }
+})
+
 const { isSubmitting, updatePassword } = await useAuth()
 
 const form = ref({
@@ -29,6 +41,8 @@ async function submitForm() {
 
   if (result.success) {
     isPasswordUpdated.value = true
+
+    await supabase.auth.signOut()
   }
 }
 </script>
