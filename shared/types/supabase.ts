@@ -102,6 +102,7 @@ export type Database = {
           product_id: number | null
           size: number | null
           storage_path: string | null
+          url: string | null
         }
         Insert: {
           alt?: string | null
@@ -112,6 +113,7 @@ export type Database = {
           product_id?: number | null
           size?: number | null
           storage_path?: string | null
+          url?: string | null
         }
         Update: {
           alt?: string | null
@@ -122,6 +124,7 @@ export type Database = {
           product_id?: number | null
           size?: number | null
           storage_path?: string | null
+          url?: string | null
         }
         Relationships: [
           {
