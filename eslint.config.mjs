@@ -6,6 +6,8 @@ import withNuxt from './.nuxt/eslint.config.mjs'
 export default withNuxt(
   // @ts-ignore - Antfu's config is ESM only, but Nuxt's ESLint config is CJS --- IGNORE ---
   antfu({
+    ignores: ['**/*.md', '.agents/**', '.github/**', 'shared/types/supabase.ts'],
+
     rules: {
       'node/prefer-global/process': ['off', 'never'],
 
