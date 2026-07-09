@@ -12,6 +12,7 @@
     "prettier": "prettier --write .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix && prettier --write .",
+    "typecheck": "nuxi typecheck",
     "supabase-types": "bun ./scripts/supabase-typegen.ts"
   },
   "dependencies": {
@@ -33,7 +34,8 @@
     "prettier": "^3.8.1",
     "tailwindcss": "^4.2.2",
     "vue": "^3.5.30",
-    "vue-router": "^5.0.3"
+    "vue-router": "^5.0.3",
+    "vue-tsc": "^3.3.7"
   },
   "trustedDependencies": [
     "@parcel/watcher",
