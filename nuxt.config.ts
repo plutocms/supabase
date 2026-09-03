@@ -1,5 +1,10 @@
+// Point these at a local checkout (e.g. `../pluto`, `../utils`) to test
+// unpublished changes; unset, they resolve to the published npm packages.
+const plutoLayer = process.env.PLUTO_PLUTO_PATH || '@plutocms/pluto'
+const utilsLayer = process.env.PLUTO_UTILS_PATH || '@plutocms/utils'
+
 export default defineNuxtConfig({
-  extends: [['@plutocms/pluto', { install: true }], '@plutocms/utils'],
+  extends: [[plutoLayer, { install: true }], utilsLayer],
 
   modules: ['@nuxt/eslint', '@nuxtjs/supabase'],
 
