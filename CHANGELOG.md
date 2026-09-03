@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/plutocms/supabase/compare/v0.1.0...v0.1.1) (2026-09-03)
+
+
+### Bug Fixes
+
+* regenerate Database types to include the media table ([b0e6203](https://github.com/plutocms/supabase/commit/b0e6203706eaec9eed3db3c3b235a2ef05b80605))
+
 ## [0.1.0](https://github.com/plutocms/supabase/compare/v0.0.1-alpha.17...v0.1.0) (2026-09-03)
 
 
