@@ -1,0 +1,18 @@
+{
+  // This folder is excluded from the Nuxt app itself (see `ignore` in
+  // ../nuxt.config.ts), so it needs its own project - otherwise editors have
+  // no tsconfig to resolve against here and Node globals (process, fs, etc.)
+  // won't show up.
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "moduleDetection": "force",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "types": ["node"],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true
+  },
+  "include": ["./**/*.ts", "../server/utils/typegen.ts"]
+}
