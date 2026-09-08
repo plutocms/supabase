@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/plutocms/supabase/compare/v0.1.1...v0.1.2) (2026-09-08)
+
+
+### Bug Fixes
+
+* type layerSchemas runtime config as Record&lt;string, string&gt; ([0ad5a8a](https://github.com/plutocms/supabase/commit/0ad5a8a42751e33c87e0c733df8344616e3706e0))
+
 ## [0.1.1](https://github.com/plutocms/supabase/compare/v0.1.0...v0.1.1) (2026-09-03)
 
 
