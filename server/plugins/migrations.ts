@@ -8,7 +8,7 @@ export default defineNitroPlugin(async () => {
   }
 
   const config = useRuntimeConfig()
-  const layerSchemas = config.plutoLayerSchemas ?? {}
+  const layerSchemas: Record<string, string> = config.plutoLayerSchemas ?? {}
 
   const layerNames = Object.keys(layerSchemas)
 
