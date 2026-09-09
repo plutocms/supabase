@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/plutocms/supabase/compare/v0.1.2...v0.2.0) (2026-09-09)
+
+
+### Features
+
+* make admin account views responsive ([#35](https://github.com/plutocms/supabase/issues/35)) ([cfa5bf0](https://github.com/plutocms/supabase/commit/cfa5bf0b902e0180272eb40d0d170589442ea179))
+
 ## [0.1.2](https://github.com/plutocms/supabase/compare/v0.1.1...v0.1.2) (2026-09-08)
 
 
