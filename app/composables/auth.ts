@@ -7,15 +7,46 @@ interface PlutoSupabaseAuthOptions {
   route?: RouteLocationNormalizedGeneric
 }
 
+interface PlutoUserMetadata {
+  display_name?: string
+  full_name?: string
+  name?: string
+  username?: string
+  is_admin?: boolean
+  [key: string]: unknown
+}
+
 export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
   const toast = useToast()
 
   const supabase = useSupabaseClient()
   const supabaseSession = useSupabaseSession()
 
-  const supabaseUser = await supabase.auth.getUser()
+  const supabaseUser = useSupabaseUser()
+  const userMetadata = useState<PlutoUserMetadata | null>(
+    'pluto-auth-user-metadata',
+    () => null
+  )
 
-  const user = computed(() => supabaseUser.data.user?.user_metadata ?? null)
+  const { data: authenticatedUser } = await supabase.auth.getUser()
+
+  if (authenticatedUser.user?.user_metadata) {
+    userMetadata.value = authenticatedUser.user.user_metadata
+  }
+
+  watch(
+    supabaseUser,
+    (currentUser) => {
+      if (currentUser?.user_metadata) {
+        userMetadata.value = currentUser.user_metadata
+      }
+    },
+    { immediate: true }
+  )
+
+  const user = computed(
+    () => supabaseUser.value?.user_metadata ?? userMetadata.value
+  )
   const isLoggedIn = computed<boolean>(() => !!supabaseSession.value)
   const isSubmitting = ref<boolean>(false)
 
@@ -94,6 +125,7 @@ export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
 
   async function logout(options?: LogoutOptions) {
     await supabase.auth.signOut()
+    userMetadata.value = null
 
     if (options?.showToast) {
       console.warn(`User logged out`)

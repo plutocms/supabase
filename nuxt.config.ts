@@ -12,6 +12,8 @@ export default defineNuxtConfig({
     name: 'supabase',
   },
 
+  css: ['#layers/supabase/app/assets/css/tailwind.css'],
+
   runtimeConfig: {
     supabaseUrl: process.env.SUPABASE_URL,
     supabaseKey: process.env.SUPABASE_KEY,
