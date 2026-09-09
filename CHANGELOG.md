@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/plutocms/supabase/compare/v0.2.0...v0.2.1) (2026-09-09)
+
+
+### Bug Fixes
+
+* **admin:** register navbar and isolate layer styles ([#37](https://github.com/plutocms/supabase/issues/37)) ([38853b9](https://github.com/plutocms/supabase/commit/38853b93d2664b583cc2b1c993c937cc8e895354))
+
 ## [0.2.0](https://github.com/plutocms/supabase/compare/v0.1.2...v0.2.0) (2026-09-09)
 
 
