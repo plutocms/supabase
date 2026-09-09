@@ -68,12 +68,16 @@ async function submitForm() {
 
 <template>
   <AdminView>
-    <h1 class="text-4xl font-bold">Settings</h1>
+    <h1 class="text-3xl font-bold lg:text-4xl">Settings</h1>
 
     <UCard>
       <UForm :schema="schema" :state="form" @submit="submitForm">
         <div class="flex flex-col gap-y-6">
-          <UFormField label="Website Title" name="website_title" class="w-1/2">
+          <UFormField
+            label="Website Title"
+            name="website_title"
+            class="w-full lg:w-1/2"
+          >
             <UInput
               v-model="form.website_title"
               placeholder="e.g. My Website"
@@ -83,7 +87,7 @@ async function submitForm() {
           <UFormField
             label="Website Description"
             name="website_description"
-            class="w-1/2"
+            class="w-full lg:w-1/2"
           >
             <UInput
               v-model="form.website_description"
@@ -91,7 +95,11 @@ async function submitForm() {
             />
           </UFormField>
 
-          <UFormField label="Website URL" name="website_url" class="w-1/2">
+          <UFormField
+            label="Website URL"
+            name="website_url"
+            class="w-full lg:w-1/2"
+          >
             <UInput
               v-model="form.website_url"
               type="url"
@@ -99,12 +107,13 @@ async function submitForm() {
             />
           </UFormField>
 
-          <div>
+          <div class="flex">
             <UButton
               :loading="isSubmitting"
               :disabled="isSubmitting"
               type="submit"
               icon="lucide:save"
+              class="w-full justify-center sm:w-auto"
             >
               Save
             </UButton>

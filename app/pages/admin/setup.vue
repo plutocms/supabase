@@ -123,8 +123,8 @@ function handleStepChange(step: number) {
 
 <template>
   <UApp>
-    <div class="flex justify-center items-center h-screen">
-      <UCard class="w-125">
+    <div class="flex min-h-dvh items-center justify-center p-4">
+      <UCard class="w-full max-w-125">
         <div class="flex flex-col gap-y-8">
           <UStepper ref="stepper" v-model="currentStep" :items="items" linear />
 
@@ -205,7 +205,7 @@ function handleStepChange(step: number) {
                       </p>
 
                       <div>
-                        <UPopover :content="{ side: 'right' }" arrow>
+                        <UPopover :content="{ side: 'bottom' }" arrow>
                           <UButton
                             icon="lucide:lightbulb"
                             label="Technical details"
@@ -284,13 +284,14 @@ function handleStepChange(step: number) {
           </div>
 
           <div class="flex justify-end">
-            <div>
+            <div class="w-full sm:w-auto">
               <UButton
                 v-if="stepper?.hasNext"
                 :form="currentStepId"
                 :loading="currentLoading"
                 leading-icon="lucide:check"
                 type="submit"
+                class="w-full justify-center sm:w-auto"
               >
                 {{ currentStepSubmitLabel }}
               </UButton>

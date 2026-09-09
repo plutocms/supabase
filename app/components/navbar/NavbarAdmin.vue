@@ -5,6 +5,11 @@ import { domainFromUrl } from '#imports'
 const host = useRequestURL().host
 
 const route = useRoute()
+const isSidebarOpen = useState<boolean>('pluto-admin-sidebar-open', () => false)
+
+function openSidebar() {
+  isSidebarOpen.value = true
+}
 
 const { isLoggedIn, user, logout } = await useAuth()
 
@@ -81,8 +86,20 @@ defineShortcuts(extractShortcuts(items.value))
 
 <template>
   <PlutoNavbarAdmin>
-    <div class="flex h-full items-stretch justify-between px-4">
-      <div class="flex items-center gap-x-3">
+    <div
+      class="flex h-full min-w-0 items-stretch justify-between gap-1 px-2 lg:px-4"
+    >
+      <div class="flex min-w-0 items-center gap-x-1 lg:gap-x-3">
+        <UButton
+          class="lg:hidden"
+          icon="lucide:menu"
+          color="neutral"
+          variant="ghost"
+          aria-label="Open navigation"
+          square
+          @click="openSidebar"
+        />
+
         <div class="h-full shrink-0 py-1">
           <NuxtLink
             title="Go to dashboard home"
@@ -96,8 +113,8 @@ defineShortcuts(extractShortcuts(items.value))
           </NuxtLink>
         </div>
 
-        <div class="h-full">
-          <ul class="flex h-full items-center text-sm">
+        <div class="min-w-0 h-full overflow-hidden">
+          <ul class="flex h-full min-w-0 items-center text-sm">
             <NavbarAdminActionButton
               :show="route.path.startsWith('/admin')"
               :title="`Visit ${domainFromUrl(maybeDevUrl)}`"
@@ -129,7 +146,7 @@ defineShortcuts(extractShortcuts(items.value))
         </div>
       </div>
 
-      <div class="flex items-center gap-3">
+      <div class="flex shrink-0 items-center gap-1 lg:gap-3">
         <ColorModeButton />
 
         <div class="h-full">
@@ -140,7 +157,11 @@ defineShortcuts(extractShortcuts(items.value))
             }"
             :modal="false"
           >
-            <button class="group h-full py-1">
+            <button
+              class="group h-full py-1"
+              aria-label="Open user menu"
+              type="button"
+            >
               <div
                 class="flex h-full items-center gap-x-2 rounded-sm rounded-l-xl pr-2 pl-0.5 group-hover:bg-white/20"
               >
@@ -156,7 +177,7 @@ defineShortcuts(extractShortcuts(items.value))
                 />
 
                 <span
-                  class="light:text-zinc-800 text-sm font-bold dark:text-white"
+                  class="light:text-zinc-800 hidden text-sm font-bold dark:text-white lg:inline"
                 >
                   {{ user?.display_name.split(' ')[0] || 'User' }}
                 </span>

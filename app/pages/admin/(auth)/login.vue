@@ -25,8 +25,8 @@ function submitForm() {
 </script>
 
 <template>
-  <div class="grid h-full place-items-center">
-    <UCard class="w-100">
+  <div class="grid min-h-dvh place-items-center p-4">
+    <UCard class="w-full max-w-100">
       <form @submit.prevent="submitForm">
         <div class="flex flex-col gap-y-6">
           <h1 class="text-3xl font-bold">Login</h1>
@@ -49,12 +49,15 @@ function submitForm() {
             />
           </UFormField>
 
-          <div class="flex items-center justify-between gap-x-4">
+          <div
+            class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-x-4"
+          >
             <UFormField>
               <UButton
                 :loading="isSubmitting"
                 type="submit"
                 icon="lucide:log-in"
+                class="w-full justify-center sm:w-auto"
               >
                 Login
               </UButton>
@@ -67,7 +70,9 @@ function submitForm() {
             </UFormField>
           </div>
 
-          <div class="flex items-center justify-between">
+          <div
+            class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
+          >
             <UButton
               variant="link"
               icon="lucide:arrow-left"
