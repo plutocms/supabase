@@ -68,8 +68,8 @@ async function submitForm() {
 </script>
 
 <template>
-  <div class="grid h-full place-items-center">
-    <UCard class="w-100">
+  <div class="grid min-h-dvh place-items-center p-4">
+    <UCard class="w-full max-w-120">
       <div v-if="isEmailVerificationMessageVisible" class="space-y-6 py-10">
         <div class="text-center space-y-4">
           <hgroup class="flex flex-col gap-y-1">
@@ -118,7 +118,7 @@ async function submitForm() {
             />
           </UFormField>
 
-          <div class="flex gap-x-4">
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <UFormField label="Username" required>
               <UInput
                 v-model="form.username"
@@ -159,7 +159,9 @@ async function submitForm() {
             />
           </UFormField>
 
-          <div class="flex items-center justify-between gap-x-4">
+          <div
+            class="flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-x-4"
+          >
             <UFormField>
               <UButton
                 to="/admin/login"
@@ -176,6 +178,7 @@ async function submitForm() {
                 :disabled="isSubmitting || !passwordMatch"
                 :loading="isSubmitting"
                 type="submit"
+                class="w-full justify-center sm:w-auto"
               >
                 Create account
               </UButton>

@@ -9,8 +9,8 @@ useHead({
 </script>
 
 <template>
-  <div class="grid h-full place-items-center">
-    <UCard class="w-100">
+  <div class="grid min-h-dvh place-items-center p-4">
+    <UCard class="w-full max-w-100">
       <div class="space-y-6 py-10">
         <div class="text-center space-y-4">
           <hgroup class="flex flex-col gap-y-1">

@@ -48,8 +48,8 @@ async function submitForm() {
 </script>
 
 <template>
-  <div class="grid h-full place-items-center">
-    <UCard class="w-100">
+  <div class="grid min-h-dvh place-items-center p-4">
+    <UCard class="w-full max-w-100">
       <div v-if="isPasswordUpdated" class="space-y-6 py-10">
         <div class="text-center space-y-4">
           <hgroup class="flex flex-col gap-y-1">
@@ -109,13 +109,16 @@ async function submitForm() {
             />
           </UFormField>
 
-          <div class="flex items-center justify-between gap-x-4">
+          <div
+            class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-x-4"
+          >
             <UFormField>
               <UButton
                 :loading="isSubmitting"
                 :disabled="!passwordMatch"
                 type="submit"
                 icon="lucide:lock-keyhole"
+                class="w-full justify-center sm:w-auto"
               >
                 Update Password
               </UButton>
