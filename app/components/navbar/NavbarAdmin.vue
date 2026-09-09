@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { DropdownMenuItem } from '@nuxt/ui'
+import { UDropdownMenu } from '#components'
 import { domainFromUrl } from '#imports'
 
 const host = useRequestURL().host
@@ -12,6 +12,24 @@ function openSidebar() {
 }
 
 const { isLoggedIn, user, logout } = await useAuth()
+
+const displayName = computed(() => {
+  return (
+    user.value?.display_name ||
+    user.value?.full_name ||
+    user.value?.name ||
+    user.value?.username ||
+    'User'
+  )
+})
+
+const shortDisplayName = computed(() => displayName.value.split(' ')[0])
+
+const userMenuLabel = computed(() => {
+  return user.value?.username
+    ? `${displayName.value} (${user.value.username})`
+    : displayName.value
+})
 
 const has_settings_modified = useState<boolean>('has_settings_modified')
 
@@ -27,10 +45,14 @@ const maybeDevUrl = computed(() => {
   return settingsData.value?.settings.website_url || ''
 })
 
-const items = ref<DropdownMenuItem[][]>([
+type DropdownItems = NonNullable<
+  Parameters<typeof UDropdownMenu>[0]['items']
+>
+
+const items = computed<DropdownItems>(() => [
   [
     {
-      label: `${user.value?.display_name} (${user.value?.username})` || 'User',
+      label: userMenuLabel.value,
       avatar: {
         icon: 'lucide:user',
         class: 'bg-green-600',
@@ -170,7 +192,7 @@ defineShortcuts(extractShortcuts(items.value))
                     root: 'rounded-xl',
                     icon: 'text-white text-lg',
                   }"
-                  :alt="user?.value?.display_name || 'User Avatar'"
+                  :alt="displayName"
                   size="sm"
                   icon="lucide:user"
                   class="bg-green-600"
@@ -179,7 +201,7 @@ defineShortcuts(extractShortcuts(items.value))
                 <span
                   class="light:text-zinc-800 hidden text-sm font-bold dark:text-white lg:inline"
                 >
-                  {{ user?.display_name.split(' ')[0] || 'User' }}
+                  {{ shortDisplayName }}
                 </span>
               </div>
             </button>
