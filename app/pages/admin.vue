@@ -32,6 +32,19 @@ watch(visibility, async (current, previous) => {
 
 <template>
   <div class="light:text-zinc-800 h-full dark:text-white">
+    <ClientOnly>
+      <Container
+        v-if="
+          isLoggedIn
+            && !route.path.startsWith('/admin/setup')
+            && !route.path.startsWith('/admin/migrations')
+        "
+        class="pt-4"
+      >
+        <MigrationsBanner />
+      </Container>
+    </ClientOnly>
+
     <NuxtPage />
   </div>
 </template>
