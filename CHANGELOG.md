@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/plutocms/supabase/compare/v0.2.1...v0.2.2) (2026-09-10)
+
+
+### Bug Fixes
+
+* **deps:** require pluto 0.3.2 ([6a6382a](https://github.com/plutocms/supabase/commit/6a6382aed8103a58f8b586df82e8e36e6e7c1f02))
+
 ## [0.2.1](https://github.com/plutocms/supabase/compare/v0.2.0...v0.2.1) (2026-09-09)
 
 
