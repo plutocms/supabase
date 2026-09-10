@@ -16,6 +16,17 @@ interface PlutoUserMetadata {
   [key: string]: unknown
 }
 
+// Admin paths that a signed-out visitor may load. Keep this list in sync
+// with every public `/admin/*` page.
+export const allowedUnauthenticatedPaths: RouteLocationRaw[] = [
+  '/admin/login',
+  '/admin/signup',
+  '/admin/confirm',
+  '/admin/setup',
+  '/admin/forgot-password',
+  '/admin/update-password',
+]
+
 export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
   const toast = useToast()
 
@@ -49,15 +60,6 @@ export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
   )
   const isLoggedIn = computed<boolean>(() => !!supabaseSession.value)
   const isSubmitting = ref<boolean>(false)
-
-  const allowedUnauthenticatedPaths: RouteLocationRaw[] = [
-    '/admin/login',
-    '/admin/signup',
-    '/admin/confirm',
-    '/admin/setup',
-    '/admin/forgot-password',
-    '/admin/update-password',
-  ]
 
   interface LoginForm {
     email: string
