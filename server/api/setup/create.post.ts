@@ -1,11 +1,18 @@
-import { readFile, writeFile } from 'node:fs/promises'
-import { resolve } from 'node:path'
 import postgres from 'postgres'
+import { persistDatabaseUrl } from '../../utils/env-file'
+import { runLayerMigration } from '../../utils/migrations'
+import { scrubConnectionString } from '../../utils/scrub-connection-string'
 import { splitStatements } from '../../utils/sql'
 
 interface Payload {
   baseUrl: string
   connectionString: string
+}
+
+interface LayerResult {
+  layerName: string
+  status: 'applied' | 'skipped' | 'failed'
+  error?: string
 }
 
 export default defineEventHandler(async (event) => {
@@ -51,40 +58,71 @@ export default defineEventHandler(async (event) => {
        ON CONFLICT (layer_name) DO NOTHING`
     )
 
-    // Persist connection string to .env for future layer migrations
-    const envPath = resolve(process.cwd(), '.env')
-    let envContent = ''
-    try {
-      envContent = await readFile(envPath, 'utf-8')
-    } catch {
-      // .env doesn't exist yet
-    }
+    // Apply every extra layer's schema too. The core schema must run first
+    // (a layer schema may depend on a core object), so this loop stays
+    // after the core-schema block above. A single failing layer must not
+    // fail the whole wizard — the core schema already succeeded and
+    // first_setup is already 'false', so this loop reports per-layer
+    // failures instead of throwing.
+    const config = useRuntimeConfig()
+    const layerSchemas: Record<string, string> = config.plutoLayerSchemas ?? {}
 
-    if (envContent.includes('DATABASE_URL=')) {
-      envContent = envContent.replace(
-        /^DATABASE_URL=.*$/m,
-        `DATABASE_URL="${connectionString}"`
-      )
-    } else {
-      // Ensure there's a trailing newline before appending
-      if (envContent.length > 0 && !envContent.endsWith('\n')) {
-        envContent += '\n'
+    const layers: LayerResult[] = []
+
+    for (const [layerName, schemaSql] of Object.entries(layerSchemas)) {
+      if (!schemaSql) {
+        continue
       }
-      envContent += `DATABASE_URL="${connectionString}"\n`
+
+      const result = await runLayerMigration({
+        layerName,
+        schemaSql,
+        connectionString,
+      })
+
+      if (result.success) {
+        layers.push({
+          layerName,
+          status: result.skipped ? 'skipped' : 'applied',
+        })
+      } else {
+        const message = scrubConnectionString(
+          result.error ?? 'Unknown migration error.',
+          connectionString
+        )
+
+        console.error(`Layer migration failed [${layerName}]:`, message)
+
+        layers.push({ layerName, status: 'failed', error: message })
+      }
     }
 
-    await writeFile(envPath, envContent, 'utf-8')
+    // Deliberate runtime mutation: the connection string just proved
+    // itself against the database, so make it available to
+    // getConnectionString() for the rest of this process life, with no
+    // server restart needed.
+    process.env.DATABASE_URL = connectionString
+
+    // Persist connection string to .env for future layer migrations
+    const persisted = await persistDatabaseUrl(connectionString)
 
     return {
       success: true,
       message: 'Database setup completed successfully.',
+      layers,
+      persisted,
     }
   } catch (error: any) {
-    console.error('Error setting up database:', error)
+    const message = scrubConnectionString(
+      error.message ?? 'Unknown error.',
+      connectionString
+    )
+
+    console.error('Error setting up the database:', message)
 
     return {
       success: false,
-      error: error.message,
+      error: message,
     }
   } finally {
     sql.end()

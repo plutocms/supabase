@@ -17,6 +17,8 @@ const projectId = config.public.supabase.url
 
 const toast = useToast()
 
+const isDev = import.meta.dev
+
 const items = ref<StepperItem[]>([
   {
     title: 'Database Setup',
@@ -39,6 +41,12 @@ const databaseForm = ref({
   connectionString: '',
   password: '',
 })
+
+// Set only when the server reports it could not write DATABASE_URL to
+// .env — see EnvPersistWarning.vue. Holds the connection string this page
+// already sent once; never re-sent, only shown back on this same page.
+const envNotPersisted = ref(false)
+const submittedConnectionString = ref('')
 
 const currentLoading = computed(() => {
   if (currentStep.value === 0) {
@@ -64,18 +72,56 @@ const currentStepSubmitLabel = computed(() => {
   return 'Submit'
 })
 
+/**
+ * Polls /api/settings/first_setup until the dev server responds again, and
+ * advances the stepper once it does.
+ *
+ * Used only to wait out the restart described in the `catch` block of
+ * `completeDatabaseSetup` — the server is expected to come back within a
+ * few seconds, not to be actually down.
+ */
+async function waitForServerAndAdvance(): Promise<boolean> {
+  const maxAttempts = 15
+  const delayMs = 2000
+
+  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+    await new Promise((resolve) => setTimeout(resolve, delayMs))
+
+    try {
+      await $fetch('/api/settings/first_setup')
+
+      toast.add({
+        title: 'Reconnected',
+        description: 'The server is back. Your database has been set up.',
+        icon: 'lucide:check-circle',
+        color: 'success',
+      })
+
+      stepper.value?.next()
+
+      return true
+    } catch {
+      // Still restarting — try again.
+    }
+  }
+
+  return false
+}
+
 async function completeDatabaseSetup() {
   try {
     isSettingUpDatabase.value = true
+
+    const connectionString = databaseForm.value.connectionString.replace(
+      '[YOUR-PASSWORD]',
+      encodeURIComponent(databaseForm.value.password)
+    )
 
     const data = await $fetch<any>('/api/setup/create', {
       method: 'POST',
       body: {
         baseUrl: window.location.origin,
-        connectionString: databaseForm.value.connectionString.replace(
-          '[YOUR-PASSWORD]',
-          encodeURIComponent(databaseForm.value.password)
-        ),
+        connectionString,
       },
     })
 
@@ -90,6 +136,11 @@ async function completeDatabaseSetup() {
       return
     }
 
+    if (data.persisted === false) {
+      envNotPersisted.value = true
+      submittedConnectionString.value = connectionString
+    }
+
     toast.add({
       title: 'Database setup complete',
       description: 'Your database has been set up successfully.',
@@ -99,6 +150,44 @@ async function completeDatabaseSetup() {
 
     stepper.value?.next()
   } catch (error) {
+    // Writing DATABASE_URL to .env (the last step of /api/setup/create,
+    // after the schema and every layer migration already succeeded)
+    // restarts the dev server. The response can be cut off by that
+    // restart even though the setup itself worked. A dropped connection
+    // has no HTTP status code — a real error response would — so use
+    // that, and only in dev, to tell "still finishing" apart from a real
+    // failure. See the matching comment in app/pages/admin/migrations.vue.
+    const hasStatusCode =
+      typeof error === 'object' &&
+      error !== null &&
+      'statusCode' in error &&
+      (error as { statusCode?: unknown }).statusCode !== undefined
+
+    if (import.meta.dev && !hasStatusCode) {
+      toast.add({
+        title: 'Dev server restarting',
+        description: 'Setup is finishing. Reconnecting…',
+        icon: 'lucide:refresh-cw',
+        color: 'info',
+      })
+
+      const recovered = await waitForServerAndAdvance()
+
+      if (recovered) {
+        return
+      }
+
+      toast.add({
+        title: 'Still reconnecting',
+        description:
+          'The dev server is taking longer than expected. Reload this page in a moment.',
+        icon: 'lucide:triangle-alert',
+        color: 'warning',
+      })
+
+      return
+    }
+
     if (import.meta.dev) {
       console.error('Error setting up the database:', error)
     }
@@ -253,6 +342,15 @@ function handleStepChange(step: number) {
                     </div>
                   </template>
                 </UAlert>
+
+                <UAlert
+                  v-if="isDev"
+                  color="info"
+                  variant="outline"
+                  title="This restarts the dev server"
+                  icon="lucide:refresh-cw"
+                  description="Saving your connection string writes it to .env. In development, that restarts the server automatically. The page will briefly show a reconnecting message — this is expected, not an error."
+                />
               </UForm>
             </section>
 
@@ -268,6 +366,11 @@ function handleStepChange(step: number) {
                   Your database is ready. Create your admin account by signing
                   up.
                 </p>
+
+                <EnvPersistWarning
+                  v-if="envNotPersisted"
+                  :connection-string="submittedConnectionString"
+                />
 
                 <p class="text-center">
                   <UButton
