@@ -38,7 +38,7 @@
   "dependencies": {
     "@nuxt/ui": "^4.9.0",
     "@nuxtjs/supabase": "^2.0.9",
-    "@plutocms/pluto": "^0.3.1",
+    "@plutocms/pluto": "^0.3.2",
     "@plutocms/utils": "^0.2.1",
     "postgres": "^3.4.9",
     "supabase": "^2.109.1",

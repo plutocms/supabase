@@ -7,7 +7,7 @@
       "dependencies": {
         "@nuxt/ui": "^4.9.0",
         "@nuxtjs/supabase": "^2.0.9",
-        "@plutocms/pluto": "^0.3.1",
+        "@plutocms/pluto": "^0.3.2",
         "@plutocms/utils": "^0.2.1",
         "postgres": "^3.4.9",
         "supabase": "^2.109.1",
@@ -218,6 +218,10 @@
     "@humanwhocodes/module-importer": ["@humanwhocodes/module-importer@1.0.1", "", {}, "sha512-bxveV4V8v5Yb4ncFTT3rPSgZBOpCkjfK0y4oVVVJwIuDVBRMDXrPyXRL988i5ap9m9bnyEEjWfm5WkBmtffLfA=="],
 
     "@humanwhocodes/retry": ["@humanwhocodes/retry@0.4.3", "", {}, "sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ=="],
+
+    "@iconify-json/lucide": ["@iconify-json/lucide@1.2.130", "", { "dependencies": { "@iconify/types": "*" } }, "sha512-rRH6qHEDEaFMOkRJPbT8fBYPLP/2GHi3Q2+iDyTDuX4l5PT/GMKs6Dn9JkL7cHtCkIWKnyYWopmMlFpNek1Fcw=="],
+
+    "@iconify-json/simple-icons": ["@iconify-json/simple-icons@1.2.95", "", { "dependencies": { "@iconify/types": "*" } }, "sha512-QwWgcoiL+eNCD38QM0OStFVFoOgDvzeHrcwMAvATvcFl0VvMEtED92qp3K3juS0H6RZ9BGUlgq9mODPwNWkjJg=="],
 
     "@iconify/collections": ["@iconify/collections@1.0.707", "", { "dependencies": { "@iconify/types": "*" } }, "sha512-bVwLyF2qrvOvpswa1d5W0DOImvYHoxgPuHhkqL6p4rQNTj4yk+aB6DM6PbKFQloFk/5pYb75pP3rg9yrDmrBkQ=="],
 
@@ -463,7 +467,7 @@
 
     "@pkgr/core": ["@pkgr/core@0.2.9", "", {}, "sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA=="],
 
-    "@plutocms/pluto": ["@plutocms/pluto@0.3.1", "", { "dependencies": { "@plutocms/utils": "^0.2.1", "@vueuse/nuxt": "^14.3.0" } }, "sha512-uUdPS1bLl33+JaiLzNDUrNjyWRLjyzbVk2u10lktxy2OtxM2jNjRrO7ZWJg9JvbiuDihQ9EruKbzshk2MU+ZCg=="],
+    "@plutocms/pluto": ["@plutocms/pluto@0.3.2", "", { "dependencies": { "@iconify-json/lucide": "^1.2.116", "@iconify-json/simple-icons": "^1.2.89", "@plutocms/utils": "^0.2.1", "@vueuse/nuxt": "^14.3.0" } }, "sha512-S1XhMjDI1zpvYIJT4r2hus5VElHQfzJh4LTX3pMxaZRXJedT36rVDsfEFTi4h/T19BcVcAvvB7Gvs4+qHa06bQ=="],
 
     "@plutocms/utils": ["@plutocms/utils@0.2.1", "", { "dependencies": { "@nuxt/eslint": "^1.15.2" } }, "sha512-2rGhLh+1NycC+eGJVA4vjLzcX9sFwc3Kha7GlQMd3ZtuhkcgVwR3/mKOtCSf75ymkDYWegjn3rk1vcSCV6pXEg=="],
 
