@@ -20,7 +20,14 @@ export default defineNuxtRouteMiddleware(async (to, _from) => {
         return navigateTo('/admin/setup')
       }
     } else {
-      // Setup already done — block access to setup page
+      // Setup already done — block access to setup page.
+      //
+      // Keep this redirect even after layer migrations move to
+      // /admin/migrations. The setup page prompts an unauthenticated
+      // visitor for a raw database connection string, and it is safe only
+      // because it is unreachable once setup is done. Reopening it for a
+      // routine layer addition would let an anonymous visitor submit a
+      // connection string to the server.
       if (to.path === '/admin/setup') {
         return navigateTo('/admin/login')
       }
