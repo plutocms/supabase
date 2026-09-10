@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0](https://github.com/plutocms/supabase/compare/v0.2.2...v0.3.0) (2026-09-10)
+
+
+### Features
+
+* **migrations:** detect and apply pending layer schemas ([b7f0785](https://github.com/plutocms/supabase/commit/b7f0785838f65dcbf9cb22fb3d21307c0819f70b))
+
+
+### Bug Fixes
+
+* **setup:** apply layer schemas when the wizard completes ([f29b2aa](https://github.com/plutocms/supabase/commit/f29b2aae4f8b6c5211f157ad349e0566df57c5cc))
+
 ## [0.2.2](https://github.com/plutocms/supabase/compare/v0.2.1...v0.2.2) (2026-09-10)
 
 
