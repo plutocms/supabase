@@ -1,6 +1,9 @@
 import { serverSupabaseClient } from '#supabase/server'
+import { requireAdmin } from '../../utils/admin-guard'
 
 export default defineEventHandler(async (event) => {
+  await requireAdmin(event)
+
   const client = await serverSupabaseClient<Database>(event)
 
   const id = event.context.params?.id as string
