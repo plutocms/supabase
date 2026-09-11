@@ -5,7 +5,6 @@ import { scrubConnectionString } from '../../utils/scrub-connection-string'
 import { splitStatements } from '../../utils/sql'
 
 interface Payload {
-  baseUrl: string
   connectionString: string
 }
 
@@ -16,14 +15,38 @@ interface LayerResult {
 }
 
 export default defineEventHandler(async (event) => {
+  // An already-configured DATABASE_URL means setup has already completed.
+  // This route is reachable with no admin session — no admin can exist
+  // before setup creates the profiles table — so once real setup has run,
+  // this check is the only thing stopping anyone from re-running it against
+  // an arbitrary database. Mirrors the same precedence rule in
+  // server/api/migrations/run.post.ts, which calls it "the whole security
+  // model for this endpoint."
+  if (process.env.DATABASE_URL) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: 'Setup has already been completed.',
+    })
+  }
+
   const body = await readBody<Payload>(event)
 
-  let schema = await $fetch<string | Blob>('/schema.sql', {
-    baseURL: body.baseUrl,
-  })
+  const config = useRuntimeConfig()
+  const layerSchemas: Record<string, string> = config.plutoLayerSchemas ?? {}
 
-  if (typeof schema !== 'string') {
-    schema = await schema.text()
+  // The core schema is discovered and embedded at build time by the
+  // pluto-migrations module, exactly like every layer schema — see
+  // modules/pluto-migrations.ts. Reading it from there instead of fetching
+  // it over HTTP means this route needs no `baseUrl` from the caller, and
+  // can no longer be made to fetch or execute SQL from an arbitrary origin.
+  const schema = layerSchemas.core
+
+  if (!schema) {
+    throw createError({
+      statusCode: 500,
+      statusMessage:
+        'Core schema not found. Reinstall @plutocms/supabase and restart the dev server.',
+    })
   }
 
   const supabaseUrl = process.env.SUPABASE_URL
@@ -64,13 +87,10 @@ export default defineEventHandler(async (event) => {
     // fail the whole wizard — the core schema already succeeded and
     // first_setup is already 'false', so this loop reports per-layer
     // failures instead of throwing.
-    const config = useRuntimeConfig()
-    const layerSchemas: Record<string, string> = config.plutoLayerSchemas ?? {}
-
     const layers: LayerResult[] = []
 
     for (const [layerName, schemaSql] of Object.entries(layerSchemas)) {
-      if (!schemaSql) {
+      if (!schemaSql || layerName === 'core') {
         continue
       }
 

@@ -10,7 +10,15 @@ export default defineNitroPlugin(async () => {
   const config = useRuntimeConfig()
   const layerSchemas: Record<string, string> = config.plutoLayerSchemas ?? {}
 
-  const layerNames = Object.keys(layerSchemas)
+  // `core` must apply before every other layer — layer schemas may
+  // reference core objects (public.profiles, public.is_admin()), and
+  // Object.keys() otherwise gives no ordering guarantee at all. This
+  // mirrors the ordering server/api/setup/create.post.ts already
+  // guarantees for the setup-wizard path.
+  const discoveredNames = Object.keys(layerSchemas)
+  const layerNames = discoveredNames.includes('core')
+    ? ['core', ...discoveredNames.filter((name) => name !== 'core')]
+    : discoveredNames
 
   if (layerNames.length === 0) {
     return
