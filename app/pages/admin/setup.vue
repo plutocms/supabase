@@ -120,7 +120,6 @@ async function completeDatabaseSetup() {
     const data = await $fetch<any>('/api/setup/create', {
       method: 'POST',
       body: {
-        baseUrl: window.location.origin,
         connectionString,
       },
     })

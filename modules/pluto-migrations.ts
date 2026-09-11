@@ -3,9 +3,12 @@ import { dirname, join, relative } from 'node:path'
 import { createResolver, defineNuxtModule, getLayerDirectories } from 'nuxt/kit'
 
 /**
- * Discovers schema.[layerName].sql files across all Nuxt layers,
- * reads their content at build time, and populates runtimeConfig
- * so the migrations plugin can run them at server startup.
+ * Discovers schema.sql (the core schema) and schema.[layerName].sql (layer
+ * schemas) across all Nuxt layers, reads their content at build time, and
+ * populates runtimeConfig so the migrations plugin can run them at server
+ * startup. The core schema is keyed as `core`, matching the
+ * `pluto_migrations.layer_name = 'core'` convention already used by the
+ * setup wizard and the migrations ledger — see server/api/setup/create.post.ts.
  *
  * Also seeds the consuming app's shared/types/supabase.ts with a
  * re-export of this layer's own committed snapshot when the consumer
@@ -78,8 +81,17 @@ export default defineNuxtModule({
       }
 
       for (const file of files) {
-        // Skip the core schema
+        // The core schema. Read it into the same map, under a fixed key,
+        // instead of the caller-supplied `baseUrl` fetch this used to
+        // require — see server/api/setup/create.post.ts.
         if (file === 'schema.sql') {
+          try {
+            layerSchemas.core = readFileSync(join(publicDir, file), 'utf-8')
+          } catch {
+            console.error(
+              `[pluto-migrations] Failed to read schema file: ${file}`
+            )
+          }
           continue
         }
 
