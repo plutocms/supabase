@@ -6,5 +6,5 @@ with full detail, so this file stays short.
 See the workspace-level `CLAUDE.md` (one directory up) for the delegation, writing, and git
 policies shared by every project here.
 
-- Layer migrations: apply pending layer database migrations from the admin UI, after initial
-  setup. @.claude/skills/layer-migrations/SKILL.md
+- Layer migrations: apply pending, versioned, per-file database migrations from the admin UI,
+  after initial setup. @.claude/skills/layer-migrations/SKILL.md

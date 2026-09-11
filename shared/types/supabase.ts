@@ -65,18 +65,24 @@ export type Database = {
       pluto_migrations: {
         Row: {
           applied_at: string
+          checksum: string | null
           id: number
           layer_name: string
+          migration_name: string
         }
         Insert: {
           applied_at?: string
+          checksum?: string | null
           id?: number
           layer_name: string
+          migration_name: string
         }
         Update: {
           applied_at?: string
+          checksum?: string | null
           id?: number
           layer_name?: string
+          migration_name?: string
         }
         Relationships: []
       }

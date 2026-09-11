@@ -1,3 +1,5 @@
+import type { PlutoMigrationFile } from './shared/types/migrations'
+
 // Point these at a local checkout (e.g. `../pluto`, `../utils`) to test
 // unpublished changes; unset, they resolve to the published npm packages.
 const plutoLayer = process.env.PLUTO_PLUTO_PATH || '@plutocms/pluto'
@@ -18,7 +20,7 @@ export default defineNuxtConfig({
     supabaseUrl: process.env.SUPABASE_URL,
     supabaseKey: process.env.SUPABASE_KEY,
     plutoRootDir: '',
-    plutoLayerSchemas: {} as Record<string, string>,
+    plutoLayerMigrations: {} as Record<string, PlutoMigrationFile[]>,
   },
 
   alias: {

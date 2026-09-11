@@ -1,13 +1,23 @@
-export interface LayerMigrationResult {
+export interface MigrationFileResult {
   layerName: string
+  migrationName: string
   status: 'applied' | 'skipped' | 'failed'
   error?: string
 }
 
+export interface LayerStatus {
+  layerName: string
+  applied: string[]
+  pending: string[]
+}
+
 interface MigrationsStatusResponse {
   success: boolean
+  layers: LayerStatus[]
   pending: string[]
   applied: string[]
+  discovered: string[]
+  pendingFileCount: number
   hasConnection: boolean
   needsConnectionString: boolean
 }
@@ -15,13 +25,14 @@ interface MigrationsStatusResponse {
 interface RunMigrationsResponse {
   success: boolean
   needsConnectionString?: boolean
-  results?: LayerMigrationResult[]
+  results?: MigrationFileResult[]
   persisted?: boolean
   message?: string
+  error?: string
 }
 
 /**
- * Reads and applies pending layer migrations, for admin-only pages and the
+ * Reads and applies pending migrations, for admin-only pages and the
  * admin-shell banner.
  *
  * `useFetch` keys the request as `pluto-migrations-status`, so every
@@ -51,6 +62,8 @@ export function useMigrations() {
     return data.value ?? null
   })
 
+  // Layer-level count — a layer with any pending file counts once here.
+  // See `status.pendingFileCount` for the per-file count.
   const pendingCount = computed(() => status.value?.pending.length ?? 0)
 
   async function runMigrations(connectionString?: string) {
