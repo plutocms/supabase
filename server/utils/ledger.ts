@@ -61,7 +61,9 @@ alter table public.pluto_migrations drop constraint if exists pluto_migrations_l
 do $$
 begin
   if not exists (
-    select 1 from pg_constraint where conname = 'pluto_migrations_layer_migration_key'
+    select 1 from pg_constraint
+     where conname = 'pluto_migrations_layer_migration_key'
+       and conrelid = 'public.pluto_migrations'::regclass
   ) then
     alter table public.pluto_migrations
       add constraint pluto_migrations_layer_migration_key unique (layer_name, migration_name);
