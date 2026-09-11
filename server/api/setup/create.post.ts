@@ -1,17 +1,11 @@
+import type { PlutoMigrationFile } from '../../../shared/types/migrations'
 import postgres from 'postgres'
 import { persistDatabaseUrl } from '../../utils/env-file'
-import { runLayerMigration } from '../../utils/migrations'
+import { runPendingMigrations } from '../../utils/migrations'
 import { scrubConnectionString } from '../../utils/scrub-connection-string'
-import { splitStatements } from '../../utils/sql'
 
 interface Payload {
   connectionString: string
-}
-
-interface LayerResult {
-  layerName: string
-  status: 'applied' | 'skipped' | 'failed'
-  error?: string
 }
 
 export default defineEventHandler(async (event) => {
@@ -32,16 +26,21 @@ export default defineEventHandler(async (event) => {
   const body = await readBody<Payload>(event)
 
   const config = useRuntimeConfig()
-  const layerSchemas: Record<string, string> = config.plutoLayerSchemas ?? {}
+  // Nuxt's schema inference narrows `plutoLayerMigrations` to whatever
+  // layer keys and file shapes it happened to observe at build time (see
+  // the `RuntimeConfig` augmentation in shared/types/runtime-config.d.ts),
+  // so the read is cast back to the intended general shape.
+  const layers = (config.plutoLayerMigrations ?? {}) as unknown as Record<
+    string,
+    PlutoMigrationFile[]
+  >
 
-  // The core schema is discovered and embedded at build time by the
-  // pluto-migrations module, exactly like every layer schema — see
+  // The core layer's migrations are discovered and embedded at build time
+  // by the pluto-migrations module, exactly like every other layer — see
   // modules/pluto-migrations.ts. Reading it from there instead of fetching
   // it over HTTP means this route needs no `baseUrl` from the caller, and
   // can no longer be made to fetch or execute SQL from an arbitrary origin.
-  const schema = layerSchemas.core
-
-  if (!schema) {
+  if (!layers.core?.length) {
     throw createError({
       statusCode: 500,
       statusMessage:
@@ -60,60 +59,30 @@ export default defineEventHandler(async (event) => {
 
   const connectionString = body.connectionString
 
-  const sql = postgres(connectionString)
-
   try {
-    const statements = splitStatements(schema)
+    // core must apply before every other layer — a layer's migrations may
+    // reference core objects (public.profiles, public.is_admin()).
+    // runPendingMigrations guarantees this ordering itself.
+    const layerResults = await runPendingMigrations({
+      connectionString,
+      layers,
+    })
 
-    for (const statement of statements) {
-      await sql.unsafe(statement)
-    }
+    const coreResult = layerResults.find((layer) => layer.layerName === 'core')
 
-    // Mark first_setup as complete
-    await sql.unsafe(
-      `UPDATE public.healthcheck SET config_value = 'false' WHERE config_name = 'first_setup'`
-    )
-
-    // Record the core schema migration
-    await sql.unsafe(
-      `INSERT INTO public.pluto_migrations (layer_name)
-       VALUES ('core')
-       ON CONFLICT (layer_name) DO NOTHING`
-    )
-
-    // Apply every extra layer's schema too. The core schema must run first
-    // (a layer schema may depend on a core object), so this loop stays
-    // after the core-schema block above. A single failing layer must not
-    // fail the whole wizard — the core schema already succeeded and
-    // first_setup is already 'false', so this loop reports per-layer
-    // failures instead of throwing.
-    const layers: LayerResult[] = []
-
-    for (const [layerName, schemaSql] of Object.entries(layerSchemas)) {
-      if (!schemaSql || layerName === 'core') {
-        continue
-      }
-
-      const result = await runLayerMigration({
-        layerName,
-        schemaSql,
-        connectionString,
-      })
-
-      if (result.success) {
-        layers.push({
-          layerName,
-          status: result.skipped ? 'skipped' : 'applied',
-        })
-      } else {
-        const message = scrubConnectionString(
-          result.error ?? 'Unknown migration error.',
-          connectionString
+    // Only mark first_setup complete once the core layer's own migrations
+    // are known good. A single failing extra layer must not block this —
+    // core already succeeded, so the wizard can still hand off to sign-up —
+    // but a failed core layer must not flip first_setup, since the base
+    // schema (profiles, healthcheck, and so on) may be incomplete.
+    if (coreResult && !coreResult.failed) {
+      const sql = postgres(connectionString, { max: 1 })
+      try {
+        await sql.unsafe(
+          `UPDATE public.healthcheck SET config_value = 'false' WHERE config_name = 'first_setup'`
         )
-
-        console.error(`Layer migration failed [${layerName}]:`, message)
-
-        layers.push({ layerName, status: 'failed', error: message })
+      } finally {
+        await sql.end()
       }
     }
 
@@ -123,13 +92,16 @@ export default defineEventHandler(async (event) => {
     // server restart needed.
     process.env.DATABASE_URL = connectionString
 
-    // Persist connection string to .env for future layer migrations
+    // Persist connection string to .env for future layer migrations. This
+    // must stay the very last thing this handler does — see "The
+    // dev-server restart on first save" in
+    // .claude/skills/layer-migrations/SKILL.md.
     const persisted = await persistDatabaseUrl(connectionString)
 
     return {
       success: true,
       message: 'Database setup completed successfully.',
-      layers,
+      layers: layerResults,
       persisted,
     }
   } catch (error: any) {
@@ -144,7 +116,5 @@ export default defineEventHandler(async (event) => {
       success: false,
       error: message,
     }
-  } finally {
-    sql.end()
   }
 })

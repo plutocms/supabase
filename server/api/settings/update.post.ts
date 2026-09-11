@@ -1,7 +1,7 @@
 import { serverSupabaseClient } from '#supabase/server'
 import { requireAdmin } from '../../utils/admin-guard'
 
-// Mirrors the TSettings enum in public/schema.sql. The Postgres enum
+// Mirrors the TSettings enum in db/migrations/001_baseline.sql. The Postgres enum
 // already rejects an unknown key at the DB level (as a raw constraint
 // error) — this turns that into a clean 400 instead.
 const KNOWN_SETTING_KEYS = [

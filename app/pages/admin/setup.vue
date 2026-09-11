@@ -322,11 +322,11 @@ function handleStepChange(step: number) {
                                 Supabase database and run the SQL queries from
                                 this
                                 <ULink
-                                  to="https://github.com/plutocms/supabase/blob/feat/setup-wizard/public/schema.sql"
+                                  to="https://github.com/plutocms/supabase/tree/main/db/migrations"
                                   target="_blank"
                                   class="underline"
                                 >
-                                  SQL file</ULink
+                                  SQL files</ULink
                                 >.
                               </p>
 

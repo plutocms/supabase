@@ -1,4 +1,5 @@
-import { runLayerMigration } from '../utils/migrations'
+import type { PlutoMigrationFile } from '../../shared/types/migrations'
+import { runPendingMigrations } from '../utils/migrations'
 import { regenerateSupabaseTypes } from '../utils/typegen'
 
 export default defineNitroPlugin(async () => {
@@ -8,60 +9,48 @@ export default defineNitroPlugin(async () => {
   }
 
   const config = useRuntimeConfig()
-  const layerSchemas: Record<string, string> = config.plutoLayerSchemas ?? {}
+  // Nuxt's schema inference narrows `plutoLayerMigrations` to whatever
+  // layer keys and file shapes it happened to observe at build time (see
+  // the `RuntimeConfig` augmentation in shared/types/runtime-config.d.ts),
+  // so the read is cast back to the intended general shape.
+  const layers = (config.plutoLayerMigrations ?? {}) as unknown as Record<
+    string,
+    PlutoMigrationFile[]
+  >
 
-  // `core` must apply before every other layer — layer schemas may
-  // reference core objects (public.profiles, public.is_admin()), and
-  // Object.keys() otherwise gives no ordering guarantee at all. This
-  // mirrors the ordering server/api/setup/create.post.ts already
-  // guarantees for the setup-wizard path.
-  const discoveredNames = Object.keys(layerSchemas)
-  const layerNames = discoveredNames.includes('core')
-    ? ['core', ...discoveredNames.filter((name) => name !== 'core')]
-    : discoveredNames
-
-  if (layerNames.length === 0) {
+  if (Object.keys(layers).length === 0) {
     return
   }
 
   let anyApplied = false
 
-  for (const layerName of layerNames) {
-    const schemaSql = layerSchemas[layerName]
+  try {
+    const layerResults = await runPendingMigrations({
+      connectionString: process.env.DATABASE_URL,
+      layers,
+    })
 
-    if (!schemaSql) {
-      continue
-    }
+    for (const layer of layerResults) {
+      for (const result of layer.results) {
+        const label = `${result.layerName}/${result.migrationName}`
 
-    try {
-      const result = await runLayerMigration({
-        layerName,
-        schemaSql,
-      })
-
-      if (result.skipped) {
-        console.warn(
-          `[migrations] Layer "${layerName}" already applied, skipped.`
-        )
-      } else if (result.success) {
-        console.warn(`[migrations] Layer "${layerName}" migrated successfully.`)
-        anyApplied = true
-      } else {
-        console.error(`[migrations] Layer "${layerName}" failed:`, result.error)
+        if (result.status === 'skipped') {
+          console.warn(`[migrations] ${label} already applied, skipped.`)
+        } else if (result.status === 'applied') {
+          console.warn(`[migrations] ${label} migrated successfully.`)
+          anyApplied = true
+        } else {
+          console.error(`[migrations] ${label} failed:`, result.error)
+        }
       }
-    } catch (error) {
-      console.error(
-        `[migrations] Error running migration for "${layerName}":`,
-        error
-      )
     }
+  } catch (error) {
+    console.error('[migrations] Error running pending migrations:', error)
   }
 
-  // Regenerate Database types from the live schema whenever a layer schema
-  // was newly applied, so `Database` stays in sync without a manual step.
-  // Re-editing an already-applied layer schema is a no-op here (it's
-  // recorded as `skipped`); use the `supabase-types` script to force a
-  // refresh in that case.
+  // Regenerate Database types from the live schema whenever a migration
+  // file was newly applied, so `Database` stays in sync without a manual
+  // step.
   if (import.meta.dev && anyApplied && config.plutoRootDir) {
     await regenerateSupabaseTypes(config.plutoRootDir)
   }

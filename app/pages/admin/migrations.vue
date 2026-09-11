@@ -15,6 +15,15 @@ const { status, fetchStatus, pendingCount, refresh, runMigrations } =
 
 const isDev = import.meta.dev
 
+// Only the layers that actually have a pending, or applied, file — used to
+// render per-file detail under each layer below.
+const pendingLayers = computed(
+  () => status.value?.layers.filter((layer) => layer.pending.length > 0) ?? []
+)
+const appliedLayers = computed(
+  () => status.value?.layers.filter((layer) => layer.applied.length > 0) ?? []
+)
+
 const connectionForm = ref({
   connectionString: '',
   password: '',
@@ -175,9 +184,14 @@ async function applyMigrations(useForm: boolean) {
             <h2 class="font-semibold">
               Pending layers ({{ status.pending.length }})
             </h2>
-            <ul class="list-inside list-disc text-sm">
-              <li v-for="layer in status.pending" :key="layer">
-                {{ layer }}
+            <ul class="flex flex-col gap-y-2 text-sm">
+              <li v-for="layer in pendingLayers" :key="layer.layerName">
+                <span class="font-mono">{{ layer.layerName }}</span>
+                <ul class="list-inside list-disc pl-4">
+                  <li v-for="fileName in layer.pending" :key="fileName">
+                    {{ fileName }}
+                  </li>
+                </ul>
               </li>
             </ul>
           </div>
@@ -186,9 +200,14 @@ async function applyMigrations(useForm: boolean) {
             <h2 class="font-semibold">
               Applied layers ({{ status.applied.length }})
             </h2>
-            <ul class="list-inside list-disc text-sm">
-              <li v-for="layer in status.applied" :key="layer">
-                {{ layer }}
+            <ul class="flex flex-col gap-y-2 text-sm">
+              <li v-for="layer in appliedLayers" :key="layer.layerName">
+                <span class="font-mono">{{ layer.layerName }}</span>
+                <ul class="list-inside list-disc pl-4">
+                  <li v-for="fileName in layer.applied" :key="fileName">
+                    {{ fileName }}
+                  </li>
+                </ul>
               </li>
             </ul>
           </div>
@@ -305,8 +324,13 @@ async function applyMigrations(useForm: boolean) {
             v-if="lastRun.results?.length"
             class="flex flex-col gap-y-1 text-sm"
           >
-            <li v-for="result in lastRun.results" :key="result.layerName">
-              <span class="font-mono">{{ result.layerName }}</span>
+            <li
+              v-for="result in lastRun.results"
+              :key="`${result.layerName}/${result.migrationName}`"
+            >
+              <span class="font-mono"
+              >{{ result.layerName }}/{{ result.migrationName }}</span
+              >
               — {{ result.status }}
               <span v-if="result.error" class="text-error">
                 : {{ result.error }}</span
