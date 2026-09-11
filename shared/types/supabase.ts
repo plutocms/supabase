@@ -39,7 +39,6 @@ export type Database = {
           id: number
           mime_type: string | null
           name: string | null
-          product_id: number | null
           size: number | null
           storage_path: string | null
         }
@@ -49,7 +48,6 @@ export type Database = {
           id?: number
           mime_type?: string | null
           name?: string | null
-          product_id?: number | null
           size?: number | null
           storage_path?: string | null
         }
@@ -59,19 +57,10 @@ export type Database = {
           id?: number
           mime_type?: string | null
           name?: string | null
-          product_id?: number | null
           size?: number | null
           storage_path?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "media_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       pluto_migrations: {
         Row: {
