@@ -36,6 +36,7 @@
     "supabase-types": "bun ./scripts/supabase-typegen.ts"
   },
   "dependencies": {
+    "@nuxt/eslint": "^1.16.0",
     "@nuxt/ui": "^4.9.0",
     "@nuxtjs/supabase": "^2.0.9",
     "@plutocms/pluto": "^0.3.2",
@@ -46,7 +47,6 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^6.2.0",
-    "@nuxt/eslint": "^1.16.0",
     "@types/bun": "^1.3.14",
     "@vueuse/nuxt": "^14.3.0",
     "eslint": "^10.6.0",
