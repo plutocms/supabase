@@ -8,6 +8,20 @@ const route = useRoute()
 const { isLoggedIn, logout, allowedUnauthenticatedPaths } = await useAuth()
 const toast = useToast()
 
+const { load: loadPermissions, clear: clearPermissions } = usePlutoPermissions()
+
+watch(
+  isLoggedIn,
+  (loggedIn) => {
+    if (loggedIn) {
+      loadPermissions()
+    } else {
+      clearPermissions()
+    }
+  },
+  { immediate: true }
+)
+
 const visibility = useDocumentVisibility()
 
 watch(visibility, async (current, previous) => {

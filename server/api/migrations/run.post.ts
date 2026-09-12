@@ -1,6 +1,6 @@
 import type { PlutoMigrationFile } from '../../../shared/types/migrations'
 import type { MigrationFileResult } from '../../utils/migrations'
-import { requireAdmin } from '../../utils/admin-guard'
+import { requireCapability } from '../../utils/capability-guard'
 import { persistDatabaseUrl } from '../../utils/env-file'
 import { resolveConnectionString, runPendingMigrations } from '../../utils/migrations'
 import { scrubConnectionString } from '../../utils/scrub-connection-string'
@@ -11,7 +11,7 @@ interface Payload {
 }
 
 export default defineEventHandler(async (event) => {
-  await requireAdmin(event)
+  await requireCapability(event, 'system:migrate')
 
   const body = await readBody<Payload | undefined>(event)
 

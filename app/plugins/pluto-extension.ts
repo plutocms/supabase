@@ -36,5 +36,17 @@ export default defineNuxtPlugin(() => {
         hasSettingsModified.value = Date.now()
       },
     },
+    capabilities: [
+      { id: 'settings-manage', key: 'settings:manage', label: 'Manage site settings' },
+      { id: 'users-read', key: 'users:read', label: 'View all user accounts' },
+      { id: 'system-migrate', key: 'system:migrate', label: 'Apply pending layer migrations' },
+    ],
+    permissionsDriver: {
+      id: 'supabase',
+      load: async () => {
+        const response = await $fetch<{ capabilities: string[] }>('/api/permissions/me')
+        return response.capabilities
+      },
+    },
   })
 })
