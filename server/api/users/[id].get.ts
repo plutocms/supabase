@@ -1,8 +1,8 @@
 import { serverSupabaseClient } from '#supabase/server'
-import { requireAdmin } from '../../utils/admin-guard'
+import { requireCapability } from '../../utils/capability-guard'
 
 export default defineEventHandler(async (event) => {
-  await requireAdmin(event)
+  await requireCapability(event, 'users:read')
 
   const client = await serverSupabaseClient<Database>(event)
 

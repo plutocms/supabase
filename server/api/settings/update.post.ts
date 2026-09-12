@@ -1,5 +1,5 @@
 import { serverSupabaseClient } from '#supabase/server'
-import { requireAdmin } from '../../utils/admin-guard'
+import { requireCapability } from '../../utils/capability-guard'
 
 // A key is lowercase segments separated by dots, e.g. 'website_title' or
 // 'blog.posts_per_page'. Mirrors the settings_setting_key_format check
@@ -11,7 +11,7 @@ const SETTING_KEY_PATTERN = /^[a-z0-9_]+(?:\.[a-z0-9_]+)*$/
 const MAX_SETTING_VALUE_LENGTH = 10_000
 
 export default defineEventHandler(async (event) => {
-  await requireAdmin(event)
+  await requireCapability(event, 'settings:manage')
 
   const client = await serverSupabaseClient<Database>(event)
   const body = await readBody<Record<string, unknown>>(event)

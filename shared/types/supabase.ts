@@ -253,6 +253,53 @@ export type Database = {
         }
         Relationships: []
       }
+      role_capabilities: {
+        Row: {
+          capability: string
+          role_key: string
+        }
+        Insert: {
+          capability: string
+          role_key: string
+        }
+        Update: {
+          capability?: string
+          role_key?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_capabilities_role_key_fkey"
+            columns: ["role_key"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["key"]
+          },
+        ]
+      }
+      roles: {
+        Row: {
+          created_at: string
+          description: string | null
+          is_builtin: boolean
+          key: string
+          label: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          is_builtin?: boolean
+          key: string
+          label: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          is_builtin?: boolean
+          key?: string
+          label?: string
+        }
+        Relationships: []
+      }
       settings: {
         Row: {
           id: number
@@ -274,12 +321,45 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          granted_at: string
+          role_key: string
+          user_id: string
+        }
+        Insert: {
+          granted_at?: string
+          role_key: string
+          user_id: string
+        }
+        Update: {
+          granted_at?: string
+          role_key?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_role_key_fkey"
+            columns: ["role_key"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["key"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_capability: {
+        Args: { cap: string }
+        Returns: boolean
+      }
+      my_capabilities: {
+        Args: Record<PropertyKey, never>
+        Returns: string[]
+      }
     }
     Enums: {
       thealthcheck: "first_setup"
