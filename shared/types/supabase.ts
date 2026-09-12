@@ -256,17 +256,20 @@ export type Database = {
       settings: {
         Row: {
           id: number
-          setting_name: Database["public"]["Enums"]["tsettings"]
+          setting_key: string | null
+          setting_name: Database["public"]["Enums"]["tsettings"] | null
           setting_value: string
         }
         Insert: {
           id?: number
-          setting_name: Database["public"]["Enums"]["tsettings"]
+          setting_key?: string | null
+          setting_name?: Database["public"]["Enums"]["tsettings"] | null
           setting_value: string
         }
         Update: {
           id?: number
-          setting_name?: Database["public"]["Enums"]["tsettings"]
+          setting_key?: string | null
+          setting_name?: Database["public"]["Enums"]["tsettings"] | null
           setting_value?: string
         }
         Relationships: []
