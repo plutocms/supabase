@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/plutocms/supabase/compare/v0.4.0...v0.4.1) (2026-09-12)
+
+
+### Bug Fixes
+
+* **migrations:** import useFetch and computed explicitly in useMigrations ([#47](https://github.com/plutocms/supabase/issues/47)) ([58739cd](https://github.com/plutocms/supabase/commit/58739cd5df99bae43352a719d348f49ba2b2bf32))
+
 ## [0.4.0](https://github.com/plutocms/supabase/compare/v0.3.0...v0.4.0) (2026-09-11)
 
 
