@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://github.com/plutocms/supabase/compare/v0.5.0...v0.6.0) (2026-09-12)
+
+
+### Features
+
+* **settings:** generic, namespaced setting keys ([#51](https://github.com/plutocms/supabase/issues/51)) ([2410552](https://github.com/plutocms/supabase/commit/2410552ce6c880ecec1fac6f0b84852ef8612bea))
+
 ## [0.5.0](https://github.com/plutocms/supabase/compare/v0.4.1...v0.5.0) (2026-09-12)
 
 
