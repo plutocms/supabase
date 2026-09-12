@@ -1,7 +1,8 @@
 import NavbarAdminProvider from '../components/navbar/NavbarAdminProvider.vue'
 
 export default defineNuxtPlugin(() => {
-  const { registerNavbar } = useNavbarAdmin()
-
-  registerNavbar(NavbarAdminProvider)
+  definePlutoExtension({
+    id: 'supabase',
+    navbar: { id: 'admin-navbar', component: NavbarAdminProvider },
+  })
 })
