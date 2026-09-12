@@ -35,12 +35,6 @@ export default defineNuxtConfig({
     },
   },
 
-  vite: {
-    optimizeDeps: {
-      include: ['yup'],
-    },
-  },
-
   eslint: {
     config: {
       nuxt: {
