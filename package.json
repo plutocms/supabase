@@ -39,7 +39,7 @@
     "@nuxt/eslint": "^1.16.0",
     "@nuxt/ui": "^4.9.0",
     "@nuxtjs/supabase": "^2.0.9",
-    "@plutocms/pluto": "^0.3.2",
+    "@plutocms/pluto": "^0.4.0",
     "@plutocms/utils": "^0.2.1",
     "postgres": "^3.4.9",
     "supabase": "^2.109.1",
