@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.4.0](https://github.com/plutocms/supabase/compare/v0.3.0...v0.4.0) (2026-09-11)
+
+
+### Features
+
+* **migrations:** harden SQL splitter and add a versioned ledger shape ([#45](https://github.com/plutocms/supabase/issues/45)) ([f6e54a6](https://github.com/plutocms/supabase/commit/f6e54a6d87ae12c197e467c6d271793ce0ae4b7f))
+* **migrations:** versioned per-file migration engine ([#46](https://github.com/plutocms/supabase/issues/46)) ([2e39d12](https://github.com/plutocms/supabase/commit/2e39d1255ada616ae55894bc2d363eb710d1a8dd))
+
+
+### Bug Fixes
+
+* close setup-wizard RCE, signup privilege escalation, and unguarded admin routes ([#43](https://github.com/plutocms/supabase/issues/43)) ([81c3c7e](https://github.com/plutocms/supabase/commit/81c3c7eb7c2dfa80b426d91d0330176298316be4))
+* **deps:** move @nuxt/eslint to dependencies ([#42](https://github.com/plutocms/supabase/issues/42)) ([11e5b1e](https://github.com/plutocms/supabase/commit/11e5b1eac80436af85a70252d25e22bda8bc3be2))
+* **navbar:** hide admin navbar on public auth pages ([f9b2a9e](https://github.com/plutocms/supabase/commit/f9b2a9e8db7c83f89c842565e359f794fb700143))
+* **types:** drop media.product_id from the committed type snapshot ([#44](https://github.com/plutocms/supabase/issues/44)) ([6b21506](https://github.com/plutocms/supabase/commit/6b215064c4f8538af097b71b4b5f1567de1d585e))
+
 ## [0.3.0](https://github.com/plutocms/supabase/compare/v0.2.2...v0.3.0) (2026-09-10)
 
 
