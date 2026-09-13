@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.1](https://github.com/plutocms/supabase/compare/v0.7.0...v0.7.1) (2026-09-13)
+
+
+### Bug Fixes
+
+* **permissions:** break the migrations-page bootstrap deadlock ([#55](https://github.com/plutocms/supabase/issues/55)) ([19f4338](https://github.com/plutocms/supabase/commit/19f43388827ba1f4699a2347726e56084c06f8ef))
+
 ## [0.7.0](https://github.com/plutocms/supabase/compare/v0.6.0...v0.7.0) (2026-09-12)
 
 
