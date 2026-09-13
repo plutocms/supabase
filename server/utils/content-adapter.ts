@@ -15,9 +15,23 @@ import { requireCapability } from './capability-guard'
  * is the one, deliberate place this file loses compile-time table/column
  * safety. See `.claude/skills/content-adapter/SKILL.md` for the full
  * write-up.
+ *
+ * Goes through `unknown` first: `serverSupabaseClient`'s inferred
+ * `Database` type is whichever layer's own generated types are in scope
+ * at the *call site* — this repo's own `shared/types/supabase.ts` when
+ * typechecked standalone, but a different consumer's own generated types
+ * when this file is typechecked as part of a deeper extends chain (a
+ * layer that extends this one, extending it in turn). A direct `as
+ * SupabaseClient` cast is only valid when the two concrete
+ * instantiations "sufficiently overlap"; a client typed against some
+ * other, unrelated `Database` shape does not, and TypeScript correctly
+ * refuses the direct assertion in that case. Routing through `unknown`
+ * is the standard, correct way to widen past that check on purpose —
+ * this cast has always been meant to discard the specific `Database`
+ * type, not to assert against one.
  */
 async function getClient(event: H3Event): Promise<SupabaseClient> {
-  return (await serverSupabaseClient(event)) as SupabaseClient
+  return (await serverSupabaseClient(event)) as unknown as SupabaseClient
 }
 
 /**
