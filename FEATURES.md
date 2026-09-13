@@ -10,3 +10,6 @@ policies shared by every project here.
   after initial setup. @.claude/skills/layer-migrations/SKILL.md
 - Permissions storage: role-based capabilities backing server route guards and RLS policies.
   @.claude/skills/permissions-storage/SKILL.md
+- Content adapter: a Supabase/PostgREST-backed `PlutoContentAdapter`, plugging any layer's
+  declared content type into `@plutocms/pluto`'s generic content routes.
+  @.claude/skills/content-adapter/SKILL.md
