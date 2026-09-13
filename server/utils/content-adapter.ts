@@ -145,6 +145,20 @@ async function list(ctx: PlutoContentContext, query: PlutoContentQuery): Promise
   }
 }
 
+/**
+ * 22P02 (invalid_text_representation): the value doesn't parse as the
+ * primary key column's own SQL type — for example a slug like
+ * "hello-world" against a `bigint` id column. This is not a real error:
+ * it means "not found by id, at the database level", the same outcome as
+ * a clean empty result, and `get()` must fall through to trying the slug
+ * column exactly as it would for an empty result. Postgres reports a type
+ * mismatch as an error rather than zero rows, so this has to be handled
+ * separately from the empty-result case, not folded into it.
+ */
+function isInvalidIdShape(error: PostgrestError): boolean {
+  return error.code === '22P02'
+}
+
 async function get(ctx: PlutoContentContext, idOrSlug: string | number): Promise<PlutoContentItem | null> {
   const client = await getClient(ctx.event)
   const pkColumn = ctx.type.primaryKey ?? 'id'
@@ -155,7 +169,7 @@ async function get(ctx: PlutoContentContext, idOrSlug: string | number): Promise
     .eq(pkColumn, idOrSlug)
     .maybeSingle()
 
-  if (error) {
+  if (error && !isInvalidIdShape(error)) {
     throw toContentError(error)
   }
 
@@ -188,14 +202,21 @@ async function create(ctx: PlutoContentContext, values: Record<string, unknown>)
   const client = await getClient(ctx.event)
   const row = mapFieldsToColumns(ctx.type, values)
 
+  // Status is not a declared field (see PlutoContentType.status — a
+  // separate, top-level concern from `fields`, unlike `slug`, which
+  // references a field also present in `fields`), so mapFieldsToColumns
+  // never sees it — it filters strictly to declared field names. A
+  // payload's status lives at the fixed conceptual key `status`,
+  // regardless of what `type.status.column` names in storage, mirroring
+  // how a field's own name (not its storage column) is the payload key
+  // everywhere else in this contract.
   const statusColumn = resolveStatusColumn(ctx.type)
-  if (
-    statusColumn
-    && ctx.type.status
-    && ctx.type.status.default !== undefined
-    && !Object.hasOwn(row, statusColumn)
-  ) {
-    row[statusColumn] = ctx.type.status.default
+  if (statusColumn) {
+    if (Object.hasOwn(values, 'status')) {
+      row[statusColumn] = values.status
+    } else if (ctx.type.status && ctx.type.status.default !== undefined) {
+      row[statusColumn] = ctx.type.status.default
+    }
   }
 
   // A client never controls its own creation timestamp. Always stamp it,
@@ -227,6 +248,14 @@ async function update(
   const pkColumn = ctx.type.primaryKey ?? 'id'
   const row = mapFieldsToColumns(ctx.type, values)
 
+  // See the matching comment in create(): status is not a declared field,
+  // so mapFieldsToColumns never sees it. Read it from the fixed
+  // conceptual key `status` in the raw payload.
+  const statusColumn = resolveStatusColumn(ctx.type)
+  if (statusColumn && Object.hasOwn(values, 'status')) {
+    row[statusColumn] = values.status
+  }
+
   // A client never controls its own update timestamp. Always stamp it,
   // overwriting anything the caller's payload tried to set.
   const updatedColumn = resolveTimestampColumn(ctx.type, 'updated')
@@ -237,7 +266,6 @@ async function update(
   // Published-at preservation, generalizing supabase-blog's hand-written
   // edit route: stamp published-at the first time a row is published, but
   // never overwrite an already-set value on a later edit.
-  const statusColumn = resolveStatusColumn(ctx.type)
   if (
     statusColumn
     && ctx.type.status
