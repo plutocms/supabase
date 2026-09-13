@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.3](https://github.com/plutocms/supabase/compare/v0.8.2...v0.8.3) (2026-09-13)
+
+
+### Bug Fixes
+
+* **deps:** ensure @plutocms/pluto ^0.10.0 range is published ([#67](https://github.com/plutocms/supabase/issues/67)) ([ed45ad3](https://github.com/plutocms/supabase/commit/ed45ad3a5b1ed4c4990a2272c48571c5e8eb5a92))
+
 ## [0.8.2](https://github.com/plutocms/supabase/compare/v0.8.1...v0.8.2) (2026-09-13)
 
 
