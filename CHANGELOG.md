@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.2](https://github.com/plutocms/supabase/compare/v0.7.1...v0.7.2) (2026-09-13)
+
+
+### Bug Fixes
+
+* **permissions:** make requireAdmin safe on a zero-migration database ([#58](https://github.com/plutocms/supabase/issues/58)) ([a83f6d0](https://github.com/plutocms/supabase/commit/a83f6d0bfa3ae150df5b90a06fcd29fe437ad9b7))
+
 ## [0.7.1](https://github.com/plutocms/supabase/compare/v0.7.0...v0.7.1) (2026-09-13)
 
 
