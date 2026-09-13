@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/plutocms/supabase/compare/v0.7.2...v0.8.0) (2026-09-13)
+
+
+### Features
+
+* **content:** add Supabase-backed PlutoContentAdapter (wave 4) ([#60](https://github.com/plutocms/supabase/issues/60)) ([834136d](https://github.com/plutocms/supabase/commit/834136d39f2297ad771cf00de5bc33f0e811a4b9))
+
 ## [0.7.2](https://github.com/plutocms/supabase/compare/v0.7.1...v0.7.2) (2026-09-13)
 
 
