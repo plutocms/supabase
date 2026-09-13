@@ -34,6 +34,16 @@ export async function requireAdmin(event: H3Event) {
   const client = await serverSupabaseClient<Database>(event)
   const { data, error } = await client.rpc('is_admin')
 
+  if (error) {
+    // A logged error here matters: an RPC error (permission denied, or the
+    // function itself missing) and "the function ran fine and returned
+    // false" both reach this branch, and both produce the same 403 to the
+    // caller on purpose — the response must not distinguish "you are not
+    // an admin" from "something is misconfigured" to an untrusted client.
+    // Server logs are where that distinction has to live instead.
+    console.error('is_admin() RPC failed:', error.message)
+  }
+
   if (error || data !== true) {
     throw createError({ statusCode: 403, statusMessage: 'Your account is not an admin.' })
   }
