@@ -1,0 +1,308 @@
+import type { PostgrestError, SupabaseClient } from '@supabase/supabase-js'
+import type { H3Event } from 'h3'
+import { serverSupabaseClient } from '#supabase/server'
+import { requireCapability } from './capability-guard'
+
+/**
+ * A Supabase client for one request, deliberately untyped.
+ *
+ * A content type's table name (`type.source`) is a plain runtime string —
+ * it is not known until a layer declares a content type, in a different
+ * repo, at that repo's build time. `serverSupabaseClient` defaults to
+ * this app's own `Database` type (see `shared/types/supabase.ts`), whose
+ * `.from()` only accepts this repo's own table names as literals. Casting
+ * to the bare `SupabaseClient` type (whose own generic defaults to `any`)
+ * is the one, deliberate place this file loses compile-time table/column
+ * safety. See `.claude/skills/content-adapter/SKILL.md` for the full
+ * write-up.
+ */
+async function getClient(event: H3Event): Promise<SupabaseClient> {
+  return (await serverSupabaseClient(event)) as SupabaseClient
+}
+
+/**
+ * Resolves the storage column for a content type's created/updated
+ * timestamp. Returns `undefined` when timestamps are disabled entirely
+ * (`type.timestamps === false`) or when this one timestamp is disabled
+ * (`type.timestamps[key] === false`).
+ */
+export function resolveTimestampColumn(
+  type: PlutoContentType,
+  key: 'created' | 'updated'
+): string | undefined {
+  if (type.timestamps === false) {
+    return undefined
+  }
+
+  const configured = type.timestamps?.[key]
+
+  if (configured === false) {
+    return undefined
+  }
+
+  return configured ?? (key === 'created' ? 'created_at' : 'updated_at')
+}
+
+/**
+ * Resolves the storage column for a content type's status field. Returns
+ * `undefined` when status is disabled entirely (`type.status === false`
+ * or unset).
+ */
+export function resolveStatusColumn(type: PlutoContentType): string | undefined {
+  if (!type.status) {
+    return undefined
+  }
+
+  return type.status.column ?? 'status'
+}
+
+/**
+ * Maps a raw PostgREST error to an H3/Nuxt error safe to send to a
+ * client. Logs the raw error first, so the real message always reaches
+ * server logs even when the client-facing message is generic. No return
+ * type annotation: `createError`'s own return type (`NuxtError`) is left
+ * to flow through, rather than restated here.
+ */
+export function toContentError(error: PostgrestError) {
+  console.error('[content-adapter] Postgres error:', error)
+
+  // 23505: unique_violation.
+  if (error.code === '23505') {
+    return createError({
+      statusCode: 409,
+      statusMessage: 'A record with this value already exists.',
+    })
+  }
+
+  // 23503: foreign_key_violation.
+  if (error.code === '23503') {
+    return createError({
+      statusCode: 400,
+      statusMessage: 'This references a record that does not exist.',
+    })
+  }
+
+  return createError({ statusCode: 500, statusMessage: error.message })
+}
+
+/** Resolves a field's storage column by name, warning and falling back to the raw name when the field is missing. This signals a misconfigured content type. */
+function resolveFieldColumn(type: PlutoContentType, fieldName: string, context: string): string {
+  const field = type.fields.find((candidate) => candidate.name === fieldName)
+
+  if (field) {
+    return fieldColumn(field)
+  }
+
+  console.warn(
+    `[content-adapter] Content type "${type.name}" has no field named "${fieldName}" (${context}). Falling back to the raw name as the column.`
+  )
+
+  return fieldName
+}
+
+async function list(ctx: PlutoContentContext, query: PlutoContentQuery): Promise<PlutoContentListResult> {
+  const client = await getClient(ctx.event)
+  const pkColumn = ctx.type.primaryKey ?? 'id'
+
+  let builder = client.from(ctx.type.source).select('*', { count: 'exact' })
+
+  const statusColumn = resolveStatusColumn(ctx.type)
+  if (statusColumn && query.includeUnpublished !== true) {
+    const publishedValue = (ctx.type.status && ctx.type.status.publishedValue) || 'published'
+    builder = builder.eq(statusColumn, publishedValue)
+  }
+
+  if (query.search) {
+    const titleColumn = resolveFieldColumn(ctx.type, ctx.type.titleField, 'titleField')
+    builder = builder.ilike(titleColumn, `%${query.search}%`)
+  }
+
+  const sort = query.sort ?? ctx.type.defaultSort
+  if (sort) {
+    const sortColumn = resolveFieldColumn(ctx.type, sort.field, 'sort')
+    builder = builder.order(sortColumn, { ascending: sort.direction !== 'desc' })
+  } else {
+    const createdColumn = resolveTimestampColumn(ctx.type, 'created')
+    builder = builder.order(createdColumn ?? pkColumn, { ascending: false })
+  }
+
+  if (query.offset !== undefined) {
+    const limit = query.limit ?? 50
+    builder = builder.range(query.offset, query.offset + limit - 1)
+  } else if (query.limit !== undefined) {
+    builder = builder.limit(query.limit)
+  }
+
+  const { data, error, count } = await builder
+
+  if (error) {
+    throw toContentError(error)
+  }
+
+  return {
+    data: (data ?? []).map((row: Record<string, unknown>) => mapColumnsToFields(ctx.type, row)),
+    total: count ?? undefined,
+  }
+}
+
+async function get(ctx: PlutoContentContext, idOrSlug: string | number): Promise<PlutoContentItem | null> {
+  const client = await getClient(ctx.event)
+  const pkColumn = ctx.type.primaryKey ?? 'id'
+
+  const { data, error } = await client
+    .from(ctx.type.source)
+    .select('*')
+    .eq(pkColumn, idOrSlug)
+    .maybeSingle()
+
+  if (error) {
+    throw toContentError(error)
+  }
+
+  if (data) {
+    return mapColumnsToFields(ctx.type, data)
+  }
+
+  if (ctx.type.slug) {
+    const slugColumn = resolveFieldColumn(ctx.type, ctx.type.slug.field, 'slug.field')
+
+    const bySlug = await client
+      .from(ctx.type.source)
+      .select('*')
+      .eq(slugColumn, idOrSlug)
+      .maybeSingle()
+
+    if (bySlug.error) {
+      throw toContentError(bySlug.error)
+    }
+
+    if (bySlug.data) {
+      return mapColumnsToFields(ctx.type, bySlug.data)
+    }
+  }
+
+  return null
+}
+
+async function create(ctx: PlutoContentContext, values: Record<string, unknown>): Promise<PlutoContentItem> {
+  const client = await getClient(ctx.event)
+  const row = mapFieldsToColumns(ctx.type, values)
+
+  const statusColumn = resolveStatusColumn(ctx.type)
+  if (
+    statusColumn
+    && ctx.type.status
+    && ctx.type.status.default !== undefined
+    && !Object.hasOwn(row, statusColumn)
+  ) {
+    row[statusColumn] = ctx.type.status.default
+  }
+
+  // A client never controls its own creation timestamp. Always stamp it,
+  // overwriting anything the caller's payload tried to set.
+  const createdColumn = resolveTimestampColumn(ctx.type, 'created')
+  if (createdColumn) {
+    row[createdColumn] = new Date().toISOString()
+  }
+
+  const { data, error } = await client
+    .from(ctx.type.source)
+    .insert(row)
+    .select('*')
+    .single()
+
+  if (error) {
+    throw toContentError(error)
+  }
+
+  return mapColumnsToFields(ctx.type, data)
+}
+
+async function update(
+  ctx: PlutoContentContext,
+  id: string | number,
+  values: Record<string, unknown>
+): Promise<PlutoContentItem> {
+  const client = await getClient(ctx.event)
+  const pkColumn = ctx.type.primaryKey ?? 'id'
+  const row = mapFieldsToColumns(ctx.type, values)
+
+  // A client never controls its own update timestamp. Always stamp it,
+  // overwriting anything the caller's payload tried to set.
+  const updatedColumn = resolveTimestampColumn(ctx.type, 'updated')
+  if (updatedColumn) {
+    row[updatedColumn] = new Date().toISOString()
+  }
+
+  // Published-at preservation, generalizing supabase-blog's hand-written
+  // edit route: stamp published-at the first time a row is published, but
+  // never overwrite an already-set value on a later edit.
+  const statusColumn = resolveStatusColumn(ctx.type)
+  if (
+    statusColumn
+    && ctx.type.status
+    && ctx.type.status.publishedAtColumn
+    && row[statusColumn] === ctx.type.status.publishedValue
+  ) {
+    const publishedAtColumn = ctx.type.status.publishedAtColumn
+    // Selects the whole row rather than the one dynamic column name:
+    // postgrest-js parses a `select()` argument at the type level, and a
+    // non-literal (runtime) column name resolves to its own
+    // `GenericStringError` type instead of a usable row shape.
+    const { data: existing, error: fetchError } = await client
+      .from(ctx.type.source)
+      .select('*')
+      .eq(pkColumn, id)
+      .maybeSingle()
+
+    if (fetchError) {
+      throw toContentError(fetchError)
+    }
+
+    if (existing && (existing as Record<string, unknown>)[publishedAtColumn] == null) {
+      row[publishedAtColumn] = new Date().toISOString()
+    }
+  }
+
+  const { data, error } = await client
+    .from(ctx.type.source)
+    .update(row)
+    .eq(pkColumn, id)
+    .select('*')
+    .single()
+
+  if (error) {
+    throw toContentError(error)
+  }
+
+  return mapColumnsToFields(ctx.type, data)
+}
+
+async function remove(ctx: PlutoContentContext, id: string | number): Promise<void> {
+  const client = await getClient(ctx.event)
+  const pkColumn = ctx.type.primaryKey ?? 'id'
+
+  const { error } = await client.from(ctx.type.source).delete().eq(pkColumn, id)
+
+  if (error) {
+    throw toContentError(error)
+  }
+}
+
+/** Delegates straight to `requireCapability`, unchanged. */
+async function authorize(event: H3Event, capability: string): Promise<void> {
+  await requireCapability(event, capability)
+}
+
+/** Builds the Supabase/PostgREST-backed `PlutoContentAdapter`. Register it with `registerContentAdapter` from a `server/plugins/*.ts` file. */
+export function createSupabaseContentAdapter(): PlutoContentAdapter {
+  return {
+    id: 'supabase',
+    list,
+    get,
+    create,
+    update,
+    remove,
+    authorize,
+  }
+}
