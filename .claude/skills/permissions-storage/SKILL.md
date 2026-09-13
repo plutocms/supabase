@@ -9,12 +9,39 @@ user hold this capability?" It adds:
   `public.is_admin()` rewrite, and the `handle_new_user()` update.
 - `server/utils/capability-guard.ts` — `requireCapability(event, capability, options?)`, gates a
   server route on a named capability.
-- `server/utils/admin-guard.ts` — `requireAdmin(event)`, now a thin alias over
-  `requireCapability` for the wildcard capability. Same name, same 401/403 behavior as before.
+- `server/utils/admin-guard.ts` — `requireAdmin(event)`, unchanged: still calls
+  `public.is_admin()` directly, never through `requireCapability`. See "Why migrations stay
+  admin-only" below for why this one route deliberately does not use the capability system.
 - `server/api/permissions/me.get.ts` — the calling user's own capability list. Backs the client
-  `usePlutoPermissions()` composable's `load()`.
+  `usePlutoPermissions()` composable's `load()`. Returns an empty list, not a 500, when
+  `public.my_capabilities()` does not exist yet (a site that has not applied this migration yet)
+  — see "Why migrations stay admin-only" below.
 - `app/plugins/pluto-extension.ts` — registers this layer's own capabilities
-  (`settings:manage`, `users:read`, `system:migrate`) and its `permissionsDriver`.
+  (`settings:manage`, `users:read`) and its `permissionsDriver`.
+
+## Why migrations stay admin-only
+
+`server/api/migrations/status.get.ts` and `run.post.ts` call `requireAdmin(event)`, never a named
+capability. This is deliberate, not an oversight.
+
+`public.has_capability()` and `public.my_capabilities()` are defined by
+`004_roles_and_capabilities.sql`. A site that has upgraded this package's version but has not yet
+applied that migration has neither function in its database. If the migrations routes — the only
+routes that can apply a pending migration — required a named capability
+(`requireCapability(event, 'system:migrate')`, an approach this project tried and reverted), the
+call to `has_capability()` would fail because the function does not exist, 403ing the admin out of
+the one page that would let them fix it. No route in this system may ever depend on a migration
+that route exists to apply.
+
+`requireAdmin` avoids this because it calls `public.is_admin()` directly, not through
+`has_capability()`. `is_admin()` has existed since `002_admin_hardening.sql` and is only ever
+`create or replace`d, never dropped — it is always safe to call, regardless of which migrations
+have run. Before `004` runs, it checks only the legacy `profiles.is_admin` column; after `004`
+runs (and redefines it), it also recognizes the `admin` role. Either way, an existing admin can
+always reach `/admin/migrations` and apply what is pending.
+
+There is no `system:migrate` capability. Do not add one and re-gate the migrations routes on it —
+this is the exact mistake this section documents undoing.
 
 ## The three tables
 
@@ -106,7 +133,8 @@ logged in but lacks the capability. The check itself runs in the database, throu
 own session — the server never passes a user id into it.
 
 `requireAdmin(event)` still works, unchanged, for a route that needs "admin, full stop" rather
-than one named capability. It is `requireCapability(event, '*')` under the hood.
+than one named capability. It does NOT call `requireCapability` — it calls `public.is_admin()`
+directly. See "Why migrations stay admin-only" above for why that distinction matters.
 
 ## Client-side: `usePlutoPermissions()`
 

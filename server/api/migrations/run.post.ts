@@ -1,6 +1,6 @@
 import type { PlutoMigrationFile } from '../../../shared/types/migrations'
 import type { MigrationFileResult } from '../../utils/migrations'
-import { requireCapability } from '../../utils/capability-guard'
+import { requireAdmin } from '../../utils/admin-guard'
 import { persistDatabaseUrl } from '../../utils/env-file'
 import { resolveConnectionString, runPendingMigrations } from '../../utils/migrations'
 import { scrubConnectionString } from '../../utils/scrub-connection-string'
@@ -11,7 +11,10 @@ interface Payload {
 }
 
 export default defineEventHandler(async (event) => {
-  await requireCapability(event, 'system:migrate')
+  // requireAdmin specifically, not a named capability — see admin-guard.ts
+  // for why: this route must work even before 004_roles_and_capabilities.sql
+  // (which defines the capability system) has been applied.
+  await requireAdmin(event)
 
   const body = await readBody<Payload | undefined>(event)
 

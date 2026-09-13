@@ -36,10 +36,12 @@ export default defineNuxtPlugin(() => {
         hasSettingsModified.value = Date.now()
       },
     },
+    // No 'system:migrate' capability: applying migrations stays admin-only,
+    // gated by requireAdmin (public.is_admin() directly), never a named
+    // capability — see server/utils/admin-guard.ts for why.
     capabilities: [
       { id: 'settings-manage', key: 'settings:manage', label: 'Manage site settings' },
       { id: 'users-read', key: 'users:read', label: 'View all user accounts' },
-      { id: 'system-migrate', key: 'system:migrate', label: 'Apply pending layer migrations' },
     ],
     permissionsDriver: {
       id: 'supabase',
