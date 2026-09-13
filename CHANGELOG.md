@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.1](https://github.com/plutocms/supabase/compare/v0.8.0...v0.8.1) (2026-09-13)
+
+
+### Bug Fixes
+
+* **content:** widen the adapter's client cast through unknown ([#62](https://github.com/plutocms/supabase/issues/62)) ([f539958](https://github.com/plutocms/supabase/commit/f539958ac062ebd3d295731e419801d5ade6861c))
+
 ## [0.8.0](https://github.com/plutocms/supabase/compare/v0.7.2...v0.8.0) (2026-09-13)
 
 
