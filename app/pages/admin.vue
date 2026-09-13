@@ -8,19 +8,11 @@ const route = useRoute()
 const { isLoggedIn, logout, allowedUnauthenticatedPaths } = await useAuth()
 const toast = useToast()
 
-const { load: loadPermissions, clear: clearPermissions } = usePlutoPermissions()
-
-watch(
-  isLoggedIn,
-  (loggedIn) => {
-    if (loggedIn) {
-      loadPermissions()
-    } else {
-      clearPermissions()
-    }
-  },
-  { immediate: true }
-)
+// Loading/clearing permissions on login/logout lives in
+// app/plugins/pluto-permissions-sync.ts now, not here — that plugin runs
+// on every page, not just this one, so a signed-in admin browsing a public
+// page directly (no prior visit to /admin/** this session) still gets
+// their capabilities loaded.
 
 const visibility = useDocumentVisibility()
 

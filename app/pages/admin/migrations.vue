@@ -30,6 +30,13 @@ const connectionForm = ref({
 })
 
 const isRunning = ref(false)
+// True only while waitForServerAndRefresh is polling through a dev-server
+// restart. useMigrations().status reads as null on every failed poll in
+// that window (see its own doc comment), which would otherwise leave the
+// page blank below the title — the toasts alone are easy to miss. The
+// template shows a persistent banner instead, keyed on this flag, so the
+// page always explains what is happening instead of going quiet.
+const isReconnecting = ref(false)
 const lastRun = ref<Awaited<ReturnType<typeof runMigrations>> | null>(null)
 // Kept only in this page's own memory, only to show the manual .env step if
 // persisting fails — see EnvPersistWarning.vue. Never sent anywhere new.
@@ -118,7 +125,11 @@ async function applyMigrations(useForm: boolean) {
         color: 'info',
       })
 
+      isReconnecting.value = true
+
       const recovered = await waitForServerAndRefresh()
+
+      isReconnecting.value = false
 
       toast.add(
         recovered
@@ -163,7 +174,19 @@ async function applyMigrations(useForm: boolean) {
   <AdminView>
     <h1 class="text-3xl font-bold lg:text-4xl">Migrations</h1>
 
-    <div v-if="fetchStatus === 'pending'" class="flex items-center gap-x-2">
+    <UAlert
+      v-if="isReconnecting"
+      color="info"
+      variant="outline"
+      icon="lucide:refresh-cw"
+      title="Dev server restarting"
+      description="Saving a new connection string restarts the dev server. Reconnecting — this page will update on its own once it's back."
+    />
+
+    <div
+      v-else-if="fetchStatus === 'pending'"
+      class="flex items-center gap-x-2"
+    >
       <Icon name="svg-spinners:ring-resize" />
       <span>Loading migration status…</span>
     </div>
@@ -340,5 +363,25 @@ async function applyMigrations(useForm: boolean) {
         </div>
       </UCard>
     </template>
+
+    <UAlert
+      v-else
+      color="error"
+      variant="outline"
+      icon="lucide:circle-x"
+      title="Could not load migration status"
+      description="This isn't the dev-server-restart case above — something else went wrong reading migration status. Check the server console, then try again."
+    >
+      <template #actions>
+        <UButton
+          color="error"
+          variant="outline"
+          icon="lucide:refresh-cw"
+          @click="refresh()"
+        >
+          Retry
+        </UButton>
+      </template>
+    </UAlert>
   </AdminView>
 </template>
