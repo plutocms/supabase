@@ -1,14 +1,20 @@
 import type { PlutoMigrationFile } from '../../../shared/types/migrations'
 import type { MigrationFileResult } from '../../utils/migrations'
+import { z } from 'zod'
 import { requireAdmin } from '../../utils/admin-guard'
 import { persistDatabaseUrl } from '../../utils/env-file'
 import { resolveConnectionString, runPendingMigrations } from '../../utils/migrations'
 import { scrubConnectionString } from '../../utils/scrub-connection-string'
 import { regenerateSupabaseTypes } from '../../utils/typegen'
+import { parseBody } from '../../utils/validate'
 
-interface Payload {
-  connectionString?: string
-}
+// The whole body is optional: an already-configured DATABASE_URL means the
+// caller need not (and, per resolveConnectionString, cannot) supply one.
+const runMigrationsSchema = z
+  .object({
+    connectionString: z.string().trim().min(1, 'Connection string must not be empty.').optional(),
+  })
+  .optional()
 
 export default defineEventHandler(async (event) => {
   // requireAdmin specifically, not a named capability — see admin-guard.ts
@@ -16,7 +22,7 @@ export default defineEventHandler(async (event) => {
   // (which defines the capability system) has been applied.
   await requireAdmin(event)
 
-  const body = await readBody<Payload | undefined>(event)
+  const body = await parseBody(event, runMigrationsSchema)
 
   // Connection string precedence: an already-configured DATABASE_URL always
   // wins, and a body-supplied string is ignored completely in that case.

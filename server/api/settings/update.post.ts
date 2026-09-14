@@ -1,5 +1,7 @@
 import { serverSupabaseClient } from '#supabase/server'
+import { z } from 'zod'
 import { requireCapability } from '../../utils/capability-guard'
+import { parseBody } from '../../utils/validate'
 
 // A key is lowercase segments separated by dots, e.g. 'website_title' or
 // 'blog.posts_per_page'. Mirrors the settings_setting_key_format check
@@ -10,43 +12,26 @@ import { requireCapability } from '../../utils/capability-guard'
 const SETTING_KEY_PATTERN = /^[a-z0-9_]+(?:\.[a-z0-9_]+)*$/
 const MAX_SETTING_VALUE_LENGTH = 10_000
 
+const settingsUpdateSchema = z.record(
+  z
+    .string()
+    .regex(
+      SETTING_KEY_PATTERN,
+      'Setting key must use lowercase letters, digits, underscores, and dot-separated segments.'
+    ),
+  z.string().max(MAX_SETTING_VALUE_LENGTH, 'Setting value is too long.')
+)
+
 export default defineEventHandler(async (event) => {
   await requireCapability(event, 'settings:manage')
 
   const client = await serverSupabaseClient<Database>(event)
-  const body = await readBody<Record<string, unknown>>(event)
+  const body = await parseBody(event, settingsUpdateSchema)
 
-  if (!body || typeof body !== 'object') {
-    throw createError({ statusCode: 400, statusMessage: 'No payload sent.' })
-  }
-
-  const transformed = Object.entries(body).map(([key, value]) => {
-    if (!SETTING_KEY_PATTERN.test(key)) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: `Invalid setting key: ${key}`,
-      })
-    }
-
-    if (typeof value !== 'string') {
-      throw createError({
-        statusCode: 400,
-        statusMessage: `Setting "${key}" must be a string.`,
-      })
-    }
-
-    if (value.length > MAX_SETTING_VALUE_LENGTH) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: `Setting "${key}" is too long.`,
-      })
-    }
-
-    return {
-      setting_key: key,
-      setting_value: value,
-    }
-  })
+  const transformed = Object.entries(body).map(([key, value]) => ({
+    setting_key: key,
+    setting_value: value,
+  }))
 
   const { data, error } = await client
     .from('settings')

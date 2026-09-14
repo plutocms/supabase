@@ -1,23 +1,22 @@
 import { serverSupabaseClient } from '#supabase/server'
+import { z } from 'zod'
+import { parseBody } from '../../utils/validate'
 
-interface Payload {
-  username: string
-  display_name: string
-  email: string
-  password: string
-}
+// Supabase Auth (GoTrue) rejects a password under 6 characters with its own
+// opaque error. Matching that minimum here turns an empty/short password
+// into the same clean 400 shape as every other validation failure, instead
+// of a raw auth-service error reaching the caller.
+const signupSchema = z.object({
+  username: z.string().trim().min(3, 'Username must be at least 3 characters.').max(100),
+  display_name: z.string().trim().min(1, 'Display name is required.').max(200),
+  email: z.string().trim().email('Email must be a valid email address.'),
+  password: z.string().min(6, 'Password must be at least 6 characters.'),
+})
 
 export default defineEventHandler(async (event) => {
   const client = await serverSupabaseClient<Database>(event)
 
-  const body = await readBody<Payload>(event)
-
-  if (!body.username || body.username.length < 3) {
-    return {
-      success: false,
-      message: 'Username must be at least 3 characters.',
-    }
-  }
+  const body = await parseBody(event, signupSchema)
 
   const { data, error } = await client.auth.signUp({
     email: body.email,

@@ -1,12 +1,18 @@
 import type { PlutoMigrationFile } from '../../../shared/types/migrations'
 import postgres from 'postgres'
+import { z } from 'zod'
 import { persistDatabaseUrl } from '../../utils/env-file'
 import { runPendingMigrations } from '../../utils/migrations'
 import { scrubConnectionString } from '../../utils/scrub-connection-string'
+import { parseBody } from '../../utils/validate'
 
-interface Payload {
-  connectionString: string
-}
+// Only checks that a connection string was actually sent. A Postgres
+// connection string can take many valid forms (postgres:// URL, key=value
+// DSN, and so on), so this route's real security model is the
+// DATABASE_URL precedence check above, not a stricter format check here.
+const setupSchema = z.object({
+  connectionString: z.string().trim().min(1, 'Connection string must not be empty.'),
+})
 
 export default defineEventHandler(async (event) => {
   // An already-configured DATABASE_URL means setup has already completed.
@@ -23,7 +29,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const body = await readBody<Payload>(event)
+  const body = await parseBody(event, setupSchema)
 
   const config = useRuntimeConfig()
   // Nuxt's schema inference narrows `plutoLayerMigrations` to whatever
