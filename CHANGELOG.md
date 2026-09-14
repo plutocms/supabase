@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.4](https://github.com/plutocms/supabase/compare/v0.8.3...v0.8.4) (2026-09-14)
+
+
+### Bug Fixes
+
+* **security:** validate request bodies with zod ([#69](https://github.com/plutocms/supabase/issues/69)) ([94f179b](https://github.com/plutocms/supabase/commit/94f179bbfdd67a55c18764a5bf6fde0cc6635936))
+
 ## [0.8.3](https://github.com/plutocms/supabase/compare/v0.8.2...v0.8.3) (2026-09-13)
 
 
