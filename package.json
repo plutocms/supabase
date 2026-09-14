@@ -42,7 +42,8 @@
     "@plutocms/pluto": "^0.10.0",
     "@plutocms/utils": "^0.2.1",
     "postgres": "^3.4.9",
-    "supabase": "^2.109.1"
+    "supabase": "^2.109.1",
+    "zod": "^4.6.4"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^6.2.0",
