@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.5](https://github.com/plutocms/supabase/compare/v0.8.4...v0.8.5) (2026-10-16)
+
+
+### Bug Fixes
+
+* **deps:** upgrade dependencies ([#71](https://github.com/plutocms/supabase/issues/71)) ([95845ea](https://github.com/plutocms/supabase/commit/95845ea1a50b38103c8bd491858958f27c20cb02))
+
 ## [0.8.4](https://github.com/plutocms/supabase/compare/v0.8.3...v0.8.4) (2026-09-14)
 
 
