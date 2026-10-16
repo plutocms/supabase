@@ -1,5 +1,5 @@
-import { serverSupabaseClient } from '#supabase/server'
 import { z } from 'zod'
+import { serverSupabaseClient } from '#supabase/server'
 import { requireCapability } from '../../utils/capability-guard'
 import { parseBody } from '../../utils/validate'
 

@@ -1,5 +1,5 @@
-import { serverSupabaseClient } from '#supabase/server'
 import { z } from 'zod'
+import { serverSupabaseClient } from '#supabase/server'
 import { parseBody } from '../../utils/validate'
 
 // Supabase Auth (GoTrue) rejects a password under 6 characters with its own
