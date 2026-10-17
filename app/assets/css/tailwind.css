@@ -1,6 +1,0 @@
-@import '@nuxt/ui';
-@import 'tailwindcss';
-
-@source '../..';
-@source '../../../node_modules/.c12/*/app/**';
-@source '@plutocms/pluto/app/**/*';
