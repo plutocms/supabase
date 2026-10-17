@@ -55,9 +55,9 @@ const items = computed<DropdownItems>(() => [
       label: userMenuLabel.value,
       avatar: {
         icon: 'lucide:user',
-        class: 'bg-green-600',
+        class: 'bg-primary',
         ui: {
-          icon: 'text-white text-sm',
+          icon: 'text-inverted text-sm',
         },
       },
       type: 'label',
@@ -155,7 +155,7 @@ defineShortcuts(extractShortcuts(items.value))
               <template #fallback>
                 <li class="h-full">
                   <div
-                    class="light:text-zinc-800/50 flex h-full items-center gap-x-2 rounded-sm px-2 text-white/50"
+                    class="text-dimmed flex h-full items-center gap-x-2 rounded-sm px-2"
                   >
                     <Icon name="svg-spinners:ring-resize" />
                   </div>
@@ -185,21 +185,21 @@ defineShortcuts(extractShortcuts(items.value))
               type="button"
             >
               <div
-                class="flex h-full items-center gap-x-2 rounded-sm rounded-l-xl pr-2 pl-0.5 group-hover:bg-white/20"
+                class="flex h-full items-center gap-x-2 rounded-sm rounded-l-xl pr-2 pl-0.5 group-hover:bg-elevated"
               >
                 <UAvatar
                   :ui="{
                     root: 'rounded-xl',
-                    icon: 'text-white text-lg',
+                    icon: 'text-inverted text-lg',
                   }"
                   :alt="displayName"
                   size="sm"
                   icon="lucide:user"
-                  class="bg-green-600"
+                  class="bg-primary"
                 />
 
                 <span
-                  class="light:text-zinc-800 hidden text-sm font-bold dark:text-white lg:inline"
+                  class="text-highlighted hidden text-sm font-semibold lg:inline"
                 >
                   {{ shortDisplayName }}
                 </span>

@@ -331,6 +331,35 @@ async function remove(ctx: PlutoContentContext, id: string | number): Promise<vo
   }
 }
 
+/**
+ * Counts the rows created in `[range.from, range.to)` with one exact-count
+ * HEAD query: no rows come back, so it is not capped by the PostgREST row
+ * limit. Row Level Security applies as usual. Returns `null` when the type
+ * has no created timestamp column.
+ */
+async function countCreated(
+  ctx: PlutoContentContext,
+  range: { from: string, to: string }
+): Promise<number | null> {
+  const createdColumn = resolveTimestampColumn(ctx.type, 'created')
+  if (!createdColumn) {
+    return null
+  }
+
+  const client = await getClient(ctx.event)
+  const { count, error } = await client
+    .from(ctx.type.source)
+    .select('*', { count: 'exact', head: true })
+    .gte(createdColumn, range.from)
+    .lt(createdColumn, range.to)
+
+  if (error) {
+    throw toContentError(error)
+  }
+
+  return count ?? 0
+}
+
 /** Delegates straight to `requireCapability`, unchanged. */
 async function authorize(event: H3Event, capability: string): Promise<void> {
   await requireCapability(event, capability)
@@ -346,5 +375,6 @@ export function createSupabaseContentAdapter(): PlutoContentAdapter {
     update,
     remove,
     authorize,
+    countCreated,
   }
 }
