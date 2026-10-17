@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.9.0](https://github.com/plutocms/supabase/compare/v0.8.6...v0.9.0) (2026-10-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* **content:** This layer no longer adds a Tailwind entry. The app's CSS entry must start with:
+
+### Features
+
+* **content:** count created items, use the admin theme, and drop the Tailwind entry ([#75](https://github.com/plutocms/supabase/issues/75)) ([ae4665a](https://github.com/plutocms/supabase/commit/ae4665aa050564ad6fa36362add604e52828097c))
+
 ## [0.8.6](https://github.com/plutocms/supabase/compare/v0.8.5...v0.8.6) (2026-10-17)
 
 
