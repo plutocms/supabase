@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.6](https://github.com/plutocms/supabase/compare/v0.8.5...v0.8.6) (2026-10-17)
+
+
+### Bug Fixes
+
+* **deps:** drop the typescript devDependency that conflicts with overrides ([#73](https://github.com/plutocms/supabase/issues/73)) ([7521b09](https://github.com/plutocms/supabase/commit/7521b096485d085999bce553da937ff22d5dc98e))
+
 ## [0.8.5](https://github.com/plutocms/supabase/compare/v0.8.4...v0.8.5) (2026-10-16)
 
 
