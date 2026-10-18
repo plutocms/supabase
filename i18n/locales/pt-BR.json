@@ -1,0 +1,7 @@
+{
+  "supabase": {
+    "profile": {
+      "migrationPending": "Aplique as migrações pendentes do banco de dados para salvar seu idioma."
+    }
+  }
+}

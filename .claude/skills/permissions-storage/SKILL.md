@@ -147,6 +147,18 @@ button does not stop a direct API call; only the guard does.
 `app/pages/admin.vue` calls `load()` when the user logs in, and `clear()` when they log out,
 watching `isLoggedIn` the same way it already watches `visibility` for other purposes.
 
+## Why `profiles` has no UPDATE policy
+
+`public.profiles` has a select policy and no UPDATE policy, on purpose. A user who could update
+their own row could also set `is_admin` to `true`. When a user must change one column of their
+own row, add a `security definer` function that writes only that column for `auth.uid()`. Do
+not add an UPDATE policy.
+
+`005_profile_locale.sql` follows this rule. It adds the column `profiles.locale` and the
+function `public.set_my_locale(new_locale text)`. The function has an empty `search_path`.
+`execute` is revoked from `public` and `anon` and granted to `authenticated`. A user reads
+their own `locale` through the existing select policy. See the `profile-language` skill.
+
 ## Known follow-up, not built in this feature
 
 - **Per-row ownership.** There is no way to grant "edit only your own posts" as a capability. A

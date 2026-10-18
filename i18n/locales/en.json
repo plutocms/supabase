@@ -1,0 +1,7 @@
+{
+  "supabase": {
+    "profile": {
+      "migrationPending": "Apply the pending database migrations to save your language."
+    }
+  }
+}

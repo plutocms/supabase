@@ -113,6 +113,17 @@ directory:
   same way `db/migrations/001_baseline.sql` and `002_admin_hardening.sql` already do — this
   keeps a partially-applied file (see the no-transaction case above) safe to retry.
 
+## Migration 005: the profile language
+
+`db/migrations/005_profile_locale.sql` adds `profiles.locale` (nullable text, null means
+Automatic) and the check `profiles_locale_format`. The check is added `not valid`, behind a
+guard, and then validated, the same way `003_settings_generic_keys.sql` does it. The file also
+creates `public.set_my_locale(text)`, a `security definer` function. It is the only writer of
+the column. The migration adds no RLS policy. See the `profile-language` skill.
+
+The routes `/api/profile/locale` do not fail when this migration is pending. The GET route
+returns no locale. The POST route answers 409 with the key `supabase.profile.migrationPending`.
+
 ## `.env` persistence caveat
 
 `persistDatabaseUrl` writes to `resolve(process.cwd(), '.env')`. `process.cwd()` may not be

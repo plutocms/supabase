@@ -2,6 +2,10 @@ import NavbarAdminProvider from '../components/navbar/NavbarAdminProvider.vue'
 import SettingsGeneralPanel from '../components/settings/SettingsGeneralPanel.vue'
 
 export default defineNuxtPlugin(() => {
+  // Read at setup, while the Nuxt context exists. The driver below calls it
+  // later, after an await, when the context is gone.
+  const errorText = usePlutoErrorText()
+
   definePlutoExtension({
     id: 'supabase',
     navbar: { id: 'admin-navbar', component: NavbarAdminProvider },
@@ -43,6 +47,23 @@ export default defineNuxtPlugin(() => {
       { id: 'settings-manage', key: 'settings:manage', label: 'Manage site settings' },
       { id: 'users-read', key: 'users:read', label: 'View all user accounts' },
     ],
+    // The admin language of the signed-in user, stored in profiles.locale
+    // (005_profile_locale.sql). A save error carries the translated server
+    // text, so the Settings language card can show it in a toast.
+    localeDriver: {
+      id: 'supabase',
+      load: async () => {
+        const response = await $fetch<{ locale: string | null }>('/api/profile/locale')
+        return response.locale
+      },
+      save: async (locale) => {
+        try {
+          await $fetch('/api/profile/locale', { method: 'POST', body: { locale } })
+        } catch (error) {
+          throw new Error(errorText(error))
+        }
+      },
+    },
     permissionsDriver: {
       id: 'supabase',
       load: async () => {
