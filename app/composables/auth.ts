@@ -29,6 +29,11 @@ export const allowedUnauthenticatedPaths: RouteLocationRaw[] = [
 
 export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
   const toast = useToast()
+  // Read at setup, while the Nuxt context exists. The functions below run
+  // later, after an await, when the context is gone.
+  const { t, te } = usePlutoI18n()
+  const authErrorText = (error: unknown) =>
+    resolveAuthErrorText(error, { t, te })
 
   const supabase = useSupabaseClient()
   const supabaseSession = useSupabaseSession()
@@ -79,8 +84,8 @@ export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
         console.error(`Error signing in user: ${error?.message}`)
 
         toast.add({
-          title: 'Could not log in',
-          description: error?.message,
+          title: t('supabase.auth.toasts.loginFailed'),
+          description: authErrorText(error),
           icon: 'lucide:circle-x',
           color: 'error',
         })
@@ -133,7 +138,7 @@ export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
       console.warn(`User logged out`)
 
       toast.add({
-        title: 'Logged out successfully',
+        title: t('supabase.auth.toasts.loggedOut'),
         icon: 'lucide:check',
         color: 'success',
       })
@@ -160,8 +165,8 @@ export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
 
       if (error) {
         toast.add({
-          title: 'Could not send reset email',
-          description: error.message,
+          title: t('supabase.auth.toasts.resetFailed'),
+          description: authErrorText(error),
           icon: 'lucide:circle-x',
           color: 'error',
         })
@@ -172,9 +177,8 @@ export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
       return { success: true }
     } catch (error) {
       toast.add({
-        title: 'Could not send reset email',
-        description:
-          error instanceof Error ? error.message : 'An unknown error occurred.',
+        title: t('supabase.auth.toasts.resetFailed'),
+        description: authErrorText(error),
         icon: 'lucide:circle-x',
         color: 'error',
       })
@@ -193,8 +197,8 @@ export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
 
       if (error) {
         toast.add({
-          title: 'Could not update password',
-          description: error.message,
+          title: t('supabase.auth.toasts.updateFailed'),
+          description: authErrorText(error),
           icon: 'lucide:circle-x',
           color: 'error',
         })
@@ -203,7 +207,7 @@ export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
       }
 
       toast.add({
-        title: 'Password updated successfully',
+        title: t('supabase.auth.toasts.passwordUpdated'),
         icon: 'lucide:check',
         color: 'success',
       })
@@ -211,9 +215,8 @@ export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
       return { success: true }
     } catch (error) {
       toast.add({
-        title: 'Could not update password',
-        description:
-          error instanceof Error ? error.message : 'An unknown error occurred.',
+        title: t('supabase.auth.toasts.updateFailed'),
+        description: authErrorText(error),
         icon: 'lucide:circle-x',
         color: 'error',
       })

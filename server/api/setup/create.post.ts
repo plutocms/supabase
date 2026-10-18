@@ -23,9 +23,10 @@ export default defineEventHandler(async (event) => {
   // server/api/migrations/run.post.ts, which calls it "the whole security
   // model for this endpoint."
   if (process.env.DATABASE_URL) {
-    throw createError({
+    throw createPlutoError({
       statusCode: 403,
-      statusMessage: 'Setup has already been completed.',
+      message: 'Setup has already been completed.',
+      key: 'supabase.errors.setupCompleted',
     })
   }
 
@@ -47,10 +48,11 @@ export default defineEventHandler(async (event) => {
   // it over HTTP means this route needs no `baseUrl` from the caller, and
   // can no longer be made to fetch or execute SQL from an arbitrary origin.
   if (!layers.core?.length) {
-    throw createError({
+    throw createPlutoError({
       statusCode: 500,
-      statusMessage:
+      message:
         'Core schema not found. Reinstall @plutocms/supabase and restart the dev server.',
+      key: 'supabase.errors.coreSchemaMissing',
     })
   }
 

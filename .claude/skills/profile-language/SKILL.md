@@ -15,8 +15,9 @@ system of `@plutocms/pluto` (see the `i18n` skill in `pluto`) through a locale d
 - `app/plugins/pluto-extension.ts` — registers the `localeDriver` (`load` and `save`).
 - `app/plugins/pluto-locale-sync.client.ts` — loads the stored language when a session appears.
 - `i18n/locales/en.json`, `i18n/locales/pt-BR.json` — the text of this layer, in the `supabase`
-  namespace. Only the keys that this feature uses are there so far.
+  namespace. They hold the text of the whole admin of this layer (see the `admin-translation` skill).
 - `test/locale-route.test.ts`, `test/migrations-005.test.ts`, `test/i18n-locale-files.test.ts`.
+- `test/fixtures/i18n-stub.ts` — a real English translator and a `createPlutoError` stub for tests.
 
 ## The data
 

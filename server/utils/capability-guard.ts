@@ -5,8 +5,10 @@ import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
 export const ALL_CAPABILITIES = '*'
 
 interface RequireCapabilityOptions {
-  /** Overrides the 403 message. */
+  /** Overrides the 403 message. English text. */
   message?: string
+  /** Translation key of the `message` override, for the admin UI. */
+  messageKey?: string
 }
 
 /**
@@ -34,17 +36,29 @@ export async function requireCapability(
   const user = await serverSupabaseUser(event)
 
   if (!user) {
-    throw createError({ statusCode: 401, statusMessage: 'You must be logged in.' })
+    throw createPlutoError({
+      statusCode: 401,
+      message: 'You must be logged in.',
+      key: 'supabase.errors.notLoggedIn',
+    })
   }
 
   const client = await serverSupabaseClient<Database>(event)
   const { data, error } = await client.rpc('has_capability', { cap: capability })
 
   if (error || data !== true) {
-    throw createError({
+    // A custom `message` without a `messageKey` has no translation, so it
+    // keeps the plain English error.
+    if (options?.message && !options.messageKey) {
+      throw createError({ statusCode: 403, statusMessage: options.message })
+    }
+
+    throw createPlutoError({
       statusCode: 403,
-      statusMessage:
+      message:
         options?.message ?? `Your account is missing the "${capability}" permission.`,
+      key: options?.messageKey ?? 'supabase.errors.missingPermission',
+      params: { capability },
     })
   }
 

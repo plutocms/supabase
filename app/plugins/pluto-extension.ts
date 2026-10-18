@@ -13,7 +13,7 @@ export default defineNuxtPlugin(() => {
       {
         id: 'general',
         order: 0,
-        title: 'General',
+        title: 'supabase.settings.general.title',
         icon: 'lucide:globe',
         component: SettingsGeneralPanel,
       },
@@ -44,8 +44,8 @@ export default defineNuxtPlugin(() => {
     // gated by requireAdmin (public.is_admin() directly), never a named
     // capability — see server/utils/admin-guard.ts for why.
     capabilities: [
-      { id: 'settings-manage', key: 'settings:manage', label: 'Manage site settings' },
-      { id: 'users-read', key: 'users:read', label: 'View all user accounts' },
+      { id: 'settings-manage', key: 'settings:manage', label: 'supabase.capabilities.settingsManage' },
+      { id: 'users-read', key: 'users:read', label: 'supabase.capabilities.usersRead' },
     ],
     // The admin language of the signed-in user, stored in profiles.locale
     // (005_profile_locale.sql). A save error carries the translated server

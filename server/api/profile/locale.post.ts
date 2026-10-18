@@ -32,9 +32,10 @@ export default defineEventHandler(async (event) => {
   const user = await serverSupabaseUser(event)
 
   if (!user) {
-    throw createError({
+    throw createPlutoError({
       statusCode: 401,
-      statusMessage: 'You must be logged in.',
+      message: 'You must be logged in.',
+      key: 'supabase.errors.notLoggedIn',
     })
   }
 
@@ -42,9 +43,10 @@ export default defineEventHandler(async (event) => {
   const { adminLocales } = useRuntimeConfig().public.plutoI18n
 
   if (locale !== null && !adminLocales.includes(locale)) {
-    throw createError({
+    throw createPlutoError({
       statusCode: 400,
-      statusMessage: 'This language is not supported.',
+      message: 'This language is not supported.',
+      key: 'supabase.errors.localeUnsupported',
     })
   }
 

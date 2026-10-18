@@ -14,6 +14,7 @@ const props = defineProps<{
 }>()
 
 const toast = useToast()
+const { t } = usePlutoI18n()
 
 const envLine = computed(() => `DATABASE_URL="${props.connectionString}"`)
 
@@ -22,15 +23,15 @@ async function copyEnvLine() {
     await navigator.clipboard.writeText(envLine.value)
 
     toast.add({
-      title: 'Copied',
-      description: 'The DATABASE_URL line is on your clipboard.',
+      title: t('supabase.envWarning.copied'),
+      description: t('supabase.envWarning.copiedDescription'),
       icon: 'lucide:check-circle',
       color: 'success',
     })
   } catch {
     toast.add({
-      title: 'Could not copy',
-      description: 'Select and copy the line by hand instead.',
+      title: t('supabase.envWarning.copyFailed'),
+      description: t('supabase.envWarning.copyFailedDescription'),
       icon: 'lucide:circle-x',
       color: 'error',
     })
@@ -40,24 +41,40 @@ async function copyEnvLine() {
 
 <template>
   <UAlert
+    :title="t('supabase.envWarning.title')"
     color="warning"
     variant="outline"
     icon="lucide:triangle-alert"
-    title="Connection string not saved automatically"
   >
     <template #description>
       <div class="flex flex-col gap-y-3">
         <p>
-          The database change already succeeded. Pluto could not write
-          <code>DATABASE_URL</code> to your project's
-          <code>.env</code> file, so it will ask again next time unless you
-          add it by hand:
+          <SupabaseMessageParts :message="t('supabase.envWarning.intro')">
+            <template #variable>
+              <code>DATABASE_URL</code>
+            </template>
+            <template #file>
+              <code>.env</code>
+            </template>
+          </SupabaseMessageParts>
         </p>
 
         <ol class="list-inside list-decimal">
-          <li>Open (or create) <code>.env</code> in your project's root folder.</li>
-          <li>Add this line. Replace any existing <code>DATABASE_URL</code> line with it.</li>
-          <li>Restart the server.</li>
+          <li>
+            <SupabaseMessageParts :message="t('supabase.envWarning.step1')">
+              <template #file>
+                <code>.env</code>
+              </template>
+            </SupabaseMessageParts>
+          </li>
+          <li>
+            <SupabaseMessageParts :message="t('supabase.envWarning.step2')">
+              <template #variable>
+                <code>DATABASE_URL</code>
+              </template>
+            </SupabaseMessageParts>
+          </li>
+          <li>{{ t('supabase.envWarning.step3') }}</li>
         </ol>
 
         <div class="flex items-center gap-x-2">
@@ -68,11 +85,11 @@ async function copyEnvLine() {
           </code>
 
           <UButton
+            :aria-label="t('supabase.envWarning.copyLine')"
             icon="lucide:copy"
             variant="soft"
             color="neutral"
             size="sm"
-            aria-label="Copy the DATABASE_URL line"
             @click="copyEnvLine"
           />
         </div>

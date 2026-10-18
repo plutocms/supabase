@@ -183,3 +183,11 @@ this feature and are not fixed here.
   including the same `auth.ts` login flow above — never sees it set, even for the first admin.
   This is why every new endpoint in this feature checks `public.profiles.is_admin`, never
   `user_metadata`. Do not read `user_metadata.is_admin` in new code.
+
+## Translation
+
+The migrations page, the banner, the setup wizard, and `EnvPersistWarning` use keys from the
+`supabase.migrations.*`, `supabase.setup.*`, `supabase.connection.*`, and `supabase.envWarning.*`
+groups. See the `admin-translation` skill. Layer names, file names, and database errors stay as
+they are. The result status (`applied`, `skipped`, `failed`) is translated through a key map.
+A route error uses `createPlutoError`, so the admin shows it in its own language.

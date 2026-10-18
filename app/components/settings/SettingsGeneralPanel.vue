@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { field } = usePlutoSettings()
+const { t } = usePlutoI18n()
 
 const websiteTitle = field('website_title')
 const websiteDescription = field('website_description')
@@ -8,22 +9,36 @@ const websiteUrl = field('website_url')
 
 <template>
   <div class="flex flex-col gap-y-6">
-    <UFormField label="Website Title" class="w-full lg:w-1/2">
-      <UInput v-model="websiteTitle" placeholder="e.g. My Website" />
-    </UFormField>
-
-    <UFormField label="Website Description" class="w-full lg:w-1/2">
+    <UFormField
+      :label="t('supabase.settings.general.websiteTitle')"
+      class="w-full lg:w-1/2"
+    >
       <UInput
-        v-model="websiteDescription"
-        placeholder="e.g. My Website Description"
+        v-model="websiteTitle"
+        :placeholder="t('supabase.settings.general.websiteTitlePlaceholder')"
       />
     </UFormField>
 
-    <UFormField label="Website URL" class="w-full lg:w-1/2">
+    <UFormField
+      :label="t('supabase.settings.general.websiteDescription')"
+      class="w-full lg:w-1/2"
+    >
+      <UInput
+        v-model="websiteDescription"
+        :placeholder="
+          t('supabase.settings.general.websiteDescriptionPlaceholder')
+        "
+      />
+    </UFormField>
+
+    <UFormField
+      :label="t('supabase.settings.general.websiteUrl')"
+      class="w-full lg:w-1/2"
+    >
       <UInput
         v-model="websiteUrl"
+        :placeholder="t('supabase.settings.general.websiteUrlPlaceholder')"
         type="url"
-        placeholder="e.g. https://example.com"
       />
     </UFormField>
   </div>

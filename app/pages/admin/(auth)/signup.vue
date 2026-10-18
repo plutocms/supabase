@@ -3,8 +3,11 @@ definePageMeta({
   layout: 'auth',
 })
 
+const { t } = usePlutoI18n()
+const errorText = usePlutoErrorText()
+
 useHead({
-  title: 'Sign Up',
+  title: () => t('supabase.auth.signup.pageTitle'),
 })
 
 const toast = useToast()
@@ -44,8 +47,8 @@ async function submitForm() {
     })
 
     toast.add({
-      title: 'Account created successfully',
-      description: 'You still need to verify your email before you can log in.',
+      title: t('supabase.auth.signup.created'),
+      description: t('supabase.auth.signup.createdDescription'),
       icon: 'lucide:check',
       color: 'success',
     })
@@ -55,9 +58,8 @@ async function submitForm() {
     console.error('Error signing up:', error)
 
     toast.add({
-      title: 'Could not create account',
-      description:
-        error instanceof Error ? error.message : 'An unknown error occurred.',
+      title: t('supabase.auth.signup.failed'),
+      description: errorText(error, 'supabase.auth.errors.unknown'),
       icon: 'lucide:circle-x',
       color: 'error',
     })
@@ -77,18 +79,16 @@ async function submitForm() {
               <UIcon name="lucide:mail-warning" class="inline-block" />
             </span>
 
-            <h1 class="text-3xl font-bold">Almost there!</h1>
+            <h1 class="text-3xl font-bold">{{ t('supabase.auth.signup.almostThere') }}</h1>
           </hgroup>
 
           <p>
-            A verification link has been sent to your email. Please check your
-            inbox and follow the instructions to verify your account.
+            {{ t('supabase.auth.signup.verificationSent') }}
           </p>
 
           <UAlert icon="lucide:check" color="success" variant="outline">
             <template #description>
-              You can close this page. You will be logged in automatically once
-              you verify your email.
+              {{ t('supabase.auth.signup.closePage') }}
             </template>
           </UAlert>
 
@@ -98,7 +98,7 @@ async function submitForm() {
             variant="outline"
           >
             <template #description>
-              If you don't see the email, please check your spam folder.
+              {{ t('supabase.auth.signup.checkSpam') }}
             </template>
           </UAlert>
         </div>
@@ -106,9 +106,9 @@ async function submitForm() {
 
       <form v-else @submit.prevent="submitForm">
         <div class="flex flex-col gap-y-6">
-          <h1 class="text-3xl font-bold">Create Account</h1>
+          <h1 class="text-3xl font-bold">{{ t('supabase.auth.signup.title') }}</h1>
 
-          <UFormField label="Email" required>
+          <UFormField :label="t('supabase.auth.fields.email')" required>
             <UInput
               v-model="form.email"
               type="email"
@@ -119,27 +119,31 @@ async function submitForm() {
           </UFormField>
 
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <UFormField label="Username" required>
+            <UFormField :label="t('supabase.auth.fields.username')" required>
               <UInput
                 v-model="form.username"
-                placeholder="e.g: johndoe"
+                :placeholder="t('supabase.auth.signup.usernamePlaceholder')"
                 class="w-full"
                 minlength="3"
                 required
               />
             </UFormField>
 
-            <UFormField label="Display Name" required>
+            <UFormField :label="t('supabase.auth.fields.displayName')" required>
               <UInput
                 v-model="form.display_name"
-                placeholder="e.g: John Doe"
+                :placeholder="t('supabase.auth.signup.displayNamePlaceholder')"
                 class="w-full"
                 required
               />
             </UFormField>
           </div>
 
-          <UFormField :error="!passwordMatch" label="Password" required>
+          <UFormField
+            :error="!passwordMatch"
+            :label="t('supabase.auth.fields.password')"
+            required
+          >
             <UInput
               v-model="form.password"
               placeholder="••••"
@@ -149,7 +153,11 @@ async function submitForm() {
             />
           </UFormField>
 
-          <UFormField :error="!passwordMatch" label="Confirm Password" required>
+          <UFormField
+            :error="!passwordMatch"
+            :label="t('supabase.auth.fields.confirmPassword')"
+            required
+          >
             <UInput
               v-model="form.confirm_password"
               placeholder="••••"
@@ -169,7 +177,7 @@ async function submitForm() {
                 variant="link"
                 class="px-0"
               >
-                Back to Login
+                {{ t('supabase.auth.backToLogin') }}
               </UButton>
             </UFormField>
 
@@ -180,7 +188,7 @@ async function submitForm() {
                 type="submit"
                 class="w-full justify-center sm:w-auto"
               >
-                Create account
+                {{ t('supabase.auth.signup.submit') }}
               </UButton>
             </UFormField>
           </div>

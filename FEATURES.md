@@ -16,3 +16,6 @@ policies shared by every project here.
 - Profile language: stores each user's admin language in `profiles.locale`, written through a
   security-definer function, and plugs it into pluto's i18n as a locale driver.
   @.claude/skills/profile-language/SKILL.md
+- Admin translation: every admin page, component, toast, and server message of this layer is
+  translated (`en`, `pt-BR`) in the `supabase.*` namespace of pluto's i18n system.
+  @.claude/skills/admin-translation/SKILL.md

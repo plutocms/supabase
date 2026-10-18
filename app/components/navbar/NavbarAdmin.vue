@@ -11,6 +11,8 @@ function openSidebar() {
   isSidebarOpen.value = true
 }
 
+const { t } = usePlutoI18n()
+
 const { isLoggedIn, user, logout } = await useAuth()
 
 const displayName = computed(() => {
@@ -19,7 +21,7 @@ const displayName = computed(() => {
     user.value?.full_name ||
     user.value?.name ||
     user.value?.username ||
-    'User'
+    t('supabase.navbar.defaultUserName')
   )
 })
 
@@ -66,7 +68,7 @@ const items = computed<DropdownItems>(() => [
 
   [
     {
-      label: 'Settings',
+      label: t('pluto.common.settings'),
       icon: 'i-lucide-cog',
       type: 'link',
       to: '/admin/settings',
@@ -81,7 +83,7 @@ const items = computed<DropdownItems>(() => [
 
   [
     {
-      label: 'Pluto on GitHub',
+      label: t('supabase.navbar.github'),
       icon: 'i-simple-icons-github',
       type: 'link',
       to: 'https://github.com/ojvribeiro/pluto',
@@ -92,7 +94,7 @@ const items = computed<DropdownItems>(() => [
 
   [
     {
-      label: 'Logout',
+      label: t('supabase.navbar.logout'),
       icon: 'i-lucide-log-out',
       kbds: ['meta', 'shift', 'q'],
       class: 'cursor-pointer',
@@ -113,18 +115,18 @@ defineShortcuts(extractShortcuts(items.value))
     >
       <div class="flex min-w-0 items-center gap-x-1 lg:gap-x-3">
         <UButton
+          :aria-label="t('supabase.navbar.openNavigation')"
           class="lg:hidden"
           icon="lucide:menu"
           color="neutral"
           variant="ghost"
-          aria-label="Open navigation"
           square
           @click="openSidebar"
         />
 
         <div class="h-full shrink-0 py-1">
           <NuxtLink
-            title="Go to dashboard home"
+            :title="t('supabase.navbar.goHome')"
             to="/admin/home"
             class="group block h-full"
           >
@@ -139,7 +141,11 @@ defineShortcuts(extractShortcuts(items.value))
           <ul class="flex h-full min-w-0 items-center text-sm">
             <NavbarAdminActionButton
               :show="route.path.startsWith('/admin')"
-              :title="`Visit ${domainFromUrl(maybeDevUrl)}`"
+              :title="
+                t('supabase.navbar.visitSite', {
+                  domain: domainFromUrl(maybeDevUrl),
+                })
+              "
               :icon="
                 status === 'pending'
                   ? 'lucide:loader-circle'
@@ -147,8 +153,8 @@ defineShortcuts(extractShortcuts(items.value))
               "
               :disabled="status === 'pending'"
               :to="maybeDevUrl"
+              :label="t('supabase.navbar.viewSite')"
               target="_blank"
-              label="View site"
             />
 
             <ClientOnly>
@@ -180,8 +186,8 @@ defineShortcuts(extractShortcuts(items.value))
             :modal="false"
           >
             <button
+              :aria-label="t('supabase.navbar.openUserMenu')"
               class="group h-full py-1"
-              aria-label="Open user menu"
               type="button"
             >
               <div

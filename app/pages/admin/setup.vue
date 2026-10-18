@@ -6,8 +6,10 @@ definePageMeta({
   layout: 'setup',
 })
 
+const { t, uiLocale } = usePlutoI18n()
+
 useHead({
-  title: 'Setup Wizard',
+  title: () => t('supabase.setup.title'),
 })
 
 const config = useRuntimeConfig()
@@ -19,14 +21,14 @@ const toast = useToast()
 
 const isDev = import.meta.dev
 
-const items = ref<StepperItem[]>([
+const items = computed<StepperItem[]>(() => [
   {
-    title: 'Database Setup',
+    title: t('supabase.setup.steps.database'),
     icon: 'i-lucide-database',
   },
 
   {
-    title: 'Complete Setup',
+    title: t('supabase.setup.steps.complete'),
     icon: 'i-lucide-check',
   },
 ])
@@ -66,10 +68,10 @@ const currentStepId = computed(() => {
 
 const currentStepSubmitLabel = computed(() => {
   if (currentStep.value === 0) {
-    return 'Set up database'
+    return t('supabase.setup.submit')
   }
 
-  return 'Submit'
+  return t('supabase.setup.next')
 })
 
 /**
@@ -91,8 +93,8 @@ async function waitForServerAndAdvance(): Promise<boolean> {
       await $fetch('/api/settings/first_setup')
 
       toast.add({
-        title: 'Reconnected',
-        description: 'The server is back. Your database has been set up.',
+        title: t('supabase.connection.reconnected'),
+        description: t('supabase.setup.reconnectedDescription'),
         icon: 'lucide:check-circle',
         color: 'success',
       })
@@ -126,8 +128,8 @@ async function completeDatabaseSetup() {
 
     if (data.success === false) {
       toast.add({
-        title: 'Database setup failed',
-        description: 'Please check your password and try again.',
+        title: t('supabase.setup.failed'),
+        description: t('supabase.setup.failedDescription'),
         icon: 'lucide:circle-x',
         color: 'error',
       })
@@ -141,8 +143,8 @@ async function completeDatabaseSetup() {
     }
 
     toast.add({
-      title: 'Database setup complete',
-      description: 'Your database has been set up successfully.',
+      title: t('supabase.setup.complete'),
+      description: t('supabase.setup.completeDescription'),
       icon: 'lucide:check-circle',
       color: 'success',
     })
@@ -164,8 +166,8 @@ async function completeDatabaseSetup() {
 
     if (import.meta.dev && !hasStatusCode) {
       toast.add({
-        title: 'Dev server restarting',
-        description: 'Setup is finishing. Reconnecting…',
+        title: t('supabase.connection.restarting'),
+        description: t('supabase.setup.restartingDescription'),
         icon: 'lucide:refresh-cw',
         color: 'info',
       })
@@ -177,9 +179,8 @@ async function completeDatabaseSetup() {
       }
 
       toast.add({
-        title: 'Still reconnecting',
-        description:
-          'The dev server is taking longer than expected. Reload this page in a moment.',
+        title: t('supabase.connection.stillReconnecting'),
+        description: t('supabase.connection.stillReconnectingDescription'),
         icon: 'lucide:triangle-alert',
         color: 'warning',
       })
@@ -192,8 +193,8 @@ async function completeDatabaseSetup() {
     }
 
     toast.add({
-      title: 'Error setting up the database',
-      description: 'Please check the console for more details.',
+      title: t('supabase.setup.error'),
+      description: t('supabase.connection.checkConsole'),
       icon: 'lucide:circle-x',
       color: 'error',
     })
@@ -210,7 +211,7 @@ function handleStepChange(step: number) {
 </script>
 
 <template>
-  <UApp>
+  <UApp :locale="uiLocale">
     <div class="flex min-h-dvh items-center justify-center p-4">
       <UCard class="w-full max-w-125">
         <div class="flex flex-col gap-y-8">
@@ -223,7 +224,7 @@ function handleStepChange(step: number) {
                 class="flex flex-col gap-y-4"
                 @submit="handleStepChange(currentStep)"
               >
-                <UFormField label="Supabase connection string" required>
+                <UFormField :label="t('supabase.connection.connectionString')" required>
                   <UInput
                     v-model="databaseForm.connectionString"
                     :disabled="isSettingUpDatabase"
@@ -233,19 +234,24 @@ function handleStepChange(step: number) {
                   />
 
                   <template #help>
-                    You can find your connection string
-                    <ULink
-                      :to="`https://supabase.com/dashboard/project/${projectId}/database/settings?showConnect=true&method=transaction`"
-                      target="_blank"
-                      class="underline"
-                      external
+                    <SupabaseMessageParts
+                      :message="t('supabase.connection.connectionStringHelp')"
                     >
-                      clicking here </ULink
-                    >.
+                      <template #link>
+                        <ULink
+                          :to="`https://supabase.com/dashboard/project/${projectId}/database/settings?showConnect=true&method=transaction`"
+                          target="_blank"
+                          class="underline"
+                          external
+                        >
+                          {{ t('supabase.connection.connectionStringHelpLink') }}
+                        </ULink>
+                      </template>
+                    </SupabaseMessageParts>
                   </template>
                 </UFormField>
 
-                <UFormField label="Database password" required>
+                <UFormField :label="t('supabase.connection.password')" required>
                   <UInput
                     v-model="databaseForm.password"
                     :disabled="isSettingUpDatabase"
@@ -261,42 +267,50 @@ function handleStepChange(step: number) {
                   variant="outline"
                 >
                   <template #description>
-                    Your password is created when you create your Supabase
-                    project. You can change it in the
-                    <ULink
-                      to="https://supabase.com/dashboard/project/_/database/settings"
-                      target="_blank"
+                    <SupabaseMessageParts
+                      :message="t('supabase.connection.passwordInfo')"
                     >
-                      Supabase Database Settings </ULink
-                    >.
+                      <template #link>
+                        <ULink
+                          to="https://supabase.com/dashboard/project/_/database/settings"
+                          target="_blank"
+                        >
+                          {{ t('supabase.connection.passwordInfoLink') }}
+                        </ULink>
+                      </template>
+                    </SupabaseMessageParts>
                   </template>
                 </UAlert>
 
                 <UAlert
+                  :title="t('supabase.connection.whyTitle')"
                   color="warning"
                   variant="outline"
-                  title="Why do I need to provide a database password?"
                   icon="lucide:info"
                 >
                   <template #description>
                     <div class="flex flex-col gap-y-4">
                       <p>
-                        It will be used to create your database structure. It
-                        won't be stored anywhere. That's a
-                        <UTooltip
-                          text="Click on the 'Technical details' button for more info"
+                        <SupabaseMessageParts
+                          :message="t('supabase.setup.why')"
                         >
-                          <span class="underline decoration-dotted cursor-help">
-                            promise</span
-                          ></UTooltip
-                        >! 😉
+                          <template #promise>
+                            <UTooltip :text="t('supabase.setup.promiseTooltip')">
+                              <span
+                                class="underline decoration-dotted cursor-help"
+                              >
+                                {{ t('supabase.setup.promise') }}</span
+                              ></UTooltip
+                            >
+                          </template>
+                        </SupabaseMessageParts>
                       </p>
 
                       <div>
                         <UPopover :content="{ side: 'bottom' }" arrow>
                           <UButton
+                            :label="t('supabase.setup.technicalDetails')"
                             icon="lucide:lightbulb"
-                            label="Technical details"
                             color="info"
                             variant="subtle"
                             class="w-fit"
@@ -308,31 +322,32 @@ function handleStepChange(step: number) {
                               class="flex flex-col gap-y-4 max-w-xs p-4 text-white text-sm"
                             >
                               <p>
-                                When you click "Next", a request to
-                                <ULink
-                                  to="https://github.com/plutocms/supabase/blob/feat/setup-wizard/server/api/setup/create.post.ts"
-                                  target="_blank"
-                                  class="underline"
+                                <SupabaseMessageParts
+                                  :message="t('supabase.setup.technicalDetailsRequest')"
                                 >
-                                  a server route</ULink
-                                >
-                                will be made with the database password you
-                                provided. This API will then use this password
-                                to make a direct PostgreSQL connection to your
-                                Supabase database and run the SQL queries from
-                                this
-                                <ULink
-                                  to="https://github.com/plutocms/supabase/tree/main/db/migrations"
-                                  target="_blank"
-                                  class="underline"
-                                >
-                                  SQL files</ULink
-                                >.
+                                  <template #route>
+                                    <ULink
+                                      to="https://github.com/plutocms/supabase/blob/feat/setup-wizard/server/api/setup/create.post.ts"
+                                      target="_blank"
+                                      class="underline"
+                                    >
+                                      {{ t('supabase.setup.technicalDetailsRoute') }}</ULink
+                                    >
+                                  </template>
+                                  <template #files>
+                                    <ULink
+                                      to="https://github.com/plutocms/supabase/tree/main/db/migrations"
+                                      target="_blank"
+                                      class="underline"
+                                    >
+                                      {{ t('supabase.setup.technicalDetailsFiles') }}</ULink
+                                    >
+                                  </template>
+                                </SupabaseMessageParts>
                               </p>
 
                               <p>
-                                After the setup is complete, the password will
-                                NOT be stored or used for any other purpose.
+                                {{ t('supabase.setup.technicalDetailsStored') }}
                               </p>
                             </div>
                           </template>
@@ -344,11 +359,11 @@ function handleStepChange(step: number) {
 
                 <UAlert
                   v-if="isDev"
+                  :title="t('supabase.connection.restartTitle')"
+                  :description="t('supabase.setup.restartDescription')"
                   color="info"
                   variant="outline"
-                  title="This restarts the dev server"
                   icon="lucide:refresh-cw"
-                  description="Saving your connection string writes it to .env. In development, that restarts the server automatically. The page will briefly show a reconnecting message — this is expected, not an error."
                 />
               </UForm>
             </section>
@@ -358,12 +373,11 @@ function handleStepChange(step: number) {
                 <hgroup class="text-center">
                   <span class="text-3xl">🎉</span>
 
-                  <h1 class="font-bold text-2xl">Setup Complete</h1>
+                  <h1 class="font-bold text-2xl">{{ t('supabase.setup.doneTitle') }}</h1>
                 </hgroup>
 
                 <p class="text-balance text-center text-lg">
-                  Your database is ready. Create your admin account by signing
-                  up.
+                  {{ t('supabase.setup.doneDescription') }}
                 </p>
 
                 <EnvPersistWarning
@@ -378,7 +392,7 @@ function handleStepChange(step: number) {
                     color="primary"
                     trailing
                   >
-                    Go to sign up
+                    {{ t('supabase.setup.goToSignup') }}
                   </UButton>
                 </p>
               </div>

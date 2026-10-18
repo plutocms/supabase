@@ -37,7 +37,12 @@ export async function parseBody<T>(event: H3Event, schema: ZodSchema<T>): Promis
       message: issue.message,
     }))
 
-    throw createError({ statusCode: 400, statusMessage: 'Validation failed.', data: { errors } })
+    throw createPlutoError({
+      statusCode: 400,
+      message: 'Validation failed.',
+      key: 'pluto.errors.validationFailed',
+      data: { errors },
+    })
   }
 
   return result.data

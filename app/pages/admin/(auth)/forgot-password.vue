@@ -3,8 +3,10 @@ definePageMeta({
   layout: 'auth',
 })
 
+const { t } = usePlutoI18n()
+
 useHead({
-  title: 'Forgot Password',
+  title: () => t('supabase.auth.forgot.pageTitle'),
 })
 
 const { isSubmitting, requestPasswordReset } = await useAuth()
@@ -31,18 +33,20 @@ async function submitForm() {
               <UIcon name="lucide:mail" class="inline-block" />
             </span>
 
-            <h1 class="text-3xl font-bold">Check your inbox</h1>
+            <h1 class="text-3xl font-bold">{{ t('supabase.auth.forgot.sentTitle') }}</h1>
           </hgroup>
 
           <p>
-            If an account exists for <strong>{{ email }}</strong
-            >, a password reset link has been sent. Check your email and follow
-            the link.
+            <SupabaseMessageParts :message="t('supabase.auth.forgot.sentDescription')">
+              <template #email>
+                <strong>{{ email }}</strong>
+              </template>
+            </SupabaseMessageParts>
           </p>
 
           <div class="flex items-center justify-center">
             <UButton variant="link" to="/admin/login" class="px-0">
-              Back to Login
+              {{ t('supabase.auth.backToLogin') }}
             </UButton>
           </div>
         </div>
@@ -51,13 +55,13 @@ async function submitForm() {
       <form v-else @submit.prevent="submitForm">
         <div class="flex flex-col gap-y-6">
           <hgroup class="flex flex-col gap-y-1">
-            <h1 class="text-3xl font-bold">Forgot Password</h1>
+            <h1 class="text-3xl font-bold">{{ t('supabase.auth.forgot.title') }}</h1>
             <p class="text-sm text-muted">
-              Enter your email and we'll send you a reset link.
+              {{ t('supabase.auth.forgot.description') }}
             </p>
           </hgroup>
 
-          <UFormField label="Email">
+          <UFormField :label="t('supabase.auth.fields.email')">
             <UInput
               v-model="email"
               placeholder="victor@example.com"
@@ -78,13 +82,13 @@ async function submitForm() {
                 icon="lucide:send"
                 class="w-full justify-center sm:w-auto"
               >
-                Send Reset Link
+                {{ t('supabase.auth.forgot.submit') }}
               </UButton>
             </UFormField>
 
             <UFormField>
               <UButton variant="link" to="/admin/login" class="px-0">
-                Back to Login
+                {{ t('supabase.auth.backToLogin') }}
               </UButton>
             </UFormField>
           </div>

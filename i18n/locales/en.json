@@ -2,6 +2,208 @@
   "supabase": {
     "profile": {
       "migrationPending": "Apply the pending database migrations to save your language."
+    },
+    "errors": {
+      "notLoggedIn": "You must be logged in.",
+      "notAdmin": "Your account is not an admin.",
+      "missingPermission": "Your account is missing the \"{capability}\" permission.",
+      "setupCompleted": "Setup has already been completed.",
+      "coreSchemaMissing": "Core schema not found. Reinstall @plutocms/supabase and restart the dev server.",
+      "fetchUsers": "Error fetching users: {message}",
+      "fetchUser": "Error fetching user: {message}",
+      "localeUnsupported": "This language is not supported.",
+      "duplicateRecord": "A record with this value already exists.",
+      "missingReference": "This references a record that does not exist.",
+      "migrationStatus": "Error reading migration status: {message}"
+    },
+    "auth": {
+      "backToLogin": "Back to Login",
+      "passwordMismatch": "Passwords do not match.",
+      "fields": {
+        "email": "Email",
+        "password": "Password",
+        "username": "Username",
+        "displayName": "Display Name",
+        "confirmPassword": "Confirm Password"
+      },
+      "toasts": {
+        "loginFailed": "Could not log in",
+        "loggedOut": "Logged out successfully",
+        "resetFailed": "Could not send reset email",
+        "updateFailed": "Could not update password",
+        "passwordUpdated": "Password updated successfully",
+        "notLoggedIn": "You are not logged in",
+        "notLoggedInDescription": "Please log in to continue."
+      },
+      "errors": {
+        "unknown": "An unknown error occurred.",
+        "invalid_credentials": "Invalid email or password.",
+        "email_not_confirmed": "Your email is not confirmed yet. Check your inbox for the verification link.",
+        "over_request_rate_limit": "Too many attempts. Wait a moment and try again.",
+        "over_email_send_rate_limit": "Too many emails sent. Wait a moment and try again.",
+        "weak_password": "This password is too weak. Choose a stronger one.",
+        "same_password": "The new password must be different from the current one.",
+        "user_not_found": "No account was found for this email.",
+        "email_exists": "An account with this email already exists.",
+        "user_already_exists": "An account with this email already exists.",
+        "signup_disabled": "Sign up is turned off for this site.",
+        "email_address_invalid": "This email address is not valid."
+      },
+      "confirm": {
+        "pageTitle": "Account Verification",
+        "title": "Account verified!",
+        "description": "Your account has been successfully verified. You can now start using the Dashboard.",
+        "goToDashboard": "Go to Dashboard"
+      },
+      "forgot": {
+        "pageTitle": "Forgot Password",
+        "title": "Forgot Password",
+        "description": "Enter your email and we'll send you a reset link.",
+        "submit": "Send Reset Link",
+        "sentTitle": "Check your inbox",
+        "sentDescription": "If an account exists for {email}, a password reset link has been sent. Check your email and follow the link."
+      },
+      "login": {
+        "title": "Login",
+        "submit": "Login",
+        "createAccount": "Create Account",
+        "backToHome": "Back to Home",
+        "forgotPassword": "Forgot password?"
+      },
+      "update": {
+        "title": "Update Password",
+        "description": "Enter your new password below.",
+        "newPassword": "New Password",
+        "confirmNewPassword": "Confirm New Password",
+        "submit": "Update Password",
+        "doneTitle": "Password Updated!",
+        "doneDescription": "Your password has been changed. You can now log in with your new password.",
+        "goToLogin": "Go to Login"
+      },
+      "signup": {
+        "pageTitle": "Sign Up",
+        "title": "Create Account",
+        "submit": "Create account",
+        "usernamePlaceholder": "e.g: johndoe",
+        "displayNamePlaceholder": "e.g: John Doe",
+        "created": "Account created successfully",
+        "createdDescription": "You still need to verify your email before you can log in.",
+        "failed": "Could not create account",
+        "almostThere": "Almost there!",
+        "verificationSent": "A verification link has been sent to your email. Please check your inbox and follow the instructions to verify your account.",
+        "closePage": "You can close this page. You will be logged in automatically once you verify your email.",
+        "checkSpam": "If you don't see the email, please check your spam folder."
+      }
+    },
+    "navbar": {
+      "defaultUserName": "User",
+      "github": "Pluto on GitHub",
+      "logout": "Logout",
+      "openNavigation": "Open navigation",
+      "goHome": "Go to dashboard home",
+      "visitSite": "Visit {domain}",
+      "viewSite": "View site",
+      "openUserMenu": "Open user menu"
+    },
+    "settings": {
+      "general": {
+        "title": "General",
+        "websiteTitle": "Website Title",
+        "websiteTitlePlaceholder": "e.g. My Website",
+        "websiteDescription": "Website Description",
+        "websiteDescriptionPlaceholder": "e.g. My Website Description",
+        "websiteUrl": "Website URL",
+        "websiteUrlPlaceholder": "e.g. https://example.com"
+      }
+    },
+    "capabilities": {
+      "settingsManage": "Manage site settings",
+      "usersRead": "View all user accounts"
+    },
+    "envWarning": {
+      "title": "Connection string not saved automatically",
+      "intro": "The database change already succeeded. Pluto could not write {variable} to your project's {file} file, so it will ask again next time unless you add it by hand:",
+      "step1": "Open (or create) {file} in your project's root folder.",
+      "step2": "Add this line. Replace any existing {variable} line with it.",
+      "step3": "Restart the server.",
+      "copyLine": "Copy the DATABASE_URL line",
+      "copied": "Copied",
+      "copiedDescription": "The DATABASE_URL line is on your clipboard.",
+      "copyFailed": "Could not copy",
+      "copyFailedDescription": "Select and copy the line by hand instead."
+    },
+    "connection": {
+      "connectionString": "Supabase connection string",
+      "connectionStringHelp": "You can find your connection string {link}.",
+      "connectionStringHelpLink": "clicking here",
+      "password": "Database password",
+      "passwordInfo": "Your password is created when you create your Supabase project. You can change it in the {link}.",
+      "passwordInfoLink": "Supabase Database Settings",
+      "whyTitle": "Why do I need to provide a database password?",
+      "restartTitle": "This restarts the dev server",
+      "restarting": "Dev server restarting",
+      "reconnected": "Reconnected",
+      "stillReconnecting": "Still reconnecting",
+      "stillReconnectingDescription": "The dev server is taking longer than expected. Reload this page in a moment.",
+      "checkConsole": "Please check the console for more details."
+    },
+    "setup": {
+      "title": "Setup Wizard",
+      "steps": {
+        "database": "Database Setup",
+        "complete": "Complete Setup"
+      },
+      "submit": "Set up database",
+      "next": "Submit",
+      "why": "It will be used to create your database structure. It won't be stored anywhere. That's a {promise}! 😉",
+      "promise": "promise",
+      "promiseTooltip": "Click on the 'Technical details' button for more info",
+      "technicalDetails": "Technical details",
+      "technicalDetailsRequest": "When you click \"Next\", a request to {route} will be made with the database password you provided. This API will then use this password to make a direct PostgreSQL connection to your Supabase database and run the SQL queries from this {files}.",
+      "technicalDetailsRoute": "a server route",
+      "technicalDetailsFiles": "SQL files",
+      "technicalDetailsStored": "After the setup is complete, the password will NOT be stored or used for any other purpose.",
+      "restartDescription": "Saving your connection string writes it to .env. In development, that restarts the server automatically. The page will briefly show a reconnecting message — this is expected, not an error.",
+      "restartingDescription": "Setup is finishing. Reconnecting…",
+      "reconnectedDescription": "The server is back. Your database has been set up.",
+      "failed": "Database setup failed",
+      "failedDescription": "Please check your password and try again.",
+      "complete": "Database setup complete",
+      "completeDescription": "Your database has been set up successfully.",
+      "error": "Error setting up the database",
+      "doneTitle": "Setup Complete",
+      "doneDescription": "Your database is ready. Create your admin account by signing up.",
+      "goToSignup": "Go to sign up"
+    },
+    "migrations": {
+      "title": "Migrations",
+      "banner": "{count} layer needs a database migration | {count} layers need a database migration",
+      "goTo": "Go to Migrations",
+      "loading": "Loading migration status…",
+      "upToDate": "Everything is up to date",
+      "upToDateDescription": "No layer needs a database migration.",
+      "pendingLayers": "Pending layers ({count})",
+      "appliedLayers": "Applied layers ({count})",
+      "why": "It is used once to open a direct PostgreSQL connection and run the pending layer schemas. It is then written to .env on the server, so future migrations need no prompt. It is never stored anywhere else, and never sent back to your browser.",
+      "restartDescription": "Saving a new connection string writes it to .env. In development, that restarts the server automatically. The page will briefly show a reconnecting message — this is expected, not an error.",
+      "restartingDescription": "Saving a new connection string restarts the dev server. Reconnecting…",
+      "reconnectingBanner": "Saving a new connection string restarts the dev server. Reconnecting — this page will update on its own once it's back.",
+      "reconnectedAllApplied": "The server is back. All migrations were applied.",
+      "reconnectedPending": "The server is back. {count} layer(s) still pending — check above.",
+      "apply": "Apply pending migrations",
+      "applied": "Migrations applied",
+      "applyFailed": "Could not apply migrations",
+      "connectionRequired": "A database connection string is required.",
+      "error": "Error applying migrations",
+      "lastRun": "Last run",
+      "status": {
+        "applied": "applied",
+        "skipped": "skipped",
+        "failed": "failed"
+      },
+      "loadFailed": "Could not load migration status",
+      "loadFailedDescription": "This isn't the dev-server-restart case above — something else went wrong reading migration status. Check the server console, then try again.",
+      "retry": "Retry"
     }
   }
 }
