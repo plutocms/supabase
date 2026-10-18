@@ -232,6 +232,7 @@ export type Database = {
           email: string | null
           id: string
           is_admin: boolean
+          locale: string | null
           updated_at: string | null
           username: string | null
         }
@@ -240,6 +241,7 @@ export type Database = {
           email?: string | null
           id: string
           is_admin?: boolean
+          locale?: string | null
           updated_at?: string | null
           username?: string | null
         }
@@ -248,6 +250,7 @@ export type Database = {
           email?: string | null
           id?: string
           is_admin?: boolean
+          locale?: string | null
           updated_at?: string | null
           username?: string | null
         }
@@ -363,6 +366,10 @@ export type Database = {
       is_admin: {
         Args: Record<PropertyKey, never>
         Returns: boolean
+      }
+      set_my_locale: {
+        Args: { new_locale: string }
+        Returns: undefined
       }
     }
     Enums: {

@@ -13,3 +13,6 @@ policies shared by every project here.
 - Content adapter: a Supabase/PostgREST-backed `PlutoContentAdapter`, plugging any layer's
   declared content type into `@plutocms/pluto`'s generic content routes.
   @.claude/skills/content-adapter/SKILL.md
+- Profile language: stores each user's admin language in `profiles.locale`, written through a
+  security-definer function, and plugs it into pluto's i18n as a locale driver.
+  @.claude/skills/profile-language/SKILL.md
