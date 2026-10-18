@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.10.0](https://github.com/plutocms/supabase/compare/v0.9.1...v0.10.0) (2026-10-18)
+
+
+### Features
+
+* **i18n:** store each user's admin language ([#79](https://github.com/plutocms/supabase/issues/79)) ([2ca171a](https://github.com/plutocms/supabase/commit/2ca171a97acbc2de4537b82b6718acbcc2c1fbd5))
+* **i18n:** translate the supabase admin pages ([#82](https://github.com/plutocms/supabase/issues/82)) ([bae1372](https://github.com/plutocms/supabase/commit/bae1372fdb89414fcb20ec74c428812f25077f6b))
+
 ## [0.9.1](https://github.com/plutocms/supabase/compare/v0.9.0...v0.9.1) (2026-10-18)
 
 
