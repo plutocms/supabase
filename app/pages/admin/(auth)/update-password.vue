@@ -3,8 +3,10 @@ definePageMeta({
   layout: 'auth',
 })
 
+const { t } = usePlutoI18n()
+
 useHead({
-  title: 'Update Password',
+  title: () => t('supabase.auth.update.title'),
 })
 
 const route = useRoute()
@@ -57,17 +59,16 @@ async function submitForm() {
               <UIcon name="lucide:lock-keyhole" class="inline-block" />
             </span>
 
-            <h1 class="text-3xl font-bold">Password Updated!</h1>
+            <h1 class="text-3xl font-bold">{{ t('supabase.auth.update.doneTitle') }}</h1>
           </hgroup>
 
           <p>
-            Your password has been changed. You can now log in with your new
-            password.
+            {{ t('supabase.auth.update.doneDescription') }}
           </p>
 
           <div class="flex items-center justify-center">
             <UButton to="/admin/login" color="primary" icon="lucide:log-in">
-              Go to Login
+              {{ t('supabase.auth.update.goToLogin') }}
             </UButton>
           </div>
         </div>
@@ -76,11 +77,13 @@ async function submitForm() {
       <form v-else @submit.prevent="submitForm">
         <div class="flex flex-col gap-y-6">
           <hgroup class="flex flex-col gap-y-1">
-            <h1 class="text-3xl font-bold">Update Password</h1>
-            <p class="text-sm text-muted">Enter your new password below.</p>
+            <h1 class="text-3xl font-bold">{{ t('supabase.auth.update.title') }}</h1>
+            <p class="text-sm text-muted">
+              {{ t('supabase.auth.update.description') }}
+            </p>
           </hgroup>
 
-          <UFormField label="New Password">
+          <UFormField :label="t('supabase.auth.update.newPassword')">
             <UInput
               v-model="form.password"
               placeholder="••••"
@@ -94,10 +97,10 @@ async function submitForm() {
           <UFormField
             :error="
               form.confirm_password && !passwordMatch
-                ? 'Passwords do not match.'
+                ? t('supabase.auth.passwordMismatch')
                 : undefined
             "
-            label="Confirm New Password"
+            :label="t('supabase.auth.update.confirmNewPassword')"
           >
             <UInput
               v-model="form.confirm_password"
@@ -120,13 +123,13 @@ async function submitForm() {
                 icon="lucide:lock-keyhole"
                 class="w-full justify-center sm:w-auto"
               >
-                Update Password
+                {{ t('supabase.auth.update.submit') }}
               </UButton>
             </UFormField>
 
             <UFormField>
               <UButton variant="link" to="/admin/login" class="px-0">
-                Back to Login
+                {{ t('supabase.auth.backToLogin') }}
               </UButton>
             </UFormField>
           </div>

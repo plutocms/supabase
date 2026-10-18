@@ -8,8 +8,10 @@ definePageMeta({
   layout: 'auth',
 })
 
+const { t } = usePlutoI18n()
+
 useHead({
-  title: 'Login',
+  title: () => t('supabase.auth.login.title'),
 })
 
 const { isSubmitting, login } = await useAuth()
@@ -29,9 +31,9 @@ function submitForm() {
     <UCard class="w-full max-w-100">
       <form @submit.prevent="submitForm">
         <div class="flex flex-col gap-y-6">
-          <h1 class="text-3xl font-bold">Login</h1>
+          <h1 class="text-3xl font-bold">{{ t('supabase.auth.login.title') }}</h1>
 
-          <UFormField label="Email">
+          <UFormField :label="t('supabase.auth.fields.email')">
             <UInput
               v-model="form.email"
               placeholder="victor@example.com"
@@ -40,7 +42,7 @@ function submitForm() {
             />
           </UFormField>
 
-          <UFormField label="Password">
+          <UFormField :label="t('supabase.auth.fields.password')">
             <UInput
               v-model="form.password"
               placeholder="••••"
@@ -59,13 +61,13 @@ function submitForm() {
                 icon="lucide:log-in"
                 class="w-full justify-center sm:w-auto"
               >
-                Login
+                {{ t('supabase.auth.login.submit') }}
               </UButton>
             </UFormField>
 
             <UFormField>
               <UButton variant="link" to="/admin/signup" class="px-0">
-                Create Account
+                {{ t('supabase.auth.login.createAccount') }}
               </UButton>
             </UFormField>
           </div>
@@ -79,11 +81,11 @@ function submitForm() {
               to="/"
               class="px-0"
             >
-              Back to Home
+              {{ t('supabase.auth.login.backToHome') }}
             </UButton>
 
             <UButton variant="link" to="/admin/forgot-password" class="px-0">
-              Forgot password?
+              {{ t('supabase.auth.login.forgotPassword') }}
             </UButton>
           </div>
         </div>

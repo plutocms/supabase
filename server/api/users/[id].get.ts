@@ -14,9 +14,11 @@ export default defineEventHandler(async (event) => {
     .eq('id', id)
 
   if (error) {
-    throw createError({
+    throw createPlutoError({
       statusCode: 500,
-      statusMessage: `Error fetching user: ${error.message}`,
+      message: `Error fetching user: ${error.message}`,
+      key: 'supabase.errors.fetchUser',
+      params: { message: error.message },
     })
   }
 

@@ -1,17 +1,17 @@
 import type { H3Event } from 'h3'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { z } from 'zod'
+import { createPlutoErrorStub } from './fixtures/i18n-stub'
 
-// `parseBody` calls the globals `readBody` and `createError`, which Nitro
-// normally auto-imports from 'h3'. Outside a Nuxt/Nitro build there is no
-// such global at runtime, so both are stubbed here the same way
-// `content-adapter-helpers.test.ts` stubs `createError` — returning the
-// input object unchanged is enough to assert on `statusCode`/`data`.
+// `parseBody` calls the globals `readBody` and `createPlutoError`, which Nitro
+// normally auto-imports. Outside a Nuxt/Nitro build there is no such global
+// at runtime, so both are stubbed here. The `createPlutoError` stub returns a
+// plain object, so a test can assert on `statusCode`/`data`.
 let bodyToReturn: unknown
 
 beforeEach(() => {
   vi.stubGlobal('readBody', async () => bodyToReturn)
-  vi.stubGlobal('createError', (input: object) => input)
+  vi.stubGlobal('createPlutoError', createPlutoErrorStub)
 })
 
 afterEach(() => {
@@ -39,7 +39,10 @@ describe('parseBody', () => {
     await expect(parseBody(fakeEvent, schema)).rejects.toEqual({
       statusCode: 400,
       statusMessage: 'Validation failed.',
-      data: { errors: [{ field: 'name', message: 'Name is required.' }] },
+      data: {
+        errors: [{ field: 'name', message: 'Name is required.' }],
+        i18n: { key: 'pluto.errors.validationFailed' },
+      },
     })
   })
 
@@ -52,7 +55,10 @@ describe('parseBody', () => {
     await expect(parseBody(fakeEvent, nestedSchema)).rejects.toEqual({
       statusCode: 400,
       statusMessage: 'Validation failed.',
-      data: { errors: [{ field: 'address.zip', message: 'Zip is required.' }] },
+      data: {
+        errors: [{ field: 'address.zip', message: 'Zip is required.' }],
+        i18n: { key: 'pluto.errors.validationFailed' },
+      },
     })
   })
 })

@@ -5,6 +5,7 @@ definePageMeta({
 })
 
 const route = useRoute()
+const { t } = usePlutoI18n()
 const { isLoggedIn, logout, allowedUnauthenticatedPaths } = await useAuth()
 const toast = useToast()
 
@@ -26,8 +27,8 @@ watch(visibility, async (current, previous) => {
       await logout({ redirectTo: route.path })
 
       toast.add({
-        title: 'You are not logged in',
-        description: 'Please log in to continue.',
+        title: t('supabase.auth.toasts.notLoggedIn'),
+        description: t('supabase.auth.toasts.notLoggedInDescription'),
         icon: 'lucide:circle-x',
         color: 'error',
       })

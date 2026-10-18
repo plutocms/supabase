@@ -9,9 +9,11 @@ export default defineEventHandler(async (event) => {
   const { data: users, error } = await client.from('profiles').select('*')
 
   if (error) {
-    throw createError({
+    throw createPlutoError({
       statusCode: 500,
-      statusMessage: `Error fetching users: ${error.message}`,
+      message: `Error fetching users: ${error.message}`,
+      key: 'supabase.errors.fetchUsers',
+      params: { message: error.message },
     })
   }
 

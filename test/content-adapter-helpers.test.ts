@@ -1,6 +1,7 @@
 import type { PlutoContentType } from '@plutocms/pluto/shared/types/content'
 import { PostgrestError } from '@supabase/supabase-js'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { createPlutoErrorStub } from './fixtures/i18n-stub'
 
 // content-adapter.ts imports `serverSupabaseClient` from '#supabase/server',
 // a virtual module Nitro only resolves inside a real Nuxt build. Stubbed
@@ -22,6 +23,7 @@ const { resolveStatusColumn, resolveTimestampColumn, toContentError } = await im
 // global type — redeclaring it here collided with that (TS2451).
 beforeEach(() => {
   vi.stubGlobal('createError', (input: object) => input)
+  vi.stubGlobal('createPlutoError', createPlutoErrorStub)
 })
 
 afterEach(() => {
@@ -101,6 +103,9 @@ describe('toContentError', () => {
 
     expect(result.statusCode).toBe(409)
     expect(result.statusMessage).toBe('A record with this value already exists.')
+    expect(result.data).toMatchObject({
+      i18n: { key: 'supabase.errors.duplicateRecord' },
+    })
   })
 
   it('maps 23503 (foreign_key_violation) to a 400', () => {
@@ -109,6 +114,9 @@ describe('toContentError', () => {
 
     expect(result.statusCode).toBe(400)
     expect(result.statusMessage).toBe('This references a record that does not exist.')
+    expect(result.data).toMatchObject({
+      i18n: { key: 'supabase.errors.missingReference' },
+    })
   })
 
   it('maps any other code to a 500, using the raw message', () => {

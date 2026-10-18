@@ -168,3 +168,12 @@ their own `locale` through the existing select policy. See the `profile-language
 - **A single source of truth for "is this user an admin".** `profiles.is_admin` and the
   `user_roles` `admin` grant can, in principle, drift apart (for example, a role revoked by hand
   without also flipping the column). Folding these into one source of truth is later cleanup.
+
+## Translation
+
+`requireAdmin` and `requireCapability` throw `createPlutoError` with the keys
+`supabase.errors.notLoggedIn`, `notAdmin`, and `missingPermission` (it has the `{capability}`
+parameter). The `statusMessage` stays English. `requireCapability` takes an optional `messageKey`
+next to `message`. A custom `message` with no `messageKey` keeps a plain English error. The
+capability labels in `pluto-extension.ts` are keys (`supabase.capabilities.*`). Role names from the
+database stay as stored. See the `admin-translation` skill.

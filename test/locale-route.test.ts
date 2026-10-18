@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { createPlutoErrorStub } from './fixtures/i18n-stub'
 
 // The routes use Nitro auto-imports (`defineEventHandler`, `createError`,
 // `createPlutoError`, `readBody`, `useRuntimeConfig`) and `#supabase/server`.
@@ -48,7 +49,7 @@ beforeEach(() => {
   vi.stubGlobal('defineEventHandler', (handler: unknown) => handler)
   vi.stubGlobal('readBody', async () => body)
   vi.stubGlobal('createError', (input: object) => input)
-  vi.stubGlobal('createPlutoError', (input: object) => input)
+  vi.stubGlobal('createPlutoError', createPlutoErrorStub)
   vi.stubGlobal('useRuntimeConfig', () => ({
     public: { plutoI18n: { adminLocales: ['en', 'pt-BR'] } },
   }))
@@ -109,6 +110,7 @@ describe('pOST /api/profile/locale', () => {
 
     await expect((await postHandler())({})).rejects.toMatchObject({
       statusCode: 401,
+      data: { i18n: { key: 'supabase.errors.notLoggedIn' } },
     })
     expect(rpc).not.toHaveBeenCalled()
   })
@@ -129,6 +131,7 @@ describe('pOST /api/profile/locale', () => {
 
     await expect((await postHandler())({})).rejects.toMatchObject({
       statusCode: 400,
+      data: { i18n: { key: 'supabase.errors.localeUnsupported' } },
     })
     expect(rpc).not.toHaveBeenCalled()
   })
@@ -160,7 +163,7 @@ describe('pOST /api/profile/locale', () => {
 
       await expect((await postHandler())({})).rejects.toMatchObject({
         statusCode: 409,
-        key: 'supabase.profile.migrationPending',
+        data: { i18n: { key: 'supabase.profile.migrationPending' } },
       })
     }
   })

@@ -2,6 +2,208 @@
   "supabase": {
     "profile": {
       "migrationPending": "Aplique as migrações pendentes do banco de dados para salvar seu idioma."
+    },
+    "errors": {
+      "notLoggedIn": "Entre na sua conta para continuar.",
+      "notAdmin": "Sua conta não é de administrador.",
+      "missingPermission": "Sua conta não tem a permissão \"{capability}\".",
+      "setupCompleted": "A configuração já foi concluída.",
+      "coreSchemaMissing": "Esquema principal não encontrado. Reinstale @plutocms/supabase e reinicie o servidor de desenvolvimento.",
+      "fetchUsers": "Erro ao buscar os usuários: {message}",
+      "fetchUser": "Erro ao buscar o usuário: {message}",
+      "localeUnsupported": "Este idioma não está disponível.",
+      "duplicateRecord": "Já existe um registro com este valor.",
+      "missingReference": "Isto aponta para um registro que não existe.",
+      "migrationStatus": "Erro ao ler o status das migrações: {message}"
+    },
+    "auth": {
+      "backToLogin": "Voltar para o login",
+      "passwordMismatch": "As senhas não coincidem.",
+      "fields": {
+        "email": "E-mail",
+        "password": "Senha",
+        "username": "Nome de usuário",
+        "displayName": "Nome de exibição",
+        "confirmPassword": "Confirmar senha"
+      },
+      "toasts": {
+        "loginFailed": "Não foi possível entrar",
+        "loggedOut": "Sessão encerrada com sucesso",
+        "resetFailed": "Não foi possível enviar o e-mail de redefinição",
+        "updateFailed": "Não foi possível atualizar a senha",
+        "passwordUpdated": "Senha atualizada com sucesso",
+        "notLoggedIn": "Você não está conectado",
+        "notLoggedInDescription": "Entre na sua conta para continuar."
+      },
+      "errors": {
+        "unknown": "Ocorreu um erro desconhecido.",
+        "invalid_credentials": "E-mail ou senha inválidos.",
+        "email_not_confirmed": "Seu e-mail ainda não foi confirmado. Verifique sua caixa de entrada para encontrar o link de verificação.",
+        "over_request_rate_limit": "Muitas tentativas. Aguarde um momento e tente novamente.",
+        "over_email_send_rate_limit": "Muitos e-mails enviados. Aguarde um momento e tente novamente.",
+        "weak_password": "Esta senha é muito fraca. Escolha uma senha mais forte.",
+        "same_password": "A nova senha deve ser diferente da senha atual.",
+        "user_not_found": "Nenhuma conta foi encontrada para este e-mail.",
+        "email_exists": "Já existe uma conta com este e-mail.",
+        "user_already_exists": "Já existe uma conta com este e-mail.",
+        "signup_disabled": "O cadastro está desativado neste site.",
+        "email_address_invalid": "Este endereço de e-mail não é válido."
+      },
+      "confirm": {
+        "pageTitle": "Verificação da conta",
+        "title": "Conta verificada!",
+        "description": "Sua conta foi verificada com sucesso. Agora você já pode usar o painel.",
+        "goToDashboard": "Ir para o painel"
+      },
+      "forgot": {
+        "pageTitle": "Esqueceu a senha?",
+        "title": "Esqueceu a senha?",
+        "description": "Informe seu e-mail e enviaremos um link de redefinição.",
+        "submit": "Enviar link de redefinição",
+        "sentTitle": "Verifique sua caixa de entrada",
+        "sentDescription": "Se existir uma conta para {email}, enviamos um link de redefinição de senha. Verifique seu e-mail e siga o link."
+      },
+      "login": {
+        "title": "Entrar",
+        "submit": "Entrar",
+        "createAccount": "Criar conta",
+        "backToHome": "Voltar para o início",
+        "forgotPassword": "Esqueceu a senha?"
+      },
+      "update": {
+        "title": "Atualizar senha",
+        "description": "Informe sua nova senha abaixo.",
+        "newPassword": "Nova senha",
+        "confirmNewPassword": "Confirmar nova senha",
+        "submit": "Atualizar senha",
+        "doneTitle": "Senha atualizada!",
+        "doneDescription": "Sua senha foi alterada. Agora você já pode entrar com a nova senha.",
+        "goToLogin": "Ir para o login"
+      },
+      "signup": {
+        "pageTitle": "Cadastro",
+        "title": "Criar conta",
+        "submit": "Criar conta",
+        "usernamePlaceholder": "ex.: joaosilva",
+        "displayNamePlaceholder": "ex.: João Silva",
+        "created": "Conta criada com sucesso",
+        "createdDescription": "Ainda é preciso verificar seu e-mail para poder entrar.",
+        "failed": "Não foi possível criar a conta",
+        "almostThere": "Quase lá!",
+        "verificationSent": "Enviamos um link de verificação para o seu e-mail. Verifique sua caixa de entrada e siga as instruções para verificar sua conta.",
+        "closePage": "Você pode fechar esta página. Você entrará automaticamente assim que verificar seu e-mail.",
+        "checkSpam": "Se você não encontrar o e-mail, verifique sua pasta de spam."
+      }
+    },
+    "navbar": {
+      "defaultUserName": "Usuário",
+      "github": "Pluto no GitHub",
+      "logout": "Sair",
+      "openNavigation": "Abrir navegação",
+      "goHome": "Ir para o início do painel",
+      "visitSite": "Visitar {domain}",
+      "viewSite": "Ver site",
+      "openUserMenu": "Abrir menu do usuário"
+    },
+    "settings": {
+      "general": {
+        "title": "Geral",
+        "websiteTitle": "Título do site",
+        "websiteTitlePlaceholder": "ex.: Meu site",
+        "websiteDescription": "Descrição do site",
+        "websiteDescriptionPlaceholder": "ex.: Descrição do meu site",
+        "websiteUrl": "URL do site",
+        "websiteUrlPlaceholder": "ex.: https://exemplo.com"
+      }
+    },
+    "capabilities": {
+      "settingsManage": "Gerenciar as configurações do site",
+      "usersRead": "Ver todas as contas de usuário"
+    },
+    "envWarning": {
+      "title": "A string de conexão não foi salva automaticamente",
+      "intro": "A alteração no banco de dados já foi concluída. O Pluto não conseguiu gravar {variable} no arquivo {file} do seu projeto. Por isso, ele vai pedir de novo na próxima vez, a menos que você adicione a linha manualmente:",
+      "step1": "Abra (ou crie) o arquivo {file} na pasta raiz do seu projeto.",
+      "step2": "Adicione esta linha. Substitua qualquer linha {variable} existente por ela.",
+      "step3": "Reinicie o servidor.",
+      "copyLine": "Copiar a linha DATABASE_URL",
+      "copied": "Copiado",
+      "copiedDescription": "A linha DATABASE_URL está na sua área de transferência.",
+      "copyFailed": "Não foi possível copiar",
+      "copyFailedDescription": "Selecione e copie a linha manualmente."
+    },
+    "connection": {
+      "connectionString": "String de conexão do Supabase",
+      "connectionStringHelp": "Você encontra sua string de conexão {link}.",
+      "connectionStringHelpLink": "clicando aqui",
+      "password": "Senha do banco de dados",
+      "passwordInfo": "Sua senha é criada quando você cria seu projeto no Supabase. Você pode alterá-la em {link}.",
+      "passwordInfoLink": "Configurações do banco de dados do Supabase",
+      "whyTitle": "Por que preciso informar a senha do banco de dados?",
+      "restartTitle": "Isto reinicia o servidor de desenvolvimento",
+      "restarting": "Servidor de desenvolvimento reiniciando",
+      "reconnected": "Reconectado",
+      "stillReconnecting": "Ainda reconectando",
+      "stillReconnectingDescription": "O servidor de desenvolvimento está demorando mais que o esperado. Recarregue esta página em instantes.",
+      "checkConsole": "Verifique o console para ver mais detalhes."
+    },
+    "setup": {
+      "title": "Assistente de configuração",
+      "steps": {
+        "database": "Configuração do banco de dados",
+        "complete": "Concluir configuração"
+      },
+      "submit": "Configurar banco de dados",
+      "next": "Enviar",
+      "why": "Ela será usada para criar a estrutura do seu banco de dados. Ela não será armazenada em nenhum lugar. Isso é uma {promise}! 😉",
+      "promise": "promessa",
+      "promiseTooltip": "Clique no botão 'Detalhes técnicos' para saber mais",
+      "technicalDetails": "Detalhes técnicos",
+      "technicalDetailsRequest": "Ao clicar em \"Próximo\", será feita uma requisição para {route} com a senha do banco de dados que você informou. Essa API usará a senha para abrir uma conexão direta do PostgreSQL com seu banco de dados do Supabase e executar as consultas SQL destes {files}.",
+      "technicalDetailsRoute": "uma rota do servidor",
+      "technicalDetailsFiles": "arquivos SQL",
+      "technicalDetailsStored": "Depois que a configuração terminar, a senha NÃO será armazenada nem usada para nenhum outro fim.",
+      "restartDescription": "Salvar sua string de conexão a grava no arquivo .env. Em desenvolvimento, isso reinicia o servidor automaticamente. A página vai exibir brevemente uma mensagem de reconexão. Isso é esperado e não é um erro.",
+      "restartingDescription": "A configuração está terminando. Reconectando…",
+      "reconnectedDescription": "O servidor voltou. Seu banco de dados foi configurado.",
+      "failed": "Falha ao configurar o banco de dados",
+      "failedDescription": "Verifique sua senha e tente novamente.",
+      "complete": "Banco de dados configurado",
+      "completeDescription": "Seu banco de dados foi configurado com sucesso.",
+      "error": "Erro ao configurar o banco de dados",
+      "doneTitle": "Configuração concluída",
+      "doneDescription": "Seu banco de dados está pronto. Crie sua conta de administrador fazendo o cadastro.",
+      "goToSignup": "Ir para o cadastro"
+    },
+    "migrations": {
+      "title": "Migrações",
+      "banner": "{count} camada precisa de uma migração do banco de dados | {count} camadas precisam de uma migração do banco de dados",
+      "goTo": "Ir para as migrações",
+      "loading": "Carregando o status das migrações…",
+      "upToDate": "Tudo está atualizado",
+      "upToDateDescription": "Nenhuma camada precisa de migração do banco de dados.",
+      "pendingLayers": "Camadas pendentes ({count})",
+      "appliedLayers": "Camadas aplicadas ({count})",
+      "why": "Ela é usada uma única vez para abrir uma conexão direta do PostgreSQL e executar os esquemas pendentes das camadas. Depois, é gravada no arquivo .env do servidor, e as próximas migrações não precisam pedir a senha. Ela nunca é armazenada em outro lugar e nunca é enviada de volta ao seu navegador.",
+      "restartDescription": "Salvar uma nova string de conexão a grava no arquivo .env. Em desenvolvimento, isso reinicia o servidor automaticamente. A página vai exibir brevemente uma mensagem de reconexão. Isso é esperado e não é um erro.",
+      "restartingDescription": "Salvar uma nova string de conexão reinicia o servidor de desenvolvimento. Reconectando…",
+      "reconnectingBanner": "Salvar uma nova string de conexão reinicia o servidor de desenvolvimento. Reconectando — esta página será atualizada sozinha quando o servidor voltar.",
+      "reconnectedAllApplied": "O servidor voltou. Todas as migrações foram aplicadas.",
+      "reconnectedPending": "O servidor voltou. {count} camada(s) ainda pendente(s) — verifique acima.",
+      "apply": "Aplicar migrações pendentes",
+      "applied": "Migrações aplicadas",
+      "applyFailed": "Não foi possível aplicar as migrações",
+      "connectionRequired": "É necessária uma string de conexão do banco de dados.",
+      "error": "Erro ao aplicar as migrações",
+      "lastRun": "Última execução",
+      "status": {
+        "applied": "aplicada",
+        "skipped": "ignorada",
+        "failed": "falhou"
+      },
+      "loadFailed": "Não foi possível carregar o status das migrações",
+      "loadFailedDescription": "Este não é o caso de reinício do servidor de desenvolvimento descrito acima. Algo diferente deu errado ao ler o status das migrações. Verifique o console do servidor e tente novamente.",
+      "retry": "Tentar novamente"
     }
   }
 }

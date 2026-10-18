@@ -45,7 +45,11 @@ export async function requireAdmin(event: H3Event) {
   const user = await serverSupabaseUser(event)
 
   if (!user) {
-    throw createError({ statusCode: 401, statusMessage: 'You must be logged in.' })
+    throw createPlutoError({
+      statusCode: 401,
+      message: 'You must be logged in.',
+      key: 'supabase.errors.notLoggedIn',
+    })
   }
 
   const client = await serverSupabaseClient<Database>(event)
@@ -64,7 +68,11 @@ export async function requireAdmin(event: H3Event) {
   }
 
   if (error || !profile?.is_admin) {
-    throw createError({ statusCode: 403, statusMessage: 'Your account is not an admin.' })
+    throw createPlutoError({
+      statusCode: 403,
+      message: 'Your account is not an admin.',
+      key: 'supabase.errors.notAdmin',
+    })
   }
 
   return user

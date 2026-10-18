@@ -3,8 +3,10 @@ definePageMeta({
   layout: 'auth',
 })
 
+const { t } = usePlutoI18n()
+
 useHead({
-  title: 'Account Verification',
+  title: () => t('supabase.auth.confirm.pageTitle'),
 })
 </script>
 
@@ -18,17 +20,16 @@ useHead({
               <UIcon name="lucide:mail-check" class="inline-block" />
             </span>
 
-            <h1 class="text-3xl font-bold">Account verified!</h1>
+            <h1 class="text-3xl font-bold">{{ t('supabase.auth.confirm.title') }}</h1>
           </hgroup>
 
           <p>
-            Your account has been successfully verified. You can now start using
-            the Dashboard.
+            {{ t('supabase.auth.confirm.description') }}
           </p>
 
           <div class="flex items-center justify-center gap-x-4">
             <UButton to="/admin" color="primary" icon="lucide:layout-dashboard">
-              Go to Dashboard
+              {{ t('supabase.auth.confirm.goToDashboard') }}
             </UButton>
           </div>
         </div>

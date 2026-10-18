@@ -1,6 +1,8 @@
 <script setup lang="ts">
+const { t } = usePlutoI18n()
+
 useHead({
-  title: 'Migrations',
+  title: () => t('supabase.migrations.title'),
 })
 
 const config = useRuntimeConfig()
@@ -14,6 +16,19 @@ const { status, fetchStatus, pendingCount, refresh, runMigrations } =
   useMigrations()
 
 const isDev = import.meta.dev
+
+// The text of each result status that the server returns.
+const statusLabels: Record<string, string> = {
+  applied: 'supabase.migrations.status.applied',
+  skipped: 'supabase.migrations.status.skipped',
+  failed: 'supabase.migrations.status.failed',
+}
+
+function statusText(status: string): string {
+  const key = statusLabels[status]
+
+  return key ? t(key) : status
+}
 
 // Only the layers that actually have a pending, or applied, file — used to
 // render per-file detail under each layer below.
@@ -86,9 +101,9 @@ async function applyMigrations(useForm: boolean) {
 
     if (result.success === false) {
       toast.add({
-        title: 'Could not apply migrations',
+        title: t('supabase.migrations.applyFailed'),
         description: result.needsConnectionString
-          ? 'A database connection string is required.'
+          ? t('supabase.migrations.connectionRequired')
           : undefined,
         icon: 'lucide:circle-x',
         color: 'error',
@@ -98,7 +113,7 @@ async function applyMigrations(useForm: boolean) {
     }
 
     toast.add({
-      title: 'Migrations applied',
+      title: t('supabase.migrations.applied'),
       icon: 'lucide:check-circle',
       color: 'success',
     })
@@ -118,9 +133,8 @@ async function applyMigrations(useForm: boolean) {
 
     if (isDev && useForm && !hasStatusCode) {
       toast.add({
-        title: 'Dev server restarting',
-        description:
-          'Saving a new connection string restarts the dev server. Reconnecting…',
+        title: t('supabase.connection.restarting'),
+        description: t('supabase.migrations.restartingDescription'),
         icon: 'lucide:refresh-cw',
         color: 'info',
       })
@@ -134,18 +148,21 @@ async function applyMigrations(useForm: boolean) {
       toast.add(
         recovered
           ? {
-              title: 'Reconnected',
+              title: t('supabase.connection.reconnected'),
               description:
                 pendingCount.value === 0
-                  ? 'The server is back. All migrations were applied.'
-                  : `The server is back. ${pendingCount.value} layer(s) still pending — check above.`,
+                  ? t('supabase.migrations.reconnectedAllApplied')
+                  : t('supabase.migrations.reconnectedPending', {
+                      count: pendingCount.value,
+                    }),
               icon: 'lucide:check-circle',
               color: 'success',
             }
           : {
-              title: 'Still reconnecting',
-              description:
-                'The dev server is taking longer than expected. Reload this page in a moment.',
+              title: t('supabase.connection.stillReconnecting'),
+              description: t(
+                'supabase.connection.stillReconnectingDescription'
+              ),
               icon: 'lucide:triangle-alert',
               color: 'warning',
             }
@@ -159,8 +176,8 @@ async function applyMigrations(useForm: boolean) {
     }
 
     toast.add({
-      title: 'Error applying migrations',
-      description: 'Please check the console for more details.',
+      title: t('supabase.migrations.error'),
+      description: t('supabase.connection.checkConsole'),
       icon: 'lucide:circle-x',
       color: 'error',
     })
@@ -172,15 +189,15 @@ async function applyMigrations(useForm: boolean) {
 
 <template>
   <AdminView>
-    <h1 class="text-3xl font-bold lg:text-4xl">Migrations</h1>
+    <h1 class="text-3xl font-bold lg:text-4xl">{{ t('supabase.migrations.title') }}</h1>
 
     <UAlert
       v-if="isReconnecting"
+      :title="t('supabase.connection.restarting')"
+      :description="t('supabase.migrations.reconnectingBanner')"
       color="info"
       variant="outline"
       icon="lucide:refresh-cw"
-      title="Dev server restarting"
-      description="Saving a new connection string restarts the dev server. Reconnecting — this page will update on its own once it's back."
     />
 
     <div
@@ -188,7 +205,7 @@ async function applyMigrations(useForm: boolean) {
       class="flex items-center gap-x-2"
     >
       <Icon name="svg-spinners:ring-resize" />
-      <span>Loading migration status…</span>
+      <span>{{ t('supabase.migrations.loading') }}</span>
     </div>
 
     <template v-else-if="status">
@@ -196,16 +213,20 @@ async function applyMigrations(useForm: boolean) {
         <div class="flex flex-col gap-y-6">
           <UAlert
             v-if="pendingCount === 0"
+            :title="t('supabase.migrations.upToDate')"
+            :description="t('supabase.migrations.upToDateDescription')"
             color="success"
             variant="outline"
             icon="lucide:check-circle"
-            title="Everything is up to date"
-            description="No layer needs a database migration."
           />
 
           <div v-else class="flex flex-col gap-y-2">
             <h2 class="font-semibold">
-              Pending layers ({{ status.pending.length }})
+              {{
+                t('supabase.migrations.pendingLayers', {
+                  count: status.pending.length,
+                })
+              }}
             </h2>
             <ul class="flex flex-col gap-y-2 text-sm">
               <li v-for="layer in pendingLayers" :key="layer.layerName">
@@ -221,7 +242,11 @@ async function applyMigrations(useForm: boolean) {
 
           <div v-if="status.applied.length" class="flex flex-col gap-y-2">
             <h2 class="font-semibold">
-              Applied layers ({{ status.applied.length }})
+              {{
+                t('supabase.migrations.appliedLayers', {
+                  count: status.applied.length,
+                })
+              }}
             </h2>
             <ul class="flex flex-col gap-y-2 text-sm">
               <li v-for="layer in appliedLayers" :key="layer.layerName">
@@ -241,7 +266,7 @@ async function applyMigrations(useForm: boolean) {
               class="flex flex-col gap-y-4"
               @submit="applyMigrations(true)"
             >
-              <UFormField label="Supabase connection string" required>
+              <UFormField :label="t('supabase.connection.connectionString')" required>
                 <UInput
                   v-model="connectionForm.connectionString"
                   :disabled="isRunning"
@@ -250,19 +275,24 @@ async function applyMigrations(useForm: boolean) {
                 />
 
                 <template #help>
-                  You can find your connection string
-                  <ULink
-                    :to="`https://supabase.com/dashboard/project/${projectId}/database/settings?showConnect=true&connectTab=direct&method=transaction`"
-                    target="_blank"
-                    class="underline"
-                    external
+                  <SupabaseMessageParts
+                    :message="t('supabase.connection.connectionStringHelp')"
                   >
-                    clicking here </ULink
-                  >.
+                    <template #link>
+                      <ULink
+                        :to="`https://supabase.com/dashboard/project/${projectId}/database/settings?showConnect=true&connectTab=direct&method=transaction`"
+                        target="_blank"
+                        class="underline"
+                        external
+                      >
+                        {{ t('supabase.connection.connectionStringHelpLink') }}
+                      </ULink>
+                    </template>
+                  </SupabaseMessageParts>
                 </template>
               </UFormField>
 
-              <UFormField label="Database password" required>
+              <UFormField :label="t('supabase.connection.password')" required>
                 <UInput
                   v-model="connectionForm.password"
                   :disabled="isRunning"
@@ -278,32 +308,36 @@ async function applyMigrations(useForm: boolean) {
                 variant="outline"
               >
                 <template #description>
-                  Your password is created when you create your Supabase
-                  project. You can change it in the
-                  <ULink
-                    to="https://supabase.com/dashboard/project/_/database/settings"
-                    target="_blank"
+                  <SupabaseMessageParts
+                    :message="t('supabase.connection.passwordInfo')"
                   >
-                    Supabase Database Settings </ULink
-                  >.
+                    <template #link>
+                      <ULink
+                        to="https://supabase.com/dashboard/project/_/database/settings"
+                        target="_blank"
+                      >
+                        {{ t('supabase.connection.passwordInfoLink') }}
+                      </ULink>
+                    </template>
+                  </SupabaseMessageParts>
                 </template>
               </UAlert>
 
               <UAlert
+                :title="t('supabase.connection.whyTitle')"
+                :description="t('supabase.migrations.why')"
                 color="warning"
                 variant="outline"
-                title="Why do I need to provide a database password?"
                 icon="lucide:info"
-                description="It is used once to open a direct PostgreSQL connection and run the pending layer schemas. It is then written to .env on the server, so future migrations need no prompt. It is never stored anywhere else, and never sent back to your browser."
               />
 
               <UAlert
                 v-if="isDev"
+                :title="t('supabase.connection.restartTitle')"
+                :description="t('supabase.migrations.restartDescription')"
                 color="info"
                 variant="outline"
-                title="This restarts the dev server"
                 icon="lucide:refresh-cw"
-                description="Saving a new connection string writes it to .env. In development, that restarts the server automatically. The page will briefly show a reconnecting message — this is expected, not an error."
               />
 
               <div class="flex">
@@ -314,7 +348,7 @@ async function applyMigrations(useForm: boolean) {
                   icon="lucide:database"
                   class="w-full justify-center sm:w-auto"
                 >
-                  Apply pending migrations
+                  {{ t('supabase.migrations.apply') }}
                 </UButton>
               </div>
             </UForm>
@@ -327,7 +361,7 @@ async function applyMigrations(useForm: boolean) {
                 class="w-full justify-center sm:w-auto"
                 @click="applyMigrations(false)"
               >
-                Apply pending migrations
+                {{ t('supabase.migrations.apply') }}
               </UButton>
             </div>
           </template>
@@ -336,7 +370,9 @@ async function applyMigrations(useForm: boolean) {
 
       <UCard v-if="lastRun">
         <div class="flex flex-col gap-y-4">
-          <h2 class="font-semibold">Last run</h2>
+          <h2 class="font-semibold">
+            {{ t('supabase.migrations.lastRun') }}
+          </h2>
 
           <EnvPersistWarning
             v-if="lastRun.success && lastRun.persisted === false"
@@ -354,7 +390,7 @@ async function applyMigrations(useForm: boolean) {
               <span class="font-mono"
               >{{ result.layerName }}/{{ result.migrationName }}</span
               >
-              — {{ result.status }}
+              — {{ statusText(result.status) }}
               <span v-if="result.error" class="text-error">
                 : {{ result.error }}</span
               >
@@ -366,11 +402,11 @@ async function applyMigrations(useForm: boolean) {
 
     <UAlert
       v-else
+      :title="t('supabase.migrations.loadFailed')"
+      :description="t('supabase.migrations.loadFailedDescription')"
       color="error"
       variant="outline"
       icon="lucide:circle-x"
-      title="Could not load migration status"
-      description="This isn't the dev-server-restart case above — something else went wrong reading migration status. Check the server console, then try again."
     >
       <template #actions>
         <UButton
@@ -379,7 +415,7 @@ async function applyMigrations(useForm: boolean) {
           icon="lucide:refresh-cw"
           @click="refresh()"
         >
-          Retry
+          {{ t('supabase.migrations.retry') }}
         </UButton>
       </template>
     </UAlert>

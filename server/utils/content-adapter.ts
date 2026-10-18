@@ -82,17 +82,19 @@ export function toContentError(error: PostgrestError) {
 
   // 23505: unique_violation.
   if (error.code === '23505') {
-    return createError({
+    return createPlutoError({
       statusCode: 409,
-      statusMessage: 'A record with this value already exists.',
+      message: 'A record with this value already exists.',
+      key: 'supabase.errors.duplicateRecord',
     })
   }
 
   // 23503: foreign_key_violation.
   if (error.code === '23503') {
-    return createError({
+    return createPlutoError({
       statusCode: 400,
-      statusMessage: 'This references a record that does not exist.',
+      message: 'This references a record that does not exist.',
+      key: 'supabase.errors.missingReference',
     })
   }
 
