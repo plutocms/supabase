@@ -30,7 +30,7 @@
     "postinstall": "nuxt prepare",
     "prettier": "prettier --write .",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix && prettier --write .",
+    "lint:fix": "eslint . --fix",
     "typecheck": "nuxi typecheck",
     "test": "vitest run",
     "supabase-types": "bun ./scripts/supabase-typegen.ts"
