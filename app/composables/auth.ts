@@ -1,33 +1,17 @@
-import type {
-  RouteLocationNormalizedGeneric,
-  RouteLocationRaw,
-} from 'vue-router'
+import type { MaybeRefOrGetter } from 'vue'
 
 interface PlutoSupabaseAuthOptions {
-  route?: RouteLocationNormalizedGeneric
+  /**
+   * A safe local path to open after a sign-in. Core checks it with
+   * `safeRedirect`. When it is empty, the sign-in opens the admin home.
+   */
+  redirect?: MaybeRefOrGetter<string | undefined>
 }
 
-interface PlutoUserMetadata {
-  display_name?: string
-  full_name?: string
-  name?: string
-  username?: string
-  is_admin?: boolean
-  [key: string]: unknown
-}
-
-// Admin paths that a signed-out visitor may load. Keep this list in sync
-// with every public `/admin/*` page.
-export const allowedUnauthenticatedPaths: RouteLocationRaw[] = [
-  '/admin/login',
-  '/admin/signup',
-  '/admin/confirm',
-  '/admin/setup',
-  '/admin/forgot-password',
-  '/admin/update-password',
-]
-
-export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
+// Sign-in, password reset and password update for the supabase auth pages.
+// The session, the user and the sign-out are in the auth driver
+// (app/plugins/pluto-extension.ts), not here.
+export function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
   const toast = useToast()
   // Read at setup, while the Nuxt context exists. The functions below run
   // later, after an await, when the context is gone.
@@ -36,34 +20,7 @@ export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
     resolveAuthErrorText(error, { t, te })
 
   const supabase = useSupabaseClient()
-  const supabaseSession = useSupabaseSession()
 
-  const supabaseUser = useSupabaseUser()
-  const userMetadata = useState<PlutoUserMetadata | null>(
-    'pluto-auth-user-metadata',
-    () => null
-  )
-
-  const { data: authenticatedUser } = await supabase.auth.getUser()
-
-  if (authenticatedUser.user?.user_metadata) {
-    userMetadata.value = authenticatedUser.user.user_metadata
-  }
-
-  watch(
-    supabaseUser,
-    (currentUser) => {
-      if (currentUser?.user_metadata) {
-        userMetadata.value = currentUser.user_metadata
-      }
-    },
-    { immediate: true }
-  )
-
-  const user = computed(
-    () => supabaseUser.value?.user_metadata ?? userMetadata.value
-  )
-  const isLoggedIn = computed<boolean>(() => !!supabaseSession.value)
   const isSubmitting = ref<boolean>(false)
 
   interface LoginForm {
@@ -103,6 +60,17 @@ export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
           .eq('config_name', 'first_setup')
 
         if (healthcheckError) {
+          console.error(`Error saving first setup: ${healthcheckError.message}`)
+
+          toast.add({
+            title: t('supabase.auth.toasts.loginFailed'),
+            description: authErrorText(healthcheckError),
+            icon: 'lucide:circle-x',
+            color: 'error',
+          })
+
+          isSubmitting.value = false
+
           return {
             success: false,
             message: healthcheckError.message,
@@ -112,7 +80,7 @@ export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
       }
 
       return navigateTo(
-        (authOptions?.route?.query.redirect as string) ?? '/admin/home'
+        toValue(authOptions?.redirect) || SUPABASE_SIGN_IN_FALLBACK
       )
     } catch (error) {
       if (import.meta.dev) {
@@ -123,36 +91,6 @@ export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
 
       isSubmitting.value = false
     }
-  }
-
-  interface LogoutOptions {
-    redirectTo?: string
-    showToast?: boolean
-  }
-
-  async function logout(options?: LogoutOptions) {
-    await supabase.auth.signOut()
-    userMetadata.value = null
-
-    if (options?.showToast) {
-      console.warn(`User logged out`)
-
-      toast.add({
-        title: t('supabase.auth.toasts.loggedOut'),
-        icon: 'lucide:check',
-        color: 'success',
-      })
-    }
-
-    if (options?.redirectTo) {
-      return navigateTo(`/admin/login?redirect=${options.redirectTo}`)
-    }
-
-    if (authOptions?.route && authOptions.route.path.startsWith('/admin')) {
-      return navigateTo('/admin/login')
-    }
-
-    return navigateTo('/admin/login')
   }
 
   async function requestPasswordReset(email: string) {
@@ -228,13 +166,9 @@ export async function useAuth(authOptions?: PlutoSupabaseAuthOptions) {
   }
 
   return {
-    isLoggedIn,
     isSubmitting,
-    user,
     login,
-    logout,
     requestPasswordReset,
     updatePassword,
-    allowedUnauthenticatedPaths,
   }
 }

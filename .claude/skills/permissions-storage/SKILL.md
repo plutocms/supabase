@@ -144,8 +144,9 @@ tells a component whether to show or hide UI. This is never a security boundary 
 real enforcement is always the server-side `requireCapability` call, backed by RLS. Hiding a
 button does not stop a direct API call; only the guard does.
 
-`app/pages/admin.vue` calls `load()` when the user logs in, and `clear()` when they log out,
-watching `isLoggedIn` the same way it already watches `visibility` for other purposes.
+Core's `pluto-auth-sync.client.ts` calls `load()` when the user logs in, and `clear()` when they
+log out. It watches `loggedIn` of the auth driver, on every page. This layer has no sync plugin.
+See the [auth-driver](../auth-driver/SKILL.md) skill.
 
 ## Why `profiles` has no UPDATE policy
 

@@ -28,12 +28,9 @@
       },
       "toasts": {
         "loginFailed": "Could not log in",
-        "loggedOut": "Logged out successfully",
         "resetFailed": "Could not send reset email",
         "updateFailed": "Could not update password",
-        "passwordUpdated": "Password updated successfully",
-        "notLoggedIn": "You are not logged in",
-        "notLoggedInDescription": "Please log in to continue."
+        "passwordUpdated": "Password updated successfully"
       },
       "errors": {
         "unknown": "An unknown error occurred.",
@@ -65,10 +62,7 @@
       },
       "login": {
         "title": "Login",
-        "submit": "Login",
-        "createAccount": "Create Account",
-        "backToHome": "Back to Home",
-        "forgotPassword": "Forgot password?"
+        "submit": "Login"
       },
       "update": {
         "title": "Update Password",
@@ -94,16 +88,6 @@
         "closePage": "You can close this page. You will be logged in automatically once you verify your email.",
         "checkSpam": "If you don't see the email, please check your spam folder."
       }
-    },
-    "navbar": {
-      "defaultUserName": "User",
-      "github": "Pluto on GitHub",
-      "logout": "Logout",
-      "openNavigation": "Open navigation",
-      "goHome": "Go to dashboard home",
-      "visitSite": "Visit {domain}",
-      "viewSite": "View site",
-      "openUserMenu": "Open user menu"
     },
     "settings": {
       "general": {

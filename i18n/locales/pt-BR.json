@@ -28,12 +28,9 @@
       },
       "toasts": {
         "loginFailed": "Não foi possível entrar",
-        "loggedOut": "Sessão encerrada com sucesso",
         "resetFailed": "Não foi possível enviar o e-mail de redefinição",
         "updateFailed": "Não foi possível atualizar a senha",
-        "passwordUpdated": "Senha atualizada com sucesso",
-        "notLoggedIn": "Você não está conectado",
-        "notLoggedInDescription": "Entre na sua conta para continuar."
+        "passwordUpdated": "Senha atualizada com sucesso"
       },
       "errors": {
         "unknown": "Ocorreu um erro desconhecido.",
@@ -65,10 +62,7 @@
       },
       "login": {
         "title": "Entrar",
-        "submit": "Entrar",
-        "createAccount": "Criar conta",
-        "backToHome": "Voltar para o início",
-        "forgotPassword": "Esqueceu a senha?"
+        "submit": "Entrar"
       },
       "update": {
         "title": "Atualizar senha",
@@ -94,16 +88,6 @@
         "closePage": "Você pode fechar esta página. Você entrará automaticamente assim que verificar seu e-mail.",
         "checkSpam": "Se você não encontrar o e-mail, verifique sua pasta de spam."
       }
-    },
-    "navbar": {
-      "defaultUserName": "Usuário",
-      "github": "Pluto no GitHub",
-      "logout": "Sair",
-      "openNavigation": "Abrir navegação",
-      "goHome": "Ir para o início do painel",
-      "visitSite": "Visitar {domain}",
-      "viewSite": "Ver site",
-      "openUserMenu": "Abrir menu do usuário"
     },
     "settings": {
       "general": {

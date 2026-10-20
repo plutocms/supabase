@@ -2,7 +2,6 @@
 import type { StepperItem } from '@nuxt/ui'
 
 definePageMeta({
-  middleware: ['setup-check'],
   layout: 'setup',
 })
 

@@ -13,7 +13,8 @@ system of `@plutocms/pluto` (see the `i18n` skill in `pluto`) through a locale d
 - `server/api/profile/locale.get.ts` — returns `{ locale: string | null }` for the calling user.
 - `server/api/profile/locale.post.ts` — stores the language of the calling user.
 - `app/plugins/pluto-extension.ts` — registers the `localeDriver` (`load` and `save`).
-- `app/plugins/pluto-locale-sync.client.ts` — loads the stored language when a session appears.
+- Core's `pluto-auth-sync.client.ts` loads the stored language when a session appears. This layer
+  has no sync plugin of its own.
 - `i18n/locales/en.json`, `i18n/locales/pt-BR.json` — the text of this layer, in the `supabase`
   namespace. They hold the text of the whole admin of this layer (see the `admin-translation` skill).
 - `test/locale-route.test.ts`, `test/migrations-005.test.ts`, `test/i18n-locale-files.test.ts`.
@@ -60,9 +61,10 @@ The `localeDriver` in `pluto-extension.ts` calls the two routes. A failed `save`
 `Error` whose message comes from `usePlutoErrorText()`. The Settings language card shows that
 message in a toast. The switch stays on the device, because pluto keeps it in a cookie.
 
-`pluto-locale-sync.client.ts` watches `useSupabaseSession()`. When a session appears, it calls
-`usePlutoI18n().syncUserLocale()`. The plugin is client-only. A server `$fetch` does not forward
-the user cookies, so a server run would read no locale and clear the cookie.
+Core's `pluto-auth-sync.client.ts` watches `loggedIn` of the auth driver. When a session appears,
+it calls `usePlutoI18n().syncUserLocale()`. The plugin is client-only. A server `$fetch` does not
+forward the user cookies, so a server run would read no locale and clear the cookie. See the
+[auth-driver](../auth-driver/SKILL.md) skill.
 
 ## A site that did not apply 005
 

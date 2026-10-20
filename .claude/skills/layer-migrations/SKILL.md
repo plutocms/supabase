@@ -30,8 +30,8 @@ file in `public.pluto_migrations`. It adds:
 - `server/api/migrations/run.post.ts` — applies pending migrations.
 - `app/composables/migrations.ts` — `useMigrations()`, the client-side entry point.
 - `app/pages/admin/migrations.vue` — the admin page.
-- `app/components/migrations/MigrationsBanner.vue` — the admin-shell banner, mounted from
-  `app/pages/admin.vue`.
+- `app/components/migrations/MigrationsBanner.vue` — the admin-shell banner. The layer registers it
+  in `adminBanners`, and core's admin layout renders it. It hides on `/admin/migrations`.
 - `app/components/EnvPersistWarning.vue` — shown on `/admin/migrations` and on the setup wizard
   (`app/pages/admin/setup.vue`) when `persisted` comes back `false`. See "`.env` persistence
   caveat" below for what it shows and why that's still safe.

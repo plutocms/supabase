@@ -21,13 +21,12 @@ The English text is the text that the UI showed before. It is the same, byte for
 
 | Group | Used by |
 |---|---|
-| `supabase.auth.*` | The login, signup, forgot, update, and confirm pages. The auth toasts. |
+| `supabase.auth.*` | The sign-in form, and the signup, forgot, update, and confirm pages. The auth toasts. |
 | `supabase.auth.errors.*` | Supabase auth error codes. |
 | `supabase.setup.*` | The setup wizard. |
 | `supabase.migrations.*` | The migrations page and the banner. |
 | `supabase.connection.*` | Text that the setup wizard and the migrations page share. |
 | `supabase.envWarning.*` | `EnvPersistWarning.vue`. |
-| `supabase.navbar.*` | `NavbarAdmin.vue`. |
 | `supabase.settings.general.*` | The General settings panel. Its title is a key in `pluto-extension.ts`. |
 | `supabase.capabilities.*` | The capability labels in `pluto-extension.ts`. |
 | `supabase.errors.*` | Server errors. |
@@ -39,8 +38,7 @@ Shared words use `pluto.common.*` (for example `pluto.common.settings`).
 
 - The setup wizard and the auth pages have no signed-in user. They use the detected admin
   language (cookie, then browser). Call `usePlutoI18n()` and nothing else.
-- `NavbarAdmin.vue` renders on the server on public pages. It uses only `usePlutoI18n()`. It never
-  reads `navigator` while it renders.
+- The navbar is in core now. Its text is in `pluto.navbar.*`, and this layer has no navbar text.
 - A registration holds a key, not text: `title: 'supabase.settings.general.title'`. Pluto
   resolves it with `tx()`.
 - A sentence with a link or markup in the middle is one message with `{name}` slots. Render it
