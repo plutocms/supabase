@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.11.0](https://github.com/plutocms/supabase/compare/v0.10.0...v0.11.0) (2026-10-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* **admin:** move the admin shell to the pluto auth driver ([#83](https://github.com/plutocms/supabase/issues/83))
+
+### Features
+
+* **admin:** move the admin shell to the pluto auth driver ([#83](https://github.com/plutocms/supabase/issues/83)) ([52ba78f](https://github.com/plutocms/supabase/commit/52ba78f934255e70a7b5188982bdb83f9fa5f86a))
+
 ## [0.10.0](https://github.com/plutocms/supabase/compare/v0.9.1...v0.10.0) (2026-10-18)
 
 
