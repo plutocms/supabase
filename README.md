@@ -45,7 +45,16 @@ export default defineNuxtConfig({
 
 This layer provides the following composables:
 
-- `useAuth`: Manage user authentication with Supabase.
+- `useAuth`: Sign in, request a password reset, and update the password, with Supabase.
+
+### Admin shell
+
+Pluto core owns the admin shell: the `/admin` route, the sign-in page, the route guard and the
+top navbar. This layer registers an auth driver, and core renders the shell from it. See
+`.claude/skills/auth-driver/SKILL.md`.
+
+An app that overrode `NavbarAdmin` or `pages/admin.vue` of an older version must move to registry
+entries. See "Migrating an app" in that skill.
 
 ### API Routes
 
