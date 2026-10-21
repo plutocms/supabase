@@ -1,6 +1,16 @@
-import AuthSignIn from '../components/auth/AuthSignIn.vue'
-import MigrationsBanner from '../components/migrations/MigrationsBanner.vue'
-import SettingsGeneralPanel from '../components/settings/SettingsGeneralPanel.vue'
+import { defineAsyncComponent } from 'vue'
+
+// The three components load on demand. They stay out of the entry chunk. Core
+// shows a skeleton while each chunk loads.
+const AuthSignIn = defineAsyncComponent(
+  () => import('../components/auth/AuthSignIn.vue')
+)
+const MigrationsBanner = defineAsyncComponent(
+  () => import('../components/migrations/MigrationsBanner.vue')
+)
+const SettingsGeneralPanel = defineAsyncComponent(
+  () => import('../components/settings/SettingsGeneralPanel.vue')
+)
 
 export default defineNuxtPlugin(() => {
   // Read at setup, while the Nuxt context exists. The driver below calls it
@@ -35,11 +45,7 @@ export default defineNuxtPlugin(() => {
   // again each time.
   const setupDone = useState<boolean>('supabase-setup-done', () => false)
 
-  async function readSetupState(): Promise<SetupState> {
-    if (setupDone.value) {
-      return 'done'
-    }
-
+  async function fetchSetupState(): Promise<SetupState> {
     let state: SetupState = 'unknown'
     try {
       state = setupStateFromResponse(
@@ -54,6 +60,27 @@ export default defineNuxtPlugin(() => {
     setupDone.value = state === 'done'
 
     return state
+  }
+
+  // On a cold load of an admin path, the request starts here, at plugin setup.
+  // The guard then awaits a request that is already in flight. The guard takes
+  // this promise once, so a later navigation reads the state again.
+  let earlyState: Promise<SetupState> | null =
+    import.meta.client &&
+    !setupDone.value &&
+    /^\/admin(?:\/|$)/.test(window.location.pathname)
+      ? fetchSetupState()
+      : null
+
+  async function readSetupState(): Promise<SetupState> {
+    if (setupDone.value) {
+      return 'done'
+    }
+
+    const early = earlyState
+    earlyState = null
+
+    return early ?? fetchSetupState()
   }
 
   if (import.meta.client) {
