@@ -28,7 +28,7 @@ registers an `authDriver` and a few other registry entries. See the `admin-shell
 | `ready()` | Resolves at once. The module plugin of `@nuxtjs/supabase` reads the session before this plugin runs. |
 | `refresh()` | Reads the session and the claims again. |
 | `signOut()` | `supabase.auth.signOut()`, then clears the session and claims state. Core shows the toast and goes to `/admin/login`. |
-| `signIn` | `AuthSignIn`. It keeps the old keys, the old error text and the `first_setup` write. It opens `redirect`, else `/admin/home`. |
+| `signIn` | `AuthSignIn` (registered with `defineAsyncComponent`). It keeps the old keys, the old error text and the `first_setup` write. It opens `redirect`, else `/admin/home`. |
 | `guard(to)` | The setup guard. See "The setup guard". |
 | `links` | Sign up (always shown, as the old page did) and forgot password. |
 | `publicPaths` | See below. |
@@ -67,7 +67,9 @@ the sign-in rule, so a new install goes to `/admin/setup` and not to the sign-in
   unreachable after the setup. See the comment on `setupRedirect()`.
 
 A done setup is cached in the state `supabase-setup-done`, so the guard does not fetch on every
-navigation. A result that is not "done" is read again each time. The guard never rejects. Core
+navigation. A result that is not "done" is read again each time. On a cold load of an `/admin`
+path, the plugin starts the first request at setup, in the browser. The guard awaits that same
+promise once, so a cold load makes one request. The guard never rejects. Core
 ignores a returned path that equals the current path.
 
 ## Permissions and language
