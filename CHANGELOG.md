@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.11.1](https://github.com/plutocms/supabase/compare/v0.11.0...v0.11.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* **deps:** use @plutocms/pluto 0.17 ([#91](https://github.com/plutocms/supabase/issues/91)) ([7deeac5](https://github.com/plutocms/supabase/commit/7deeac5379ddaac0317fa457897190c0850e8ffc))
+* **typegen:** keep the PostgREST version block and the app's format ([#90](https://github.com/plutocms/supabase/issues/90)) ([2518c33](https://github.com/plutocms/supabase/commit/2518c33f69fe188e69d93695819d7d3ca19932d7))
+
+
+### Performance Improvements
+
+* **admin:** load the admin components on demand and start the setup check early ([#89](https://github.com/plutocms/supabase/issues/89)) ([f0d36bc](https://github.com/plutocms/supabase/commit/f0d36bc7d46f911522990653cd93ebb523c5a774))
+
 ## [0.11.0](https://github.com/plutocms/supabase/compare/v0.10.0...v0.11.0) (2026-10-20)
 
 
