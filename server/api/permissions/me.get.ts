@@ -20,15 +20,21 @@ export default defineEventHandler(async (event) => {
     // public.my_capabilities() is defined by 004_roles_and_capabilities.sql.
     // A site that has upgraded this package but not yet applied that
     // migration has no such function yet — that is an expected, temporary
-    // state during an upgrade, not a server error. Degrade to an empty
-    // capability list (the same shape a signed-out caller gets above)
-    // rather than 500ing: the caller already fails every can() check with
-    // an empty list, which is the correct, safe behavior until the pending
-    // migration is applied through /admin/migrations (itself gated by
-    // requireAdmin, not a capability, precisely so this state is always
-    // recoverable — see server/utils/admin-guard.ts).
-    console.error('my_capabilities() failed, returning an empty capability list:', error.message)
-    return { capabilities: [] as string[] }
+    // state during an upgrade, not a server error. Fall back to the
+    // profiles.is_admin column (the same check as requireAdmin, which gates
+    // /admin/migrations): an admin gets ['*'], everyone else an empty list.
+    // Without the fallback, the admin guard would see an admin with no
+    // capability and keep them out of /admin/migrations, the one page that
+    // can apply the missing migration.
+    console.error('my_capabilities() failed, falling back to profiles.is_admin:', error.message)
+
+    const { data: profile } = await client
+      .from('profiles')
+      .select('is_admin')
+      .eq('id', user.sub)
+      .maybeSingle()
+
+    return { capabilities: profile?.is_admin ? ['*'] : ([] as string[]) }
   }
 
   return { capabilities: data ?? [] }
