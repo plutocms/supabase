@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.3](https://github.com/plutocms/supabase/compare/v0.11.2...v0.11.3) (2026-10-22)
+
+
+### Bug Fixes
+
+* **permissions:** treat a profile admin as admin when my_capabilities() is missing ([#96](https://github.com/plutocms/supabase/issues/96)) ([f0e4980](https://github.com/plutocms/supabase/commit/f0e49808d0a7ceb9ffec45947e9ba5a1a033b9aa))
+
 ## [0.11.2](https://github.com/plutocms/supabase/compare/v0.11.1...v0.11.2) (2026-10-22)
 
 
