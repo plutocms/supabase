@@ -64,6 +64,36 @@ describe('keepInternalSupabase', () => {
     )
   })
 
+  it('copies the block when the output names it in DatabaseWithoutInternals', () => {
+    // The real CLI output always has this line, outside the Database type.
+    const cli = `${generated}\ntype DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">\n`
+    const result = keepInternalSupabase(cli, existing)
+
+    expect(result).toContain('PostgrestVersion: "14.5"')
+    expect(result).toContain('Omit<Database, "__InternalSupabase">')
+  })
+
+  it('copies the block from a file in the ESLint style', () => {
+    // After `eslint --fix`: an interface and single quotes.
+    const eslintStyle = existing
+      .replace('export type Database = {', 'export interface Database {')
+      .replace('"14.5"', '\'14.5\'')
+
+    expect(keepInternalSupabase(generated, eslintStyle)).toContain(
+      'PostgrestVersion: \'14.5\''
+    )
+  })
+
+  it('removes the blank line the CLI writes after the opening brace', () => {
+    const cli = generated.replace(
+      'export type Database = {\n',
+      'export type Database = {\n  \n'
+    )
+    const result = keepInternalSupabase(cli, existing)
+
+    expect(result).toContain('  }\n  public: {')
+  })
+
   it('is stable when it runs twice', () => {
     const once = keepInternalSupabase(generated, existing)
 

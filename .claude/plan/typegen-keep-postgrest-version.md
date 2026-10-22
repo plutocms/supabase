@@ -37,3 +37,9 @@ Branch / PR: fix/typegen-format
 - 2026-10-21: plan made. Given to the `builder` of the load-speed steps 2-4 (same repo, kept in
   its own files so it can go in its own PR).
 - 2026-10-21: code done in `server/utils/typegen.ts` and `test/typegen.test.ts` (branch `perf/lazy-registrations`, no commit). `keepInternalSupabase()` is a pure function. The app's Prettier is resolved from `rootDir` and fails soft. The write compares the processed text. The user reviews and commits it in its own PR.
+- 2026-10-22: the 0.11.1 fix failed in a real app: `next.includes('__InternalSupabase')` is always
+  true, because the CLI output names it in `Omit<Database, '__InternalSupabase'>`. It also ran only
+  Prettier, while apps commit ESLint + Prettier output. Follow-up (`fix/typegen-keep-block`):
+  detect the block itself, run the app's ESLint fix then Prettier, drop the CLI's blank line
+  after the brace, and find `supabase.exe` (Bun on Windows). End-to-end check against a real app
+  and database: the regenerated text equals the committed file, so nothing is written.

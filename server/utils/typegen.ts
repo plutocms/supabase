@@ -14,13 +14,21 @@ const execFileAsync = promisify(execFile)
  * directly via --db-url).
  */
 function resolveSupabaseBin(rootDir: string): string {
-  const binName = process.platform === 'win32' ? 'supabase.cmd' : 'supabase'
-  const localBin = join(rootDir, 'node_modules/.bin', binName)
-  return existsSync(localBin) ? localBin : 'supabase'
+  // On Windows, npm installs `supabase.cmd` and Bun installs `supabase.exe`.
+  const binNames = process.platform === 'win32'
+    ? ['supabase.cmd', 'supabase.exe']
+    : ['supabase']
+  const localBin = binNames
+    .map((name) => join(rootDir, 'node_modules/.bin', name))
+    .find((path) => existsSync(path))
+  return localBin ?? 'supabase'
 }
 
 // The block, with its leading comment lines. The block has no nested braces.
 const INTERNAL_BLOCK = /(?:^[ \t]*\/\/[^\n]*\n)*^[ \t]*__InternalSupabase:\s*\{[^{}]*\}[ \t]*\n/m
+// The block itself. The name alone is not enough: the output also has it in
+// `Omit<Database, '__InternalSupabase'>`.
+const HAS_BLOCK = /^[ \t]*__InternalSupabase:\s*\{/m
 const DATABASE_OPEN = /^export type Database = \{[ \t]*\n/m
 
 /**
@@ -36,7 +44,7 @@ export function keepInternalSupabase(
   next: string,
   existing: string | null
 ): string {
-  if (!existing || next.includes('__InternalSupabase')) {
+  if (!existing || HAS_BLOCK.test(next)) {
     return next
   }
 
@@ -48,8 +56,41 @@ export function keepInternalSupabase(
   }
 
   const at = open.index + open[0].length
+  // The CLI writes a whitespace-only line after the opening brace. After the
+  // block it would stay as a blank line, so remove it.
+  const rest = next.slice(at).replace(/^(?:[ \t]*\n)+/, '')
 
-  return next.slice(0, at) + block + next.slice(at)
+  return next.slice(0, at) + block + rest
+}
+
+/**
+ * Imports a package from the app's node_modules (resolved from `rootDir`).
+ */
+async function importFromApp(rootDir: string, name: string) {
+  const entry = createRequire(join(rootDir, 'package.json')).resolve(name)
+  const mod = await import(pathToFileURL(entry).href)
+  return mod.default ?? mod
+}
+
+/**
+ * Fixes the text with the ESLint of the app. It resolves ESLint and the
+ * app's config from `rootDir`. It returns the text unchanged when the app
+ * has no ESLint, when ESLint ignores the file, or when the fix fails.
+ */
+async function fixWithAppEslint(
+  rootDir: string,
+  filePath: string,
+  text: string
+): Promise<string> {
+  try {
+    const { ESLint } = await importFromApp(rootDir, 'eslint')
+    const eslint = new ESLint({ cwd: rootDir, fix: true })
+    const [result] = await eslint.lintText(text, { filePath })
+
+    return result?.output ?? text
+  } catch {
+    return text
+  }
 }
 
 /**
@@ -63,11 +104,7 @@ async function formatWithAppPrettier(
   text: string
 ): Promise<string> {
   try {
-    const entry = createRequire(join(rootDir, 'package.json')).resolve(
-      'prettier'
-    )
-    const prettier = await import(pathToFileURL(entry).href)
-    const api = prettier.default ?? prettier
+    const api = await importFromApp(rootDir, 'prettier')
     const options = (await api.resolveConfig(filePath)) ?? {}
 
     return await api.format(text, { ...options, filepath: filePath })
@@ -115,11 +152,14 @@ export async function regenerateSupabaseTypes(
       ? readFileSync(targetPath, 'utf-8')
       : null
 
-    const processed = await formatWithAppPrettier(
+    // The same steps as a usual `lint:fix`: ESLint first, then Prettier. So
+    // an unchanged schema gives the same text as the committed file.
+    const fixed = await fixWithAppEslint(
       rootDir,
       targetPath,
       keepInternalSupabase(stdout, existing)
     )
+    const processed = await formatWithAppPrettier(rootDir, targetPath, fixed)
 
     if (existing === processed) {
       return
