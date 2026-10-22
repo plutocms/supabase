@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.11.2](https://github.com/plutocms/supabase/compare/v0.11.1...v0.11.2) (2026-10-22)
+
+
+### Bug Fixes
+
+* **db:** grant Data API access explicitly and restrict staff reads ([#93](https://github.com/plutocms/supabase/issues/93)) ([0ed2d56](https://github.com/plutocms/supabase/commit/0ed2d56c593ed6550312692e125ba75525f5fd69))
+* **typegen:** keep the PostgREST version block and match the app's lint output ([#94](https://github.com/plutocms/supabase/issues/94)) ([38ec3ea](https://github.com/plutocms/supabase/commit/38ec3ea5e49ef559cfc8142bbbfff401f934cd22))
+
 ## [0.11.1](https://github.com/plutocms/supabase/compare/v0.11.0...v0.11.1) (2026-10-21)
 
 
