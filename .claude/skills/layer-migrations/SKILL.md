@@ -113,6 +113,39 @@ directory:
   same way `db/migrations/001_baseline.sql` and `002_admin_hardening.sql` already do — this
   keeps a partially-applied file (see the no-transaction case above) safe to retry.
 
+## Data API grants
+
+From 2026-10-30, Supabase stops granting Data API access to new tables in `public` on its own.
+A table without a grant answers "permission denied" (42501) to supabase-js, PostgREST and
+GraphQL. RLS does not help: the grant is checked first. These rules apply to every layer:
+
+- A migration that creates a table in `public` grants it in the same file. Use the next numbered
+  file (`NNN_slug.sql`) and never edit a shipped file.
+- Grant the minimal set that the policies need. Do not copy a broad template.
+- `anon` gets `select` only, and only on a table with an anon or public select policy. A table
+  with no such policy gets no `anon` grant.
+- `authenticated` gets only the privileges that its policies allow. `profiles` has a select
+  policy and no update policy on purpose, so it gets `select` only.
+- `service_role` gets `select, insert, update, delete`.
+- Never grant `truncate`, `references`, `trigger` or `all`.
+- Use identity columns (`generated ... as identity`), not `serial`. An identity column needs no
+  sequence grant. A `serial` column needs `grant usage on sequence ...` for an insert through the
+  API.
+- A new function that the API calls gets `grant execute on function ... to <roles>`.
+- A `grant` is additive and safe to run twice. Write the file so it stays safe to run twice.
+- A unit test per layer (`test/data-api-grants.test.ts`) fails when a table has no grant to
+  `authenticated`, when `anon` has more than `select`, or when a file grants a banned privilege.
+
+Why `006_data_api_grants.sql` (core), `005_data_api_grants.sql` (shop, storage) and
+`004_data_api_grants.sql` (blog) exist: the baselines were written when Supabase granted every
+new table automatically. Those files add the grants for a new database. They change nothing on an
+older database, which already holds broader privileges. The runner applies them right after the
+baseline on a fresh install. If the role in `DATABASE_URL` does not own the tables, `grant` only
+warns, and the file is still recorded. Check the result with `has_table_privilege`.
+
+`007_restrict_staff_reads.sql` (core) narrows four read policies. See the `permissions-storage`
+skill.
+
 ## Migration 005: the profile language
 
 `db/migrations/005_profile_locale.sql` adds `profiles.locale` (nullable text, null means

@@ -160,6 +160,17 @@ function `public.set_my_locale(new_locale text)`. The function has an empty `sea
 `execute` is revoked from `public` and `anon` and granted to `authenticated`. A user reads
 their own `locale` through the existing select policy. See the `profile-language` skill.
 
+## Data API grants and restricted reads
+
+`006_data_api_grants.sql` grants `execute` on `is_admin()`, `has_capability(text)` and
+`my_capabilities()` to `authenticated` and `service_role`, and on `set_my_locale(text)` to
+`authenticated`. It does not revoke the default `public` execute, because policies that apply to
+`anon` still call these functions. `007_restrict_staff_reads.sql` closes the open-sign-up read
+hole: `settings` is readable by staff (a user with at least one capability, through
+`my_capabilities()`), and `pluto_migrations`, `roles` and `role_capabilities` are readable by
+`is_admin()` only. A plain signed-up user reads none of them. `dashboard_user` keeps its read
+access on `settings` and `pluto_migrations`. See the `layer-migrations` skill.
+
 ## Known follow-up, not built in this feature
 
 - **Per-row ownership.** There is no way to grant "edit only your own posts" as a capability. A
