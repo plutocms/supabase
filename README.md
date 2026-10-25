@@ -1,6 +1,6 @@
-# Supabase Layer for Pluto CMS
+# Supabase Layer for Pluto
 
-This layer integrates Supabase as a backend service for Pluto CMS, providing a robust and scalable solution for managing content and data.
+This layer integrates Supabase as a backend service for Pluto, providing a robust and scalable solution for managing content and data.
 
 ## Installation
 
