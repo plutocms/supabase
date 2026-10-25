@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.0](https://github.com/plutocms/supabase/compare/v0.11.3...v0.12.0) (2026-10-25)
+
+
+### Features
+
+* **access:** manage users and roles, with invites through Pluto mail ([#98](https://github.com/plutocms/supabase/issues/98)) ([0d2ffbf](https://github.com/plutocms/supabase/commit/0d2ffbf0b3f7ad14e1ceeac6e396e01a6bb63279))
+
 ## [0.11.3](https://github.com/plutocms/supabase/compare/v0.11.2...v0.11.3) (2026-10-22)
 
 
