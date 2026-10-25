@@ -14,28 +14,19 @@ SUPABASE_URL=your-supabase-url
 SUPABASE_KEY=your-publishable-supabase-key
 ```
 
-2. Add the `@nuxtjs/supabase` and `supabase` dependencies to your project:
+2. Install the layer. It brings `@nuxtjs/supabase`, `@plutocms/pluto` and `@plutocms/utils`, so you do not add them:
 
 ```bash
-## NPM
-npm i @nuxtjs/supabase supabase
-
-## Yarn
-yarn add @nuxtjs/supabase supabase
-
-## PNPM
-pnpm add @nuxtjs/supabase supabase
-
-## Bun
-bun add @nuxtjs/supabase supabase
+npm i @plutocms/supabase
+# or pnpm add @plutocms/supabase, or bun add @plutocms/supabase
 ```
 
-3. Include the Pluto Supabase layer via `extends` option in your `nuxt.config.ts`:
+3. Include the Pluto Supabase layer via `extends` option in your `nuxt.config.ts`. It is the only Pluto layer the app lists:
 
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
-  extends: [['github:plutocms/supabase', { install: true }]],
+  extends: [['@plutocms/supabase', { install: true }]],
 })
 ```
 
@@ -121,6 +112,11 @@ The layer includes API routes for interacting with Supabase services, such as au
 - GET `/api/settings`
 - POST `/api/settings/update`
 - POST `/api/auth/signup`
+- GET `/api/users`, GET `/api/users/:id`
+- GET `/api/migrations/status`, POST `/api/migrations/run` (admin)
+- GET `/api/permissions/me`
+- GET and POST `/api/profile/locale`
+- GET `/api/settings/first_setup`, POST `/api/setup/create`
 - GET `/api/access/users`, GET `/api/access/roles` (permission `users:read`)
 - POST `/api/access/users/invite`, POST `/api/access/users/:id/resend` (admin; `locale` is the
   optional language of the email)
