@@ -28,7 +28,9 @@ The English text is the text that the UI showed before. It is the same, byte for
 | `supabase.connection.*` | Text that the setup wizard and the migrations page share. |
 | `supabase.envWarning.*` | `EnvPersistWarning.vue`. |
 | `supabase.settings.general.*` | The General settings panel. Its title is a key in `pluto-extension.ts`. |
-| `supabase.capabilities.*` | The capability labels in `pluto-extension.ts`. |
+| `supabase.capabilities.*` | The capability labels in `pluto-extension.ts`, and `group`, the label of this layer's group in the Roles editor. |
+| `supabase.access.*` | The Users and Roles pages and their modals, the toasts, and the access API errors (`supabase.access.errors.*`). |
+| `supabase.mail.authEmails.*` | The "Supabase sign-in emails" panel of the Email tab. |
 | `supabase.errors.*` | Server errors. |
 | `supabase.profile.*` | The language save error. |
 

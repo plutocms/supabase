@@ -87,6 +87,14 @@
         "verificationSent": "A verification link has been sent to your email. Please check your inbox and follow the instructions to verify your account.",
         "closePage": "You can close this page. You will be logged in automatically once you verify your email.",
         "checkSpam": "If you don't see the email, please check your spam folder."
+      },
+      "invite": {
+        "pageTitle": "Accept Invite",
+        "title": "Welcome!",
+        "description": "Choose a password to finish your account.",
+        "submit": "Save password and continue",
+        "expired": "This invite link has expired or was already used. Ask an admin to send a new invite.",
+        "invalid": "This invite link is not valid. Open the link from your invite email again, or ask an admin for a new invite."
       }
     },
     "settings": {
@@ -102,7 +110,8 @@
     },
     "capabilities": {
       "settingsManage": "Manage site settings",
-      "usersRead": "View all user accounts"
+      "usersRead": "View all user accounts",
+      "group": "Supabase"
     },
     "envWarning": {
       "title": "Connection string not saved automatically",
@@ -188,6 +197,190 @@
       "loadFailed": "Could not load migration status",
       "loadFailedDescription": "This isn't the dev-server-restart case above — something else went wrong reading migration status. Check the server console, then try again.",
       "retry": "Retry"
+    },
+    "access": {
+      "users": {
+        "title": "Users",
+        "description": "The people who can use the admin. Customers are not listed here.",
+        "invite": "Invite user",
+        "you": "You",
+        "administrator": "Administrator",
+        "neverSignedIn": "Never",
+        "actionsLabel": "Actions for {name}",
+        "columns": {
+          "user": "User",
+          "roles": "Roles",
+          "status": "Status",
+          "lastSignIn": "Last sign-in"
+        },
+        "status": {
+          "active": "Active",
+          "invited": "Invited",
+          "invitedOn": "Invited {date}"
+        },
+        "menu": {
+          "editRoles": "Edit roles",
+          "resend": "Resend invite",
+          "copyLink": "Copy invite link",
+          "revoke": "Revoke access"
+        },
+        "empty": {
+          "title": "No users yet",
+          "description": "Invite the first person to help manage this site."
+        },
+        "error": {
+          "title": "The users could not be loaded"
+        }
+      },
+      "invite": {
+        "title": "Invite user",
+        "description": "The person gets an email with a link to choose a password. The roles apply when they sign in.",
+        "email": "Email",
+        "emailPlaceholder": "name@example.com",
+        "name": "Name (optional)",
+        "namePlaceholder": "e.g. Ada Lovelace",
+        "roles": "Roles",
+        "rolesRequired": "Pick at least one role.",
+        "locale": "Email language",
+        "localeHint": "The language of the invite email.",
+        "submit": "Send invite",
+        "mailProblem": "The invite email was not sent",
+        "copyLink": "Copy invite link",
+        "setupEmail": "Set up email",
+        "needsKey": "To copy the invite link instead, set NUXT_SUPABASE_SECRET_KEY on the server.",
+        "linkTitle": "The invite is ready",
+        "linkDescription": "The user was added. Send them this link yourself.",
+        "done": "Done"
+      },
+      "link": {
+        "label": "Invite link",
+        "note": "This link signs the person in once, then it expires. Send it only to them.",
+        "copy": "Copy link",
+        "copied": "Link copied",
+        "title": "Invite link"
+      },
+      "editRoles": {
+        "title": "Edit roles",
+        "description": "Choose the roles of {name}.",
+        "save": "Save roles",
+        "emptyHint": "Pick at least one role. To remove all access, use Revoke access.",
+        "selfAdmin": "You are removing your own admin role. You will lose access to Users and Roles."
+      },
+      "revoke": {
+        "title": "Revoke access",
+        "body": "{name} will lose every role and cannot use the admin. The account stays. Only the admin access is removed.",
+        "confirm": "Revoke access",
+        "self": "This is your own account. You will lose access to the admin."
+      },
+      "roles": {
+        "title": "Roles",
+        "description": "A role is a set of permissions. Give roles to users to control what they can do.",
+        "create": "New role",
+        "builtin": "Built-in",
+        "fullAccess": "Full access",
+        "permissionCount": "{count} permission | {count} permissions",
+        "userCount": "{count} user | {count} users",
+        "columns": {
+          "role": "Role",
+          "permissions": "Permissions",
+          "users": "Users"
+        },
+        "menu": {
+          "edit": "Edit",
+          "view": "View",
+          "delete": "Delete"
+        },
+        "error": {
+          "title": "The roles could not be loaded"
+        }
+      },
+      "role": {
+        "titleCreate": "New role",
+        "titleEdit": "Edit role",
+        "titleView": "Role",
+        "description": "Choose what this role can do.",
+        "label": "Name",
+        "labelPlaceholder": "e.g. Editor",
+        "key": "Key",
+        "keyHint": "Use a-z, 0-9 and an underscore. You cannot change the key later.",
+        "keyInvalid": "The key can use only a-z, 0-9 and an underscore.",
+        "about": "Description",
+        "aboutPlaceholder": "What is this role for?",
+        "capabilities": "Permissions",
+        "capabilitiesRequired": "Pick at least one permission.",
+        "fullAccessNote": "This role has full access. It cannot be changed.",
+        "save": "Save role"
+      },
+      "deleteRole": {
+        "title": "Delete role",
+        "body": "Delete the role {name}? This cannot be undone.",
+        "usersLose": "No user has this role. | 1 user loses this role. | {count} users lose this role.",
+        "confirm": "Delete role"
+      },
+      "toasts": {
+        "invited": "Invite sent to {email}.",
+        "granted": "{email} already has an account. The roles are granted.",
+        "noLinkConfirmed": "This account is confirmed. It signs in with its own password, so it needs no link.",
+        "emailFailed": "{email} was added, but the email did not send. Copy the invite link and send it yourself.",
+        "resent": "Invite sent again to {email}.",
+        "resentNoEmail": "The email did not send. Copy the invite link and send it yourself.",
+        "rolesSaved": "Roles saved.",
+        "revoked": "Access revoked.",
+        "roleCreated": "Role created.",
+        "roleSaved": "Role saved.",
+        "roleDeleted": "Role deleted.",
+        "failed": "That did not work"
+      },
+      "errors": {
+        "forbidden": "Only an admin can do this.",
+        "lastAdmin": "This is the last admin. Make another user an admin first.",
+        "roleExists": "A role with this key already exists.",
+        "builtinRole": "A built-in role cannot be changed or deleted.",
+        "wildcard": "A new role cannot hold the wildcard permission.",
+        "emptyRole": "A role needs at least one permission.",
+        "unknownRole": "One of the roles does not exist.",
+        "invalidKey": "The role key can use only a-z, 0-9 and an underscore.",
+        "invalidLabel": "The role needs a name.",
+        "invalidCapability": "One of the permissions is not valid.",
+        "userNotFound": "This user does not exist.",
+        "roleNotFound": "This role does not exist.",
+        "invalidUserId": "The user id is not valid.",
+        "signupDisabled": "Public sign-up is off. Set NUXT_SUPABASE_SECRET_KEY on the server to send invites.",
+        "emailNotAuthorized": "Supabase's built-in email sends only to members of your Supabase organization. Set up custom SMTP in Supabase to invite other addresses.",
+        "emailInvalid": "Supabase does not accept this email address. Use a real address: Supabase refuses example and test domains.",
+        "inviteFailed": "The invite email could not be sent.",
+        "rateLimited": "Too many invites. Wait a few minutes and try again.",
+        "emailRateLimited": "Supabase sent too many emails. Wait a minute for the same address, or up to an hour with the built-in mailer. Custom SMTP in Supabase raises this limit.",
+        "alreadyAccepted": "This user already accepted the invite.",
+        "migrationPending": "Apply the pending database migrations to manage users and roles.",
+        "serviceKeyRequired": "Set NUXT_SUPABASE_SECRET_KEY on the server to make invite links."
+      }
+    },
+    "mail": {
+      "authEmails": {
+        "title": "Supabase sign-in emails",
+        "description": "Sign-up, password reset and magic link emails.",
+        "intro": "Supabase sends these emails, not Pluto. Without custom SMTP, Supabase sends them only to the members of your Supabase team, and only a few each hour. Invites from the Users page use Pluto mail when the service key is set.",
+        "resendTitle": "Connect Resend to Supabase",
+        "resendBody": "Resend can fill in the SMTP settings of your Supabase project for you. You sign in to both services. Pluto keeps no key.",
+        "resendLink": "Open the Resend integration",
+        "manualTitle": "Or enter the SMTP values by hand",
+        "manualBody": "In Supabase, open Authentication, then Emails, then SMTP Settings. Turn on custom SMTP and enter these values.",
+        "host": "Host",
+        "port": "Port",
+        "username": "Username",
+        "password": "Password",
+        "passwordValue": "Your Resend API key",
+        "copyValue": "Copy {label}",
+        "dashboardTitle": "Supabase dashboard",
+        "dashboardSmtp": "SMTP settings",
+        "dashboardTemplates": "Email templates",
+        "dashboardRateLimits": "Rate limits",
+        "dashboardHome": "Open your project",
+        "dashboardNote": "These links open pages of the Supabase dashboard. Supabase can move them, so they are best effort. If a link fails, open your project and look under Authentication.",
+        "noProject": "Pluto could not read the project ref from your Supabase URL. Open the Supabase dashboard by hand.",
+        "rateLimitHint": "After you set custom SMTP, open Authentication, then Rate Limits, and raise the number of emails each hour. The default is low."
+      }
     }
   }
 }
