@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.0](https://github.com/plutocms/supabase/compare/v0.12.0...v0.13.0) (2026-10-25)
+
+
+### Features
+
+* **deps:** raise @plutocms/pluto to ^0.20.0 ([#101](https://github.com/plutocms/supabase/issues/101)) ([ef39fb7](https://github.com/plutocms/supabase/commit/ef39fb717114f4302dd01a0877a8b2a68cf53613))
+
 ## [0.12.0](https://github.com/plutocms/supabase/compare/v0.11.3...v0.12.0) (2026-10-25)
 
 
