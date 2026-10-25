@@ -11,7 +11,7 @@
     "unrs-resolver",
     "vue-demi"
   ],
-  "description": "Supabase backend layer for Pluto CMS",
+  "description": "Supabase backend layer for Pluto",
   "author": "Victor Ribeiro",
   "homepage": "https://github.com/plutocms/supabase#readme",
   "repository": {
