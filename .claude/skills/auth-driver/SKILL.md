@@ -13,6 +13,7 @@ registers an `authDriver` and a few other registry entries. See the `admin-shell
 
 - `app/plugins/pluto-extension.ts` — registers `authDriver` (with the setup `guard`), `site` and
   `adminBanners`.
+- `app/utils/invite-link.ts` — `parseInviteLink()`, the pure reader of an invite link.
 - `app/utils/auth-driver.ts` — the pure parts: `mapSupabaseUser()`, `SUPABASE_PUBLIC_PATHS`,
   `setupStateFromResponse()`, `setupRedirect()`.
 - `app/components/auth/AuthSignIn.vue` — the email and password form. It has no frame.
@@ -41,7 +42,29 @@ registers an `authDriver` and a few other registry entries. See the `admin-shell
 | `/admin/forgot-password` | goes to the admin home | The old guard did the same. |
 | `/admin/confirm` | stays on the page | A confirm link signs the user in. |
 | `/admin/update-password` | stays on the page | A recovery link signs the user in. |
+| `/admin/accept-invite` | stays on the page | An invite link signs the user in. See "Accepting an invite". |
 | `/admin/setup` | stays on the page | The setup guard decides. |
+
+## Accepting an invite
+
+`app/pages/admin/(auth)/accept-invite.vue` is the page behind the invite email. The browser client
+uses PKCE, but the default invite email gives implicit-flow tokens in the URL hash, which the PKCE
+client does not read. So the page reads the link itself, with the pure helper
+`parseInviteLink(query, hash)` in `app/utils/invite-link.ts`:
+
+| Link | What the page does |
+|---|---|
+| `?token_hash=...&type=invite` (the recommended email template, or an invite link from Pluto mail) | `verifyOtp({ type: 'invite', token_hash })` |
+| `?token_hash=...&type=magiclink` (a copied link for an account that exists; `signup` also works) | `verifyOtp({ type: 'magiclink', token_hash })` |
+| `#access_token=...&refresh_token=...` (the default invite email, or the sign-in link sent without the service key) | `setSession({ access_token, refresh_token })` |
+| `#error_code=otp_expired` (or any `error_code`) | "Link expired, ask for a new invite" |
+| no token, but a session | goes on to the password form |
+| nothing | "Invalid link" |
+
+The page clears the URL with `history.replaceState`, then shows a password and confirm form. It
+calls `updateUser({ password })` through `useAuth().updatePassword`, then the driver `refresh()`,
+then goes to `/admin/home`. The invite API is in the `permissions-storage` skill. The Users and Roles
+pages are in the `users-and-roles` skill.
 
 ## Site info
 

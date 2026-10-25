@@ -8,8 +8,12 @@ policies shared by every project here.
 
 - Layer migrations: apply pending, versioned, per-file database migrations from the admin UI,
   after initial setup. @.claude/skills/layer-migrations/SKILL.md
-- Permissions storage: role-based capabilities backing server route guards and RLS policies.
+- Permissions storage: role-based capabilities backing server route guards and RLS policies, and
+  the admin-only access API (invite, roles) of migration 008.
   @.claude/skills/permissions-storage/SKILL.md
+- Users and Roles: the Users and Roles tabs of Settings (invite, edit roles, revoke, copy invite
+  link, roles editor), invites through Pluto mail, and a guide for the Supabase sign-in emails.
+  @.claude/skills/users-and-roles/SKILL.md
 - Content adapter: a Supabase/PostgREST-backed `PlutoContentAdapter`, plugging any layer's
   declared content type into `@plutocms/pluto`'s generic content routes.
   @.claude/skills/content-adapter/SKILL.md

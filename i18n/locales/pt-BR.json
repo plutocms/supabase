@@ -87,6 +87,14 @@
         "verificationSent": "Enviamos um link de verificação para o seu e-mail. Verifique sua caixa de entrada e siga as instruções para verificar sua conta.",
         "closePage": "Você pode fechar esta página. Você entrará automaticamente assim que verificar seu e-mail.",
         "checkSpam": "Se você não encontrar o e-mail, verifique sua pasta de spam."
+      },
+      "invite": {
+        "pageTitle": "Aceitar convite",
+        "title": "Boas-vindas!",
+        "description": "Escolha uma senha para concluir sua conta.",
+        "submit": "Salvar senha e continuar",
+        "expired": "Este link de convite expirou ou já foi usado. Peça a um administrador para enviar um novo convite.",
+        "invalid": "Este link de convite não é válido. Abra o link do e-mail de convite de novo, ou peça um novo convite a um administrador."
       }
     },
     "settings": {
@@ -102,7 +110,8 @@
     },
     "capabilities": {
       "settingsManage": "Gerenciar as configurações do site",
-      "usersRead": "Ver todas as contas de usuário"
+      "usersRead": "Ver todas as contas de usuário",
+      "group": "Supabase"
     },
     "envWarning": {
       "title": "A string de conexão não foi salva automaticamente",
@@ -188,6 +197,190 @@
       "loadFailed": "Não foi possível carregar o status das migrações",
       "loadFailedDescription": "Este não é o caso de reinício do servidor de desenvolvimento descrito acima. Algo diferente deu errado ao ler o status das migrações. Verifique o console do servidor e tente novamente.",
       "retry": "Tentar novamente"
+    },
+    "access": {
+      "users": {
+        "title": "Usuários",
+        "description": "As pessoas que podem usar o admin. Os clientes não aparecem aqui.",
+        "invite": "Convidar usuário",
+        "you": "Você",
+        "administrator": "Administrador",
+        "neverSignedIn": "Nunca",
+        "actionsLabel": "Ações para {name}",
+        "columns": {
+          "user": "Usuário",
+          "roles": "Papéis",
+          "status": "Status",
+          "lastSignIn": "Último acesso"
+        },
+        "status": {
+          "active": "Ativo",
+          "invited": "Convidado",
+          "invitedOn": "Convidado em {date}"
+        },
+        "menu": {
+          "editRoles": "Editar papéis",
+          "resend": "Reenviar convite",
+          "copyLink": "Copiar link do convite",
+          "revoke": "Revogar acesso"
+        },
+        "empty": {
+          "title": "Nenhum usuário ainda",
+          "description": "Convide a primeira pessoa para ajudar a gerenciar este site."
+        },
+        "error": {
+          "title": "Não foi possível carregar os usuários"
+        }
+      },
+      "invite": {
+        "title": "Convidar usuário",
+        "description": "A pessoa recebe um e-mail com um link para escolher uma senha. Os papéis valem quando ela entrar.",
+        "email": "E-mail",
+        "emailPlaceholder": "nome@exemplo.com",
+        "name": "Nome (opcional)",
+        "namePlaceholder": "ex.: Ada Lovelace",
+        "roles": "Papéis",
+        "rolesRequired": "Escolha pelo menos um papel.",
+        "locale": "Idioma do e-mail",
+        "localeHint": "O idioma do e-mail de convite.",
+        "submit": "Enviar convite",
+        "mailProblem": "O e-mail de convite não foi enviado",
+        "copyLink": "Copiar link do convite",
+        "setupEmail": "Configurar e-mail",
+        "needsKey": "Para copiar o link do convite, defina NUXT_SUPABASE_SECRET_KEY no servidor.",
+        "linkTitle": "O convite está pronto",
+        "linkDescription": "O usuário foi adicionado. Envie este link a ele por conta própria.",
+        "done": "Concluir"
+      },
+      "link": {
+        "label": "Link do convite",
+        "note": "Este link faz o login da pessoa uma vez e depois expira. Envie somente para ela.",
+        "copy": "Copiar link",
+        "copied": "Link copiado",
+        "title": "Link do convite"
+      },
+      "editRoles": {
+        "title": "Editar papéis",
+        "description": "Escolha os papéis de {name}.",
+        "save": "Salvar papéis",
+        "emptyHint": "Escolha pelo menos um papel. Para remover todo o acesso, use Revogar acesso.",
+        "selfAdmin": "Você está removendo seu próprio papel de administrador. Você perderá o acesso a Usuários e Papéis."
+      },
+      "revoke": {
+        "title": "Revogar acesso",
+        "body": "{name} perderá todos os papéis e não poderá usar o admin. A conta continua. Só o acesso ao admin é removido.",
+        "confirm": "Revogar acesso",
+        "self": "Esta é a sua própria conta. Você perderá o acesso ao admin."
+      },
+      "roles": {
+        "title": "Papéis",
+        "description": "Um papel é um conjunto de permissões. Dê papéis aos usuários para controlar o que eles podem fazer.",
+        "create": "Novo papel",
+        "builtin": "Nativo",
+        "fullAccess": "Acesso total",
+        "permissionCount": "{count} permissão | {count} permissões",
+        "userCount": "{count} usuário | {count} usuários",
+        "columns": {
+          "role": "Papel",
+          "permissions": "Permissões",
+          "users": "Usuários"
+        },
+        "menu": {
+          "edit": "Editar",
+          "view": "Ver",
+          "delete": "Excluir"
+        },
+        "error": {
+          "title": "Não foi possível carregar os papéis"
+        }
+      },
+      "role": {
+        "titleCreate": "Novo papel",
+        "titleEdit": "Editar papel",
+        "titleView": "Papel",
+        "description": "Escolha o que este papel pode fazer.",
+        "label": "Nome",
+        "labelPlaceholder": "ex.: Editor",
+        "key": "Chave",
+        "keyHint": "Use a-z, 0-9 e sublinhado. Você não pode mudar a chave depois.",
+        "keyInvalid": "A chave só pode usar a-z, 0-9 e sublinhado.",
+        "about": "Descrição",
+        "aboutPlaceholder": "Para que serve este papel?",
+        "capabilities": "Permissões",
+        "capabilitiesRequired": "Escolha pelo menos uma permissão.",
+        "fullAccessNote": "Este papel tem acesso total. Ele não pode ser alterado.",
+        "save": "Salvar papel"
+      },
+      "deleteRole": {
+        "title": "Excluir papel",
+        "body": "Excluir o papel {name}? Isso não pode ser desfeito.",
+        "usersLose": "Nenhum usuário tem este papel. | 1 usuário perde este papel. | {count} usuários perdem este papel.",
+        "confirm": "Excluir papel"
+      },
+      "toasts": {
+        "invited": "Convite enviado para {email}.",
+        "granted": "{email} já tem uma conta. Os papéis foram concedidos.",
+        "noLinkConfirmed": "Esta conta já está confirmada. Ela entra com a própria senha, então não precisa de link.",
+        "emailFailed": "{email} foi adicionado, mas o e-mail não foi enviado. Copie o link do convite e envie por conta própria.",
+        "resent": "Convite reenviado para {email}.",
+        "resentNoEmail": "O e-mail não foi enviado. Copie o link do convite e envie por conta própria.",
+        "rolesSaved": "Papéis salvos.",
+        "revoked": "Acesso revogado.",
+        "roleCreated": "Papel criado.",
+        "roleSaved": "Papel salvo.",
+        "roleDeleted": "Papel excluído.",
+        "failed": "Isso não funcionou"
+      },
+      "errors": {
+        "forbidden": "Somente um administrador pode fazer isso.",
+        "lastAdmin": "Este é o último administrador. Torne outro usuário administrador primeiro.",
+        "roleExists": "Já existe um papel com esta chave.",
+        "builtinRole": "Um papel nativo não pode ser alterado nem excluído.",
+        "wildcard": "Um novo papel não pode ter a permissão curinga.",
+        "emptyRole": "Um papel precisa de pelo menos uma permissão.",
+        "unknownRole": "Um dos papéis não existe.",
+        "invalidKey": "A chave do papel só pode usar a-z, 0-9 e sublinhado.",
+        "invalidLabel": "O papel precisa de um nome.",
+        "invalidCapability": "Uma das permissões não é válida.",
+        "userNotFound": "Este usuário não existe.",
+        "roleNotFound": "Este papel não existe.",
+        "invalidUserId": "O id do usuário não é válido.",
+        "signupDisabled": "O cadastro público está desligado. Defina NUXT_SUPABASE_SECRET_KEY no servidor para enviar convites.",
+        "emailNotAuthorized": "O e-mail padrão do Supabase só envia para membros da sua organização no Supabase. Configure um SMTP próprio no Supabase para convidar outros endereços.",
+        "emailInvalid": "O Supabase não aceita este endereço de e-mail. Use um endereço real: o Supabase recusa domínios de exemplo e de teste.",
+        "inviteFailed": "Não foi possível enviar o e-mail de convite.",
+        "rateLimited": "Convites demais. Aguarde alguns minutos e tente de novo.",
+        "emailRateLimited": "O Supabase enviou e-mails demais. Aguarde um minuto para o mesmo endereço, ou até uma hora com o e-mail padrão. Um SMTP próprio no Supabase aumenta esse limite.",
+        "alreadyAccepted": "Este usuário já aceitou o convite.",
+        "migrationPending": "Aplique as migrações pendentes do banco de dados para gerenciar usuários e papéis.",
+        "serviceKeyRequired": "Defina NUXT_SUPABASE_SECRET_KEY no servidor para gerar links de convite."
+      }
+    },
+    "mail": {
+      "authEmails": {
+        "title": "E-mails de login do Supabase",
+        "description": "E-mails de cadastro, redefinição de senha e link mágico.",
+        "intro": "O Supabase envia esses e-mails, não o Pluto. Sem SMTP próprio, o Supabase os envia só para os membros da sua equipe no Supabase, e apenas alguns por hora. Os convites da página Usuários usam o e-mail do Pluto quando a chave de serviço está definida.",
+        "resendTitle": "Conectar o Resend ao Supabase",
+        "resendBody": "O Resend pode preencher as configurações de SMTP do seu projeto Supabase para você. Você entra nos dois serviços. O Pluto não guarda chave.",
+        "resendLink": "Abrir a integração do Resend",
+        "manualTitle": "Ou informe os valores de SMTP manualmente",
+        "manualBody": "No Supabase, abra Authentication, depois Emails, depois SMTP Settings. Ative o SMTP próprio e informe estes valores.",
+        "host": "Servidor",
+        "port": "Porta",
+        "username": "Usuário",
+        "password": "Senha",
+        "passwordValue": "Sua chave de API do Resend",
+        "copyValue": "Copiar {label}",
+        "dashboardTitle": "Painel do Supabase",
+        "dashboardSmtp": "Configurações de SMTP",
+        "dashboardTemplates": "Modelos de e-mail",
+        "dashboardRateLimits": "Limites de envio",
+        "dashboardHome": "Abrir seu projeto",
+        "dashboardNote": "Estes links abrem páginas do painel do Supabase. O Supabase pode mudá-las, então são feitos no melhor esforço. Se um link falhar, abra seu projeto e procure em Authentication.",
+        "noProject": "O Pluto não conseguiu ler a referência do projeto na sua URL do Supabase. Abra o painel do Supabase manualmente.",
+        "rateLimitHint": "Depois de configurar o SMTP próprio, abra Authentication, depois Rate Limits, e aumente o número de e-mails por hora. O padrão é baixo."
+      }
     }
   }
 }

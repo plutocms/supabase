@@ -50,6 +50,8 @@ export function mapSupabaseUser(
  * - `signup` and `forgot-password` send a signed-in user to the admin home.
  * - `confirm` and `update-password` stay open: a recovery or confirm link
  *   signs the user in, and the page must still show.
+ * - `accept-invite` stays open: an invite link signs the user in, and the page
+ *   must still show the password form.
  * - `setup` stays open for the auth guard. The setup guard
  *   (`guard` in `pluto-extension.ts`) blocks it when the setup is done.
  */
@@ -58,6 +60,7 @@ export const SUPABASE_PUBLIC_PATHS: PlutoAuthPublicPath[] = [
   { path: '/admin/forgot-password', signedIn: 'redirect' },
   { path: '/admin/confirm', signedIn: 'allow' },
   { path: '/admin/update-password', signedIn: 'allow' },
+  { path: '/admin/accept-invite', signedIn: 'allow' },
   { path: '/admin/setup', signedIn: 'allow' },
 ]
 

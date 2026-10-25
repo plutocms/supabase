@@ -146,6 +146,15 @@ warns, and the file is still recorded. Check the result with `has_table_privileg
 `007_restrict_staff_reads.sql` (core) narrows four read policies. See the `permissions-storage`
 skill.
 
+`008_users_and_roles_admin.sql` (core) creates no table. It adds eight `security definer`
+functions (`list_staff_users`, `list_roles`, `find_user_id_by_email`, `set_user_roles`,
+`add_user_roles`, `create_role`, `update_role`, `delete_role`) and tightens the policies of
+`roles` (delete) and `role_capabilities` (insert, update, delete). Each function has
+`revoke execute ... from public, anon` and `grant execute ... to authenticated, service_role`,
+because the Data API grant rule applies to functions too. The routes under `/api/access/**` call
+them. They answer 409 `supabase.access.errors.migrationPending` while 008 is pending. See the
+`permissions-storage` skill.
+
 ## Migration 005: the profile language
 
 `db/migrations/005_profile_locale.sql` adds `profiles.locale` (nullable text, null means

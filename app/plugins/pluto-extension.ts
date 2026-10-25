@@ -1,6 +1,6 @@
 import { defineAsyncComponent } from 'vue'
 
-// The three components load on demand. They stay out of the entry chunk. Core
+// The four components load on demand. They stay out of the entry chunk. Core
 // shows a skeleton while each chunk loads.
 const AuthSignIn = defineAsyncComponent(
   () => import('../components/auth/AuthSignIn.vue')
@@ -10,6 +10,10 @@ const MigrationsBanner = defineAsyncComponent(
 )
 const SettingsGeneralPanel = defineAsyncComponent(
   () => import('../components/settings/SettingsGeneralPanel.vue')
+)
+// The guide for the Supabase sign-in emails, a section of the Email tab.
+const AuthEmailsPanel = defineAsyncComponent(
+  () => import('../components/mail/AuthEmailsPanel.vue')
 )
 
 export default defineNuxtPlugin(() => {
@@ -161,6 +165,37 @@ export default defineNuxtPlugin(() => {
         component: SettingsGeneralPanel,
       },
     ],
+    // The Users and Roles tabs of Settings. The page files are in
+    // app/pages/admin/settings/. Users shows for `users:read` (an admin always
+    // has it). Roles is admin only: '*' is the admin-only capability.
+    settingsPages: [
+      {
+        id: 'users',
+        order: 10,
+        label: 'supabase.access.users.title',
+        icon: 'lucide:users',
+        to: '/admin/settings/users',
+        capability: 'users:read',
+      },
+      {
+        id: 'roles',
+        order: 20,
+        label: 'supabase.access.roles.title',
+        icon: 'lucide:shield',
+        to: '/admin/settings/roles',
+        capability: '*',
+      },
+    ],
+    // A guide on the Email tab: the sign-in emails come from Supabase.
+    mailPanels: [
+      {
+        id: 'auth-emails',
+        title: 'supabase.mail.authEmails.title',
+        description: 'supabase.mail.authEmails.description',
+        icon: 'lucide:mail',
+        component: AuthEmailsPanel,
+      },
+    ],
     settingsDriver: {
       id: 'supabase',
       load: async () => {
@@ -179,6 +214,8 @@ export default defineNuxtPlugin(() => {
         hasSettingsModified.value = Date.now()
       },
     },
+    // Core groups these capabilities in the Roles editor under the label
+    // 'supabase.capabilities.group' (the `<owner>.capabilities.group` key).
     // No 'system:migrate' capability: applying migrations stays admin-only,
     // gated by requireAdmin (public.is_admin() directly), never a named
     // capability — see server/utils/admin-guard.ts for why.

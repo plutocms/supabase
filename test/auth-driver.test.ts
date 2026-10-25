@@ -75,6 +75,7 @@ describe('sUPABASE_PUBLIC_PATHS', () => {
 
   it('lists every public auth page and the setup page', () => {
     expect(SUPABASE_PUBLIC_PATHS.map((entry) => entry.path).toSorted()).toEqual([
+      '/admin/accept-invite',
       '/admin/confirm',
       '/admin/forgot-password',
       '/admin/setup',
@@ -92,9 +93,10 @@ describe('sUPABASE_PUBLIC_PATHS', () => {
     expect(signedIn('/admin/forgot-password')).toBe('redirect')
   })
 
-  it('keeps confirm, update-password and setup open for a signed-in user', () => {
+  it('keeps confirm, update-password, accept-invite and setup open for a signed-in user', () => {
     expect(signedIn('/admin/confirm')).toBe('allow')
     expect(signedIn('/admin/update-password')).toBe('allow')
+    expect(signedIn('/admin/accept-invite')).toBe('allow')
     expect(signedIn('/admin/setup')).toBe('allow')
   })
 

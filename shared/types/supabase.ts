@@ -355,20 +355,61 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      has_capability: {
-        Args: { cap: string }
-        Returns: boolean
+      add_user_roles: {
+        Args: { role_keys: string[]; target: string }
+        Returns: undefined
       }
-      my_capabilities: {
+      create_role: {
+        Args: {
+          p_capabilities: string[]
+          p_description: string
+          p_key: string
+          p_label: string
+        }
+        Returns: undefined
+      }
+      delete_role: { Args: { p_key: string }; Returns: number }
+      find_user_id_by_email: { Args: { p_email: string }; Returns: string }
+      has_capability: { Args: { cap: string }; Returns: boolean }
+      is_admin: { Args: Record<PropertyKey, never>; Returns: boolean }
+      list_roles: {
         Args: Record<PropertyKey, never>
-        Returns: string[]
+        Returns: {
+          capabilities: string[]
+          description: string
+          is_builtin: boolean
+          key: string
+          label: string
+          user_count: number
+        }[]
       }
-      is_admin: {
+      list_staff_users: {
         Args: Record<PropertyKey, never>
-        Returns: boolean
+        Returns: {
+          display_name: string
+          email: string
+          email_confirmed_at: string
+          id: string
+          invited_at: string
+          is_admin: boolean
+          last_sign_in_at: string
+          roles: string[]
+          username: string
+        }[]
       }
-      set_my_locale: {
-        Args: { new_locale: string }
+      my_capabilities: { Args: Record<PropertyKey, never>; Returns: string[] }
+      set_my_locale: { Args: { new_locale: string }; Returns: undefined }
+      set_user_roles: {
+        Args: { role_keys: string[]; target: string }
+        Returns: undefined
+      }
+      update_role: {
+        Args: {
+          p_capabilities: string[]
+          p_description: string
+          p_key: string
+          p_label: string
+        }
         Returns: undefined
       }
     }

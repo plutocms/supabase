@@ -22,15 +22,16 @@ import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
  * so querying it directly has no migration dependency at all.
  *
  * The trade-off: a user granted the `admin` role only through
- * `user_roles` (see `permissions-storage/SKILL.md`'s "Granting a role by
+ * `user_roles` by hand (see `permissions-storage/SKILL.md`'s "Granting a role by
  * hand"), with `profiles.is_admin` left `false`, cannot pass this check —
  * only RLS and `has_capability()`-gated routes recognize a role-only
  * admin. That is an acceptable, narrow limitation: `user_roles` cannot
  * exist before `004` has been applied, so a role-only admin can only
  * exist on a site that has already applied every current migration, at
  * which point there is nothing left for that admin to need
- * `/admin/migrations` for. If a future migration ever needs applying by
- * a role-only admin, grant them `profiles.is_admin = true` too.
+ * `/admin/migrations` for. Migration 008 also closes the gap: `set_user_roles`
+ * and `add_user_roles` keep `profiles.is_admin` in step with the `admin`
+ * role. After a hand-made grant, set `profiles.is_admin = true` too.
  *
  * `serverSupabaseUser` (from `@nuxtjs/supabase`, backed by
  * `client.auth.getClaims()`) returns decoded JWT claims, not a Supabase
