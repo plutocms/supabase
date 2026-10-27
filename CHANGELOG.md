@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.14.0](https://github.com/plutocms/supabase/compare/v0.13.0...v0.14.0) (2026-10-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* the routes `/api/access/**`, `/api/auth/signup`, `/api/migrations/**`, `/api/permissions/me`, `/api/profile/locale`, `/api/settings/**`, `/api/setup/create` and `/api/users/**` moved under `/api/_pluto/supabase/` (see the README), and failures are HTTP errors.
+
+### Features
+
+* move the internal routes under /api/_pluto/supabase, and support the public API ([#104](https://github.com/plutocms/supabase/issues/104)) ([e7bf91c](https://github.com/plutocms/supabase/commit/e7bf91cd5a802247b4ec3b6938389b94a06ce3e3))
+
 ## [0.13.0](https://github.com/plutocms/supabase/compare/v0.12.0...v0.13.0) (2026-10-25)
 
 
