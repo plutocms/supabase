@@ -74,7 +74,7 @@ const currentStepSubmitLabel = computed(() => {
 })
 
 /**
- * Polls /api/settings/first_setup until the dev server responds again, and
+ * Polls /api/_pluto/supabase/setup until the dev server responds again, and
  * advances the stepper once it does.
  *
  * Used only to wait out the restart described in the `catch` block of
@@ -89,7 +89,7 @@ async function waitForServerAndAdvance(): Promise<boolean> {
     await new Promise((resolve) => setTimeout(resolve, delayMs))
 
     try {
-      await $fetch('/api/settings/first_setup')
+      await $fetch('/api/_pluto/supabase/setup')
 
       toast.add({
         title: t('supabase.connection.reconnected'),
@@ -118,23 +118,12 @@ async function completeDatabaseSetup() {
       encodeURIComponent(databaseForm.value.password)
     )
 
-    const data = await $fetch<any>('/api/setup/create', {
+    const data = await $fetch<any>('/api/_pluto/supabase/setup', {
       method: 'POST',
       body: {
         connectionString,
       },
     })
-
-    if (data.success === false) {
-      toast.add({
-        title: t('supabase.setup.failed'),
-        description: t('supabase.setup.failedDescription'),
-        icon: 'lucide:circle-x',
-        color: 'error',
-      })
-
-      return
-    }
 
     if (data.persisted === false) {
       envNotPersisted.value = true
@@ -150,7 +139,20 @@ async function completeDatabaseSetup() {
 
     stepper.value?.next()
   } catch (error) {
-    // Writing DATABASE_URL to .env (the last step of /api/setup/create,
+    // The route answers a failed setup with an HTTP error that carries the
+    // scrubbed database error in its data.
+    if (typeof failureData(error)?.error === 'string') {
+      toast.add({
+        title: t('supabase.setup.failed'),
+        description: t('supabase.setup.failedDescription'),
+        icon: 'lucide:circle-x',
+        color: 'error',
+      })
+
+      return
+    }
+
+    // Writing DATABASE_URL to .env (the last step of /api/_pluto/supabase/setup,
     // after the schema and every layer migration already succeeded)
     // restarts the dev server. The response can be cut off by that
     // restart even though the setup itself worked. A dropped connection
@@ -326,7 +328,7 @@ function handleStepChange(step: number) {
                                 >
                                   <template #route>
                                     <ULink
-                                      to="https://github.com/plutocms/supabase/blob/feat/setup-wizard/server/api/setup/create.post.ts"
+                                      to="https://github.com/plutocms/supabase/blob/main/server/api/_pluto/supabase/setup/index.post.ts"
                                       target="_blank"
                                       class="underline"
                                     >

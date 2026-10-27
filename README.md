@@ -50,7 +50,7 @@ entries. See "Migrating an app" in that skill.
 ### Invite users (access API)
 
 An admin invites a user by email and gives the user one or more roles. The routes are under
-`/api/access/**`. Every write needs an admin. This needs the migration
+`/api/_pluto/supabase/access/**`. Every write needs an admin. This needs the migration
 `008_users_and_roles_admin.sql`, which the admin applies from `/admin/migrations`.
 
 Invites need no setup. Check one thing: in the Supabase dashboard (Authentication, then URL
@@ -107,24 +107,36 @@ come from Supabase. The Email tab has a guide to send them through Resend too.
 
 ### API Routes
 
-The layer includes API routes for interacting with Supabase services, such as authentication and media management.
+The layer includes API routes for interacting with Supabase services, such as authentication and settings.
+Every route lives under `/api/_pluto/supabase/`. Core blocks a cross-site write to `/api/_pluto/**`, so
+a page of another site cannot call them. A failure is an HTTP error with a translation key, never a
+`200` with `success: false`. These routes serve the admin. They are not a public API.
 
-- GET `/api/settings`
-- POST `/api/settings/update`
-- POST `/api/auth/signup`
-- GET `/api/users`, GET `/api/users/:id`
-- GET `/api/migrations/status`, POST `/api/migrations/run` (admin)
-- GET `/api/permissions/me`
-- GET and POST `/api/profile/locale`
-- GET `/api/settings/first_setup`, POST `/api/setup/create`
-- GET `/api/access/users`, GET `/api/access/roles` (permission `users:read`)
-- POST `/api/access/users/invite`, POST `/api/access/users/:id/resend` (admin; `locale` is the
+### Public content API
+
+The public content of the Supabase layers is read through the public API of core,
+`GET /api/pluto/v1/content/<type>` (and `/<id or slug>`). See
+[the public API](https://pluto.vulmix.dev/core/public-api). The routes are anonymous. This layer
+reads for them with an anon client that has no user session, so Row Level Security applies as for
+an anonymous visitor, and the answer is the same for everyone. A CDN can cache it. The adapter
+never uses the service role key for a read. The adapter also supports the `filters` of a public
+query, and puts the created, updated and published-at columns on each item, so a public list can
+sort by date.
+
+- GET and PUT `/api/_pluto/supabase/settings` (PUT needs `settings:manage`; it answers `{ message, data }`)
+- POST `/api/_pluto/supabase/auth/signup`
+- GET `/api/_pluto/supabase/migrations`, POST `/api/_pluto/supabase/migrations/run` (admin)
+- GET `/api/_pluto/supabase/me/capabilities`
+- GET and PUT `/api/_pluto/supabase/me/locale`
+- GET `/api/_pluto/supabase/setup` (the setup state), POST `/api/_pluto/supabase/setup` (runs the first setup)
+- GET `/api/_pluto/supabase/access/users`, GET `/api/_pluto/supabase/access/roles` (permission `users:read`)
+- POST `/api/_pluto/supabase/access/users/invite`, POST `/api/_pluto/supabase/access/users/:id/resend` (admin; `locale` is the
   optional language of the email)
-- POST `/api/access/users/invite-link` (admin; needs the service role key; returns a one-time link
+- POST `/api/_pluto/supabase/access/users/invite-link` (admin; needs the service role key; returns a one-time link
   and sends no email)
-- GET `/api/access/capabilities` (admin; says whether the service key and Pluto mail are set)
-- PUT and DELETE `/api/access/users/:id/roles` (admin; DELETE revokes the access)
-- POST `/api/access/roles`, PUT and DELETE `/api/access/roles/:key` (admin)
+- GET `/api/_pluto/supabase/access/capabilities` (admin; says whether the service key and Pluto mail are set)
+- PUT and DELETE `/api/_pluto/supabase/access/users/:id/roles` (admin; DELETE revokes the access)
+- POST `/api/_pluto/supabase/access/roles`, PUT and DELETE `/api/_pluto/supabase/access/roles/:key` (admin)
 
 ### Types
 

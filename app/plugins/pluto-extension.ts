@@ -36,7 +36,7 @@ export default defineNuxtPlugin(() => {
   async function loadSiteSettings() {
     try {
       const response = await $fetch<{ settings: Record<string, string> }>(
-        '/api/settings'
+        '/api/_pluto/supabase/settings'
       )
       siteSettings.value = response.settings
     } catch {
@@ -53,7 +53,7 @@ export default defineNuxtPlugin(() => {
     let state: SetupState = 'unknown'
     try {
       state = setupStateFromResponse(
-        await $fetch('/api/settings/first_setup')
+        await $fetch('/api/_pluto/supabase/setup')
       )
     } catch (error) {
       if (import.meta.dev) {
@@ -200,13 +200,13 @@ export default defineNuxtPlugin(() => {
       id: 'supabase',
       load: async () => {
         const response = await $fetch<{ settings: Record<string, string> }>(
-          '/api/settings'
+          '/api/_pluto/supabase/settings'
         )
         return response.settings
       },
       save: async (patch) => {
-        await $fetch('/api/settings/update', {
-          method: 'POST',
+        await $fetch('/api/_pluto/supabase/settings', {
+          method: 'PUT',
           body: patch,
         })
 
@@ -229,12 +229,12 @@ export default defineNuxtPlugin(() => {
     localeDriver: {
       id: 'supabase',
       load: async () => {
-        const response = await $fetch<{ locale: string | null }>('/api/profile/locale')
+        const response = await $fetch<{ locale: string | null }>('/api/_pluto/supabase/me/locale')
         return response.locale
       },
       save: async (locale) => {
         try {
-          await $fetch('/api/profile/locale', { method: 'POST', body: { locale } })
+          await $fetch('/api/_pluto/supabase/me/locale', { method: 'PUT', body: { locale } })
         } catch (error) {
           throw new Error(errorText(error))
         }
@@ -243,7 +243,7 @@ export default defineNuxtPlugin(() => {
     permissionsDriver: {
       id: 'supabase',
       load: async () => {
-        const response = await $fetch<{ capabilities: string[] }>('/api/permissions/me')
+        const response = await $fetch<{ capabilities: string[] }>('/api/_pluto/supabase/me/capabilities')
         return response.capabilities
       },
     },

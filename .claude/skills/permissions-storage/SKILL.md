@@ -12,7 +12,7 @@ user hold this capability?" It adds:
 - `server/utils/admin-guard.ts` — `requireAdmin(event)`. It reads the column `profiles.is_admin`
   directly. It does not call `public.is_admin()` and it does not use `requireCapability`. See "Why
   migrations stay admin-only" below for why.
-- `server/api/permissions/me.get.ts` — the calling user's own capability list. Backs the client
+- `server/api/_pluto/supabase/me/capabilities.get.ts` — the calling user's own capability list. Backs the client
   `usePlutoPermissions()` composable's `load()`. Returns an empty list, not a 500, when
   `public.my_capabilities()` does not exist yet (a site that has not applied this migration yet)
   — see "Why migrations stay admin-only" below.
@@ -21,7 +21,7 @@ user hold this capability?" It adds:
 
 ## Why migrations stay admin-only
 
-`server/api/migrations/status.get.ts` and `run.post.ts` call `requireAdmin(event)`, never a named
+`server/api/_pluto/supabase/migrations/index.get.ts` and `run.post.ts` call `requireAdmin(event)`, never a named
 capability. This is deliberate, not an oversight.
 
 `public.has_capability()` and `public.my_capabilities()` are defined by
@@ -142,7 +142,7 @@ also accepts an admin who has the role only. See "Why migrations stay admin-only
 ## Client-side: `usePlutoPermissions()`
 
 `usePlutoPermissions()` (from `@plutocms/pluto`) reads whichever layer registered a
-`permissionsDriver` — this layer registers one, backed by `/api/permissions/me`. `can(capability)`
+`permissionsDriver` — this layer registers one, backed by `/api/_pluto/supabase/me/capabilities`. `can(capability)`
 tells a component whether to show or hide UI. This is never a security boundary by itself: the
 real enforcement is always the server-side `requireCapability` call, backed by RLS. Hiding a
 button does not stop a direct API call; only the guard does.
@@ -186,7 +186,7 @@ access on `settings` and `pluto_migrations`. See the `layer-migrations` skill.
 ## The access API (migration 008)
 
 `008_users_and_roles_admin.sql` adds eight `security definer` functions with an empty
-`search_path`. The routes under `server/api/access/**` call them with the session of the caller,
+`search_path`. The routes under `server/api/_pluto/supabase/access/**` call them with the session of the caller,
 so `auth.uid()` is the caller. Rules for v1:
 
 - **Admins only.** Every write (invite, set roles, revoke, create, edit and delete a role) needs
@@ -221,13 +221,13 @@ other at the same time.
 
 | Route | Guard |
 |---|---|
-| `GET /api/access/users`, `GET /api/access/roles` | `users:read` |
-| `POST /api/access/users/invite` | admin, rate limit (10 per 10 minutes per caller) |
-| `POST /api/access/users/invite-link` | admin, same rate limit; needs the service role key (503 `serviceKeyRequired`) |
-| `GET /api/access/capabilities` | admin; `{ serviceKey, mail: { configured } }` |
-| `POST /api/access/users/[id]/resend` | admin, rate limit; only while `email_confirmed_at` is empty |
-| `PUT` and `DELETE /api/access/users/[id]/roles` | admin (DELETE sets an empty list) |
-| `POST /api/access/roles`, `PUT` and `DELETE /api/access/roles/[key]` | admin |
+| `GET /api/_pluto/supabase/access/users`, `GET /api/_pluto/supabase/access/roles` | `users:read` |
+| `POST /api/_pluto/supabase/access/users/invite` | admin, rate limit (10 per 10 minutes per caller) |
+| `POST /api/_pluto/supabase/access/users/invite-link` | admin, same rate limit; needs the service role key (503 `serviceKeyRequired`) |
+| `GET /api/_pluto/supabase/access/capabilities` | admin; `{ serviceKey, mail: { configured } }` |
+| `POST /api/_pluto/supabase/access/users/[id]/resend` | admin, rate limit; only while `email_confirmed_at` is empty |
+| `PUT` and `DELETE /api/_pluto/supabase/access/users/[id]/roles` | admin (DELETE sets an empty list) |
+| `POST /api/_pluto/supabase/access/roles`, `PUT` and `DELETE /api/_pluto/supabase/access/roles/[key]` | admin |
 
 The invite route first looks the email up (`find_user_id_by_email`). An email that has an
 account (confirmed or not) gets the roles added, with no email (`{ status: 'granted' }`), and the

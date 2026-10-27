@@ -9,12 +9,17 @@
       "missingPermission": "Sua conta não tem a permissão \"{capability}\".",
       "setupCompleted": "A configuração já foi concluída.",
       "coreSchemaMissing": "Esquema principal não encontrado. Reinstale @plutocms/supabase e reinicie o servidor de desenvolvimento.",
-      "fetchUsers": "Erro ao buscar os usuários: {message}",
-      "fetchUser": "Erro ao buscar o usuário: {message}",
       "localeUnsupported": "Este idioma não está disponível.",
       "duplicateRecord": "Já existe um registro com este valor.",
       "missingReference": "Isto aponta para um registro que não existe.",
-      "migrationStatus": "Erro ao ler o status das migrações: {message}"
+      "migrationStatus": "Erro ao ler o status das migrações: {message}",
+      "signupFailed": "Não foi possível criar a conta.",
+      "connectionStringRequired": "Informe a string de conexão do banco de dados.",
+      "migrationsFailed": "As migrações falharam: {message}",
+      "setupFailed": "A configuração do banco de dados falhou: {message}",
+      "setupStateRead": "Não foi possível ler o estado da configuração: {message}",
+      "settingsSave": "Não foi possível salvar as configurações: {message}",
+      "localeSave": "Não foi possível salvar o seu idioma: {message}"
     },
     "auth": {
       "backToLogin": "Voltar para o login",

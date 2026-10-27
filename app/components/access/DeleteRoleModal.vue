@@ -23,7 +23,7 @@ async function remove() {
   working.value = true
 
   try {
-    await $fetch(`/api/access/roles/${props.role.key}`, { method: 'DELETE' })
+    await $fetch(`/api/_pluto/supabase/access/roles/${props.role.key}`, { method: 'DELETE' })
 
     toast.add({
       title: t('supabase.access.toasts.roleDeleted'),

@@ -33,11 +33,11 @@ afterEach(() => {
 })
 
 async function call() {
-  const { default: handler } = await import('../server/api/permissions/me.get')
+  const { default: handler } = await import('../server/api/_pluto/supabase/me/capabilities.get')
   return (handler as (event: unknown) => Promise<{ capabilities: string[] }>)({})
 }
 
-describe('the /api/permissions/me route', () => {
+describe('the /api/_pluto/supabase/me/capabilities route', () => {
   it('returns an empty list for a signed-out caller', async () => {
     user = null
     expect(await call()).toEqual({ capabilities: [] })

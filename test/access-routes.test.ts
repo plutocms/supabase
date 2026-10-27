@@ -180,14 +180,14 @@ afterEach(() => {
 vi.stubGlobal('defineEventHandler', (handler: unknown) => handler)
 
 const { requireAdminRole } = await import('../server/utils/admin-role-guard')
-const invite = (await import('../server/api/access/users/invite.post')).default as (e: unknown) => Promise<unknown>
-const resend = (await import('../server/api/access/users/[id]/resend.post')).default as (e: unknown) => Promise<unknown>
-const putRoles = (await import('../server/api/access/users/[id]/roles.put')).default as (e: unknown) => Promise<unknown>
-const delRoles = (await import('../server/api/access/users/[id]/roles.delete')).default as (e: unknown) => Promise<unknown>
-const createRole = (await import('../server/api/access/roles.post')).default as (e: unknown) => Promise<unknown>
-const inviteLink = (await import('../server/api/access/users/invite-link.post')).default as (e: unknown) => Promise<unknown>
-const capabilities = (await import('../server/api/access/capabilities.get')).default as (e: unknown) => Promise<unknown>
-const deleteRole = (await import('../server/api/access/roles/[key].delete')).default as (e: unknown) => Promise<unknown>
+const invite = (await import('../server/api/_pluto/supabase/access/users/invite.post')).default as (e: unknown) => Promise<unknown>
+const resend = (await import('../server/api/_pluto/supabase/access/users/[id]/resend.post')).default as (e: unknown) => Promise<unknown>
+const putRoles = (await import('../server/api/_pluto/supabase/access/users/[id]/roles.put')).default as (e: unknown) => Promise<unknown>
+const delRoles = (await import('../server/api/_pluto/supabase/access/users/[id]/roles.delete')).default as (e: unknown) => Promise<unknown>
+const createRole = (await import('../server/api/_pluto/supabase/access/roles.post')).default as (e: unknown) => Promise<unknown>
+const inviteLink = (await import('../server/api/_pluto/supabase/access/users/invite-link.post')).default as (e: unknown) => Promise<unknown>
+const capabilities = (await import('../server/api/_pluto/supabase/access/capabilities.get')).default as (e: unknown) => Promise<unknown>
+const deleteRole = (await import('../server/api/_pluto/supabase/access/roles/[key].delete')).default as (e: unknown) => Promise<unknown>
 
 const ID = '11111111-1111-4111-8111-111111111111'
 const event = (params: Record<string, string> = {}) => ({ context: { params } }) as never
@@ -225,7 +225,7 @@ describe('requireAdminRole', () => {
   })
 })
 
-describe('pOST /api/access/users/invite', () => {
+describe('pOST /api/_pluto/supabase/access/users/invite', () => {
   it('makes no service call for a caller who is not an admin', async () => {
     rpcResults.is_admin = { data: false, error: null }
 
@@ -437,7 +437,7 @@ describe('pOST /api/access/users/invite', () => {
   })
 })
 
-describe('pOST /api/access/users/[id]/resend', () => {
+describe('pOST /api/_pluto/supabase/access/users/[id]/resend', () => {
   it('invites the same email again for a pending user', async () => {
     await expect(resend(event({ id: ID }))).resolves.toEqual({ status: 'sent' })
 
@@ -568,7 +568,7 @@ describe('roles routes', () => {
   })
 })
 
-describe('pOST /api/access/users/invite with Pluto mail', () => {
+describe('pOST /api/_pluto/supabase/access/users/invite with Pluto mail', () => {
   const LINK = 'https://site.test/admin/accept-invite?token_hash=hash-1&type=invite'
 
   beforeEach(() => {
@@ -697,7 +697,7 @@ describe('pOST /api/access/users/invite with Pluto mail', () => {
   })
 })
 
-describe('pOST /api/access/users/[id]/resend with Pluto mail', () => {
+describe('pOST /api/_pluto/supabase/access/users/[id]/resend with Pluto mail', () => {
   beforeEach(() => {
     mailConfigured = true
     rpcResults.list_staff_users = {
@@ -740,7 +740,7 @@ describe('pOST /api/access/users/[id]/resend with Pluto mail', () => {
   })
 })
 
-describe('pOST /api/access/users/invite-link', () => {
+describe('pOST /api/_pluto/supabase/access/users/invite-link', () => {
   it('answers 503 without the service key', async () => {
     serviceKeyMissing = true
 
@@ -848,7 +848,7 @@ describe('pOST /api/access/users/invite-link', () => {
   })
 })
 
-describe('gET /api/access/capabilities', () => {
+describe('gET /api/_pluto/supabase/access/capabilities', () => {
   it('reports the key and the mail state to an admin', async () => {
     mailConfigured = true
 

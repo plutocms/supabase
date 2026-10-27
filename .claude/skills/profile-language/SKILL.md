@@ -10,8 +10,8 @@ system of `@plutocms/pluto` (see the `i18n` skill in `pluto`) through a locale d
 
 - `db/migrations/005_profile_locale.sql` — the `profiles.locale` column, its format check, and
   the `public.set_my_locale(text)` function.
-- `server/api/profile/locale.get.ts` — returns `{ locale: string | null }` for the calling user.
-- `server/api/profile/locale.post.ts` — stores the language of the calling user.
+- `server/api/_pluto/supabase/me/locale.get.ts` — returns `{ locale: string | null }` for the calling user.
+- `server/api/_pluto/supabase/me/locale.put.ts` — stores the language of the calling user.
 - `app/plugins/pluto-extension.ts` — registers the `localeDriver` (`load` and `save`).
 - Core's `pluto-auth-sync.client.ts` loads the stored language when a session appears. This layer
   has no sync plugin of its own.
@@ -39,12 +39,12 @@ own row through the existing select policy.
 
 ## The routes
 
-`GET /api/profile/locale` reads `locale` with `.eq('id', user.sub)`. It uses `user.sub`, not
+`GET /api/_pluto/supabase/me/locale` reads `locale` with `.eq('id', user.sub)`. It uses `user.sub`, not
 `user.id`, because the claims object has no `id` (see `server/utils/admin-guard.ts`). A signed-out
 caller gets `{ locale: null }`. If the read fails because the column does not exist yet, the route
-logs the error and returns `{ locale: null }`. This is the same way `permissions/me.get.ts` degrades.
+logs the error and returns `{ locale: null }`. This is the same way `me/capabilities.get.ts` degrades.
 
-`POST /api/profile/locale` takes `{ locale: string | null }`.
+`PUT /api/_pluto/supabase/me/locale` takes `{ locale: string | null }`.
 
 - Signed out: 401.
 - A body that does not match: 400, through `parseBody`.

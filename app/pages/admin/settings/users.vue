@@ -50,8 +50,8 @@ async function load() {
 
   try {
     const [usersResponse, rolesResponse] = await Promise.all([
-      $fetch<{ users: AccessUser[] }>('/api/access/users'),
-      $fetch<{ roles: AccessRole[] }>('/api/access/roles'),
+      $fetch<{ users: AccessUser[] }>('/api/_pluto/supabase/access/users'),
+      $fetch<{ roles: AccessRole[] }>('/api/_pluto/supabase/access/roles'),
     ])
 
     users.value = usersResponse.users
@@ -65,7 +65,7 @@ async function load() {
 
 async function loadCapabilities() {
   try {
-    capabilities.value = await $fetch<AccessCapabilities>('/api/access/capabilities')
+    capabilities.value = await $fetch<AccessCapabilities>('/api/_pluto/supabase/access/capabilities')
   } catch {
     // The invite works without it. Only the "Copy invite link" action hides.
     capabilities.value = null
@@ -134,7 +134,7 @@ async function copyLink(user: AccessUser) {
   }
 
   try {
-    const result = await $fetch<{ link: string | null }>('/api/access/users/invite-link', {
+    const result = await $fetch<{ link: string | null }>('/api/_pluto/supabase/access/users/invite-link', {
       method: 'POST',
       body: { email: user.email, roleKeys: user.roles },
     })
@@ -164,7 +164,7 @@ async function copyLink(user: AccessUser) {
 async function resend(user: AccessUser) {
   try {
     const result = await $fetch<{ emailSent?: boolean, link?: string }>(
-      `/api/access/users/${user.id}/resend`,
+      `/api/_pluto/supabase/access/users/${user.id}/resend`,
       { method: 'POST', body: { locale: locale.value } }
     )
 

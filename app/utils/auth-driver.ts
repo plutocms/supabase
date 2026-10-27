@@ -67,11 +67,11 @@ export const SUPABASE_PUBLIC_PATHS: PlutoAuthPublicPath[] = [
 /** The page that opens after a sign-in with no (safe) redirect. */
 export const SUPABASE_SIGN_IN_FALLBACK = '/admin/home'
 
-/** The setup state that the setup guard reads from `/api/settings/first_setup`. */
+/** The setup state that the setup guard reads from `/api/_pluto/supabase/setup`. */
 export type SetupState = 'pending' | 'done' | 'unknown'
 
 /**
- * Reads the answer of `/api/settings/first_setup`. A failed call, or a
+ * Reads the answer of `/api/_pluto/supabase/setup`. A failed call, or a
  * response with no `is_first_setup` flag, is `unknown`.
  */
 export function setupStateFromResponse(data: unknown): SetupState {

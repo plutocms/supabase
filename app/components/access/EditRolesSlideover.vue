@@ -61,7 +61,7 @@ async function save() {
   saving.value = true
 
   try {
-    await $fetch(`/api/access/users/${props.user.id}/roles`, {
+    await $fetch(`/api/_pluto/supabase/access/users/${props.user.id}/roles`, {
       method: 'PUT',
       body: { roleKeys: roleKeys.value },
     })

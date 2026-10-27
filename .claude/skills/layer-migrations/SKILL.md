@@ -26,8 +26,8 @@ file in `public.pluto_migrations`. It adds:
   to `.env`.
 - `server/utils/scrub-connection-string.ts` — `scrubConnectionString(message, connStr)`,
   removes a connection string and its password from an error message.
-- `server/api/migrations/status.get.ts` — reports pending and applied migration files.
-- `server/api/migrations/run.post.ts` — applies pending migrations.
+- `server/api/_pluto/supabase/migrations/index.get.ts` — reports pending and applied migration files.
+- `server/api/_pluto/supabase/migrations/run.post.ts` — applies pending migrations.
 - `app/composables/migrations.ts` — `useMigrations()`, the client-side entry point.
 - `app/pages/admin/migrations.vue` — the admin page.
 - `app/components/migrations/MigrationsBanner.vue` — the admin-shell banner. The layer registers it
@@ -38,14 +38,21 @@ file in `public.pluto_migrations`. It adds:
 
 ## Connection string precedence
 
-`server/api/migrations/run.post.ts` resolves the connection string in this order, and no
+`server/api/_pluto/supabase/migrations/run.post.ts` resolves the connection string in this order, and no
 other order:
 
 1. `process.env.DATABASE_URL`, if set. A body-supplied string is ignored completely in this
    case.
 2. Otherwise, the body-supplied `connectionString`.
-3. Otherwise, the endpoint returns `{ success: false, needsConnectionString: true }`. It does
-   not throw.
+3. Otherwise, the endpoint answers 400 with `createPlutoError` (key
+   `supabase.errors.connectionStringRequired`) and `data: { needsConnectionString: true }`.
+
+A failed run answers 500 (key `supabase.errors.migrationsFailed`) with the scrubbed text in
+`data.error`. `setup/index.post.ts` does the same with the key `supabase.errors.setupFailed`. The
+client reads that data with `failureData()` (`app/utils/api-failure.ts`). `useMigrations()` turns
+the error back into `{ success: false, needsConnectionString?, error? }`, so the migrations page
+still shows its own toast. The setup page shows the "setup failed" toast. A dropped connection has
+no status code, and both pages still treat it as the dev-server restart.
 
 Rule 1 is the whole security model for this endpoint. Without it, any admin could point the
 server at an arbitrary database host by passing a `connectionString` in the request body, even
@@ -151,7 +158,7 @@ functions (`list_staff_users`, `list_roles`, `find_user_id_by_email`, `set_user_
 `add_user_roles`, `create_role`, `update_role`, `delete_role`) and tightens the policies of
 `roles` (delete) and `role_capabilities` (insert, update, delete). Each function has
 `revoke execute ... from public, anon` and `grant execute ... to authenticated, service_role`,
-because the Data API grant rule applies to functions too. The routes under `/api/access/**` call
+because the Data API grant rule applies to functions too. The routes under `/api/_pluto/supabase/access/**` call
 them. They answer 409 `supabase.access.errors.migrationPending` while 008 is pending. See the
 `permissions-storage` skill.
 
@@ -163,7 +170,7 @@ guard, and then validated, the same way `003_settings_generic_keys.sql` does it.
 creates `public.set_my_locale(text)`, a `security definer` function. It is the only writer of
 the column. The migration adds no RLS policy. See the `profile-language` skill.
 
-The routes `/api/profile/locale` do not fail when this migration is pending. The GET route
+The routes `/api/_pluto/supabase/me/locale` do not fail when this migration is pending. The GET route
 returns no locale. The POST route answers 409 with the key `supabase.profile.migrationPending`.
 
 ## `.env` persistence caveat
@@ -188,8 +195,8 @@ response.
 
 ## The dev-server restart on first save
 
-Writing to `.env` (`persistDatabaseUrl`, called from both `server/api/migrations/run.post.ts`
-and `server/api/setup/create.post.ts`) happens as the last step, after the database work already
+Writing to `.env` (`persistDatabaseUrl`, called from both `server/api/_pluto/supabase/migrations/run.post.ts`
+and `server/api/_pluto/supabase/setup.post.ts`) happens as the last step, after the database work already
 succeeded. In development, Nuxt restarts the whole dev server whenever `.env` changes, so the
 HTTP response for that request can be cut off mid-flight even though the migration or setup
 itself already committed.
@@ -202,7 +209,7 @@ Both `app/pages/admin/migrations.vue` and `app/pages/admin/setup.vue`:
   the caught error has a `statusCode` — a real HTTP error response has one, a connection dropped
   mid-request does not. Only in dev, and only in that no-`statusCode` case, treat it as "the
   server is restarting" instead of a failure: show a "reconnecting" toast, poll a lightweight
-  endpoint (`/api/migrations/status` via `refresh()`, or `/api/settings/first_setup`) every two
+  endpoint (`/api/_pluto/supabase/migrations` via `refresh()`, or `/api/_pluto/supabase/setup`) every two
   seconds for up to thirty seconds, and report back once it responds again.
 
 This assumption — "a dropped connection after this specific write means success, not failure" —

@@ -27,7 +27,7 @@ async function revoke() {
   working.value = true
 
   try {
-    await $fetch(`/api/access/users/${props.user.id}/roles`, { method: 'DELETE' })
+    await $fetch(`/api/_pluto/supabase/access/users/${props.user.id}/roles`, { method: 'DELETE' })
 
     toast.add({
       title: t('supabase.access.toasts.revoked'),

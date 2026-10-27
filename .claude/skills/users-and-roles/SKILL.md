@@ -32,7 +32,7 @@ emails on the Email tab. It needs `@plutocms/pluto` 0.18 or later (the `settings
 
 ## The Users tab
 
-- Data: `GET /api/access/users` and `GET /api/access/roles`. Both need `users:read`. The page shows
+- Data: `GET /api/_pluto/supabase/access/users` and `GET /api/_pluto/supabase/access/roles`. Both need `users:read`. The page shows
   `USkeleton` rows while it loads, a `UAlert` with "Try again" on an error, and a `UEmpty` with an
   invite button when the list is empty.
 - Columns: name and email (a "You" badge on your own row), role badges (an admin shows
@@ -41,14 +41,14 @@ emails on the Email tab. It needs `@plutocms/pluto` 0.18 or later (the `settings
   checks again with `requireAdminRole`.
 - The row menu: **Edit roles**, **Resend invite** and **Copy invite link** (pending users only; the
   copy needs the service key), **Revoke access**.
-- On load, an admin reads `GET /api/access/capabilities` to know if the service key is set.
+- On load, an admin reads `GET /api/_pluto/supabase/access/capabilities` to know if the service key is set.
 - Every modal and slideover loads on demand (`defineAsyncComponent` in the page). The invite form
   and the slideovers mount on their first open. Revoke and Link open with `useOverlay`.
 
 ### Invite
 
 `InviteModal` has email, optional name, roles (`UCheckboxGroup`) and the email language (default:
-the admin's language). It posts to `/api/access/users/invite` with `locale`.
+the admin's language). It posts to `/api/_pluto/supabase/access/users/invite` with `locale`.
 
 - `granted`: the account existed. The roles are added. A toast says so.
 - `emailSent: false` with a `link`: the user exists but the Pluto mail send failed. The modal shows
@@ -61,10 +61,10 @@ the admin's language). It posts to `/api/access/users/invite` with `locale`.
 
 ### Edit roles and revoke
 
-- Edit roles replaces the roles (`PUT /api/access/users/:id/roles`). It needs at least one role.
+- Edit roles replaces the roles (`PUT /api/_pluto/supabase/access/users/:id/roles`). It needs at least one role.
   If you remove your own `admin` role, a warning shows. After a change to your own roles, the page
   calls `usePlutoPermissions().load()`, so the menu and tabs follow.
-- Revoke removes all roles (`DELETE /api/access/users/:id/roles`). The account stays. The text says
+- Revoke removes all roles (`DELETE /api/_pluto/supabase/access/users/:id/roles`). The account stays. The text says
   so. The last admin cannot be revoked: the server answers 409 `lastAdmin`.
 
 ## The Roles tab
