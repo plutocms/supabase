@@ -81,7 +81,7 @@ in the browser after sign-in, and again after the Settings page saves.
 
 The driver `guard(to)` is the setup guard. Core runs it on `/admin/**`, after `ready()` and before
 the sign-in rule, so a new install goes to `/admin/setup` and not to the sign-in page. It reads
-`/api/settings/first_setup` and calls `setupRedirect(path, state)`:
+`/api/_pluto/supabase/setup` and calls `setupRedirect(path, state)`:
 
 - Setup not done, or the state cannot be read: every admin path but `/admin/setup` goes to
   `/admin/setup`.

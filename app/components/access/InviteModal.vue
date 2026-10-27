@@ -85,7 +85,7 @@ async function submit() {
   mailProblem.value = null
 
   try {
-    const result = await $fetch<AccessInviteResult>('/api/access/users/invite', {
+    const result = await $fetch<AccessInviteResult>('/api/_pluto/supabase/access/users/invite', {
       method: 'POST',
       body: { ...body(), locale: emailLocale.value },
     })
@@ -140,7 +140,7 @@ async function copyLink() {
 
   try {
     const result = await $fetch<{ status: 'invited' | 'granted', link: string | null }>(
-      '/api/access/users/invite-link',
+      '/api/_pluto/supabase/access/users/invite-link',
       { method: 'POST', body: body() }
     )
 

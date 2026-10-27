@@ -10,7 +10,7 @@ import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
  * `004_roles_and_capabilities.sql` respectively); a genuinely fresh site
  * that has never applied any migration beyond the original baseline
  * schema — an expected, normal state, not a broken one — has neither
- * function. `/api/migrations/*` (the only routes that call `requireAdmin`
+ * function. `/api/_pluto/supabase/migrations/*` (the only routes that call `requireAdmin`
  * today) are the one place this actually bites: they are the routes that
  * apply a pending migration, so they must work with zero migrations
  * applied, not just with `002`+ already in place. An earlier version of

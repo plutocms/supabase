@@ -29,7 +29,7 @@ async function load() {
   }
 
   try {
-    const response = await $fetch<{ roles: AccessRole[] }>('/api/access/roles')
+    const response = await $fetch<{ roles: AccessRole[] }>('/api/_pluto/supabase/access/roles')
 
     roles.value = response.roles
     status.value = 'ready'

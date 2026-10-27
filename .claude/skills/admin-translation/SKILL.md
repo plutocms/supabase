@@ -80,8 +80,10 @@ In a test, stub `createPlutoError` with `createPlutoErrorStub`. Build a translat
 
 ## Not translated
 
-- `server/api/auth/signup.post.ts` returns `{ success, message }` and the signup page does not read
-  it. A route-level zod message (for example the "Username must be at least 3 characters." rule) is
+- The success body of `server/api/_pluto/supabase/auth/signup.post.ts`, `{ success, message }`. The signup page
+  does not read it. A Supabase Auth failure is an HTTP error (key `supabase.errors.signupFailed`, the
+  auth code in `data.code`). The page shows the translated text of a known code, as the sign-in page
+  does. A route-level zod message (for example the "Username must be at least 3 characters." rule) is
   English, because the UI does not trigger those rules.
 - The placeholders `victor@example.com`, `postgresql://`, `••••`, and `• • • • •`.
 - Log lines and thrown `Error`s on the server.

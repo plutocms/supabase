@@ -3,7 +3,8 @@
 This feature adds the first real `PlutoContentAdapter`, backed by Supabase/PostgREST. It plugs
 into `@plutocms/pluto`'s generic content routes (`/api/_pluto/content/[type]`, see that repo's
 content-model skill), so any content type a layer declares maps onto a hand-authored table
-through one adapter, with no per-content-type server code. It adds:
+through one adapter, with no per-content-type server code. It also answers the public API of core
+(`GET /api/pluto/v1/content/<type>`, see "Public reads" below). It adds:
 
 - `server/utils/content-adapter.ts` — `createSupabaseContentAdapter()`, the adapter itself, plus
   three exported pure helpers used by its own tests: `resolveTimestampColumn`,
@@ -11,6 +12,8 @@ through one adapter, with no per-content-type server code. It adds:
 - `server/plugins/content-adapter.ts` — registers the adapter at Nitro startup, through
   `registerContentAdapter` (from `@plutocms/pluto`).
 - `test/content-adapter-helpers.test.ts` — unit tests for the three pure helpers.
+- `test/content-adapter-reads.test.ts` — unit tests for filters, timestamps and the anonymous client,
+  with a fake query builder.
 
 No content type is declared in this repo. `supabase` is the backend layer only — a layer that
 owns a content type (`supabase-blog`'s `post`, `supabase-shop`'s `product`) declares it, in that
@@ -79,6 +82,33 @@ payload does not already set that column (`!Object.hasOwn(row, statusColumn)`). 
 creating a row with an explicit status is respected; a caller that omits status gets the
 declared default.
 
+## Filters
+
+`query.filters` is a map of field name to text. `list()` resolves each field with
+`resolveFieldColumn` and applies `.eq(column, value)`. The value is text, so a stored number or
+boolean matches by its text (`'3'`, `'true'`). Core checks that each name is a public field before it
+calls the adapter.
+
+## Timestamps on items
+
+`mapColumnsToFields` drops every column that no field declares, and a timestamp is not a field.
+`toItem()` maps the row, then copies the created column, the updated column and
+`type.status.publishedAtColumn` (when set) onto the item under their **column names**. A field with
+the same name keeps its own value. `timestampKeys(type)` returns those column names as
+`{ created?, updated?, published? }`. Core uses it to sort and to show the dates. A sort field that
+is a timestamp column resolves directly, with no "no field named" warning.
+
+## Public reads
+
+When `isPublicRead(ctx.event)` is true, `getClient()` returns an anonymous client and not the session
+client. The client comes from `createClient(url, key, { auth: { persistSession: false,
+autoRefreshToken: false, detectSessionInUrl: false } })`. The url and the key are the
+`public.supabase` runtime config of `@nuxtjs/supabase`. The client reads no cookie, so Row Level
+Security applies as for an anonymous visitor. The answer is the same for everyone, so a CDN can cache
+it. One client serves the process, and it is built again only if the url or the key changes. The
+adapter never uses the service role key. A table that the public must read needs an RLS policy for
+the `anon` role.
+
 ## Error mapping
 
 `toContentError(error)` inspects `error.code` — the Postgres SQLSTATE PostgREST forwards — and
@@ -126,14 +156,12 @@ with no cast needed.
 
 ## What is not tested here (and why)
 
-`test/content-adapter-helpers.test.ts` covers only the three pure functions
-(`resolveTimestampColumn`, `resolveStatusColumn`, `toContentError`) — no I/O, no Supabase client,
-real branches. `list`/`get`/`create`/`update`/`remove` are not unit-tested by mocking the
-supabase-js query-builder chain (`.from().select().eq().order().range()...`): a mock deep enough
-to stand in for that chain would test the mock, not the code, and this repo has no precedent for
-it (see `test/ledger.test.ts`, `test/sql.test.ts` for the existing pure-logic bar). Those five
-methods are verified against a live database separately, outside this repo's automated test
-suite.
+`test/content-adapter-helpers.test.ts` covers the three pure functions (`resolveTimestampColumn`,
+`resolveStatusColumn`, `toContentError`). `test/content-adapter-reads.test.ts` checks the read path
+(filters, timestamps, sort, which client is used) against a small fake builder that records the
+calls. It checks that the adapter makes the right calls. It does not check the SQL.
+`create`, `update` and `remove` are verified against a live database, outside this repo's
+automated test suite.
 
 The helper test file mocks the module-level `#supabase/server` import (a virtual module Nitro
 only resolves inside a real Nuxt build) with `vi.mock`, purely so `content-adapter.ts` can load

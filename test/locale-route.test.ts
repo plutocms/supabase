@@ -63,16 +63,16 @@ afterEach(() => {
 type Handler = (event: unknown) => Promise<unknown>
 
 async function getHandler(): Promise<Handler> {
-  return (await import('../server/api/profile/locale.get'))
+  return (await import('../server/api/_pluto/supabase/me/locale.get'))
     .default as unknown as Handler
 }
 
 async function postHandler(): Promise<Handler> {
-  return (await import('../server/api/profile/locale.post'))
+  return (await import('../server/api/_pluto/supabase/me/locale.put'))
     .default as unknown as Handler
 }
 
-describe('gET /api/profile/locale', () => {
+describe('gET /api/_pluto/supabase/me/locale', () => {
   it('returns the stored locale, read by user.sub', async () => {
     expect(await (await getHandler())({})).toEqual({ locale: 'pt-BR' })
     expect(eq).toHaveBeenCalledWith('id', 'user-1')
@@ -104,7 +104,7 @@ describe('gET /api/profile/locale', () => {
   })
 })
 
-describe('pOST /api/profile/locale', () => {
+describe('pUT /api/_pluto/supabase/me/locale', () => {
   it('rejects a signed-out caller with 401', async () => {
     user = null
 
@@ -168,12 +168,13 @@ describe('pOST /api/profile/locale', () => {
     }
   })
 
-  it('answers 500 with the message for another error', async () => {
+  it('answers 500 with the message and key for another error', async () => {
     rpcResult = { error: { message: 'boom', code: 'XX000' } }
 
     await expect((await postHandler())({})).rejects.toMatchObject({
       statusCode: 500,
-      statusMessage: 'boom',
+      statusMessage: 'Could not save your language: boom',
+      data: { i18n: { key: 'supabase.errors.localeSave', params: { message: 'boom' } } },
     })
   })
 })

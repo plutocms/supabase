@@ -131,12 +131,12 @@ async function save() {
 
   try {
     if (creating.value) {
-      await $fetch('/api/access/roles', {
+      await $fetch('/api/_pluto/supabase/access/roles', {
         method: 'POST',
         body: { ...body, key: key.value },
       })
     } else {
-      await $fetch(`/api/access/roles/${props.role!.key}`, { method: 'PUT', body })
+      await $fetch(`/api/_pluto/supabase/access/roles/${props.role!.key}`, { method: 'PUT', body })
     }
 
     toast.add({

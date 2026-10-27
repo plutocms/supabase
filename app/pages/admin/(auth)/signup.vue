@@ -3,7 +3,7 @@ definePageMeta({
   layout: 'auth',
 })
 
-const { t } = usePlutoI18n()
+const { t, te } = usePlutoI18n()
 const errorText = usePlutoErrorText()
 
 useHead({
@@ -36,7 +36,7 @@ async function submitForm() {
   isSubmitting.value = true
 
   try {
-    await $fetch('/api/auth/signup', {
+    await $fetch('/api/_pluto/supabase/auth/signup', {
       method: 'POST',
       body: {
         email: form.value.email,
@@ -59,7 +59,14 @@ async function submitForm() {
 
     toast.add({
       title: t('supabase.auth.signup.failed'),
-      description: errorText(error, 'supabase.auth.errors.unknown'),
+      description: resolveAuthErrorText(
+        {
+          code: failureData(error)?.code,
+          message: (error as { data?: { statusMessage?: string } }).data?.statusMessage
+            ?? errorText(error, 'supabase.auth.errors.unknown'),
+        },
+        { t, te }
+      ),
       icon: 'lucide:circle-x',
       color: 'error',
     })

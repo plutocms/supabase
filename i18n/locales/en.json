@@ -9,12 +9,17 @@
       "missingPermission": "Your account is missing the \"{capability}\" permission.",
       "setupCompleted": "Setup has already been completed.",
       "coreSchemaMissing": "Core schema not found. Reinstall @plutocms/supabase and restart the dev server.",
-      "fetchUsers": "Error fetching users: {message}",
-      "fetchUser": "Error fetching user: {message}",
       "localeUnsupported": "This language is not supported.",
       "duplicateRecord": "A record with this value already exists.",
       "missingReference": "This references a record that does not exist.",
-      "migrationStatus": "Error reading migration status: {message}"
+      "migrationStatus": "Error reading migration status: {message}",
+      "signupFailed": "Could not create the account.",
+      "connectionStringRequired": "A database connection string is required.",
+      "migrationsFailed": "Migrations failed: {message}",
+      "setupFailed": "Database setup failed: {message}",
+      "setupStateRead": "Could not read the setup state: {message}",
+      "settingsSave": "Could not save the settings: {message}",
+      "localeSave": "Could not save your language: {message}"
     },
     "auth": {
       "backToLogin": "Back to Login",
