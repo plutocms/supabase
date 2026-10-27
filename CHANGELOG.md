@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.1](https://github.com/plutocms/supabase/compare/v0.14.0...v0.14.1) (2026-10-27)
+
+
+### Bug Fixes
+
+* **deps:** use @plutocms/pluto 0.28 ([#106](https://github.com/plutocms/supabase/issues/106)) ([a2cb3f2](https://github.com/plutocms/supabase/commit/a2cb3f284dc7cfd5585a76d1c6bfa7616c4fd994))
+
 ## [0.14.0](https://github.com/plutocms/supabase/compare/v0.13.0...v0.14.0) (2026-10-27)
 
 
