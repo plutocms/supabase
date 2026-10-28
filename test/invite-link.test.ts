@@ -12,7 +12,9 @@ describe('parseInviteLink', () => {
   })
 
   it('reads token_hash with type=magiclink, from the copied link of an existing account', () => {
-    expect(parseInviteLink({ token_hash: 'abc', type: 'magiclink' }, '')).toEqual({
+    expect(
+      parseInviteLink({ token_hash: 'abc', type: 'magiclink' }, '')
+    ).toEqual({
       kind: 'otp',
       tokenHash: 'abc',
       type: 'magiclink',
@@ -20,7 +22,9 @@ describe('parseInviteLink', () => {
   })
 
   it('ignores token_hash with another type', () => {
-    expect(parseInviteLink({ token_hash: 'abc', type: 'recovery' }, '')).toEqual({
+    expect(
+      parseInviteLink({ token_hash: 'abc', type: 'recovery' }, '')
+    ).toEqual({
       kind: 'none',
     })
   })

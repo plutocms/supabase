@@ -225,7 +225,10 @@ function handleStepChange(step: number) {
                 class="flex flex-col gap-y-4"
                 @submit="handleStepChange(currentStep)"
               >
-                <UFormField :label="t('supabase.connection.connectionString')" required>
+                <UFormField
+                  :label="t('supabase.connection.connectionString')"
+                  required
+                >
                   <UInput
                     v-model="databaseForm.connectionString"
                     :disabled="isSettingUpDatabase"
@@ -245,7 +248,9 @@ function handleStepChange(step: number) {
                           class="underline"
                           external
                         >
-                          {{ t('supabase.connection.connectionStringHelpLink') }}
+                          {{
+                            t('supabase.connection.connectionStringHelpLink')
+                          }}
                         </ULink>
                       </template>
                     </SupabaseMessageParts>
@@ -296,7 +301,9 @@ function handleStepChange(step: number) {
                           :message="t('supabase.setup.why')"
                         >
                           <template #promise>
-                            <UTooltip :text="t('supabase.setup.promiseTooltip')">
+                            <UTooltip
+                              :text="t('supabase.setup.promiseTooltip')"
+                            >
                               <span
                                 class="underline decoration-dotted cursor-help"
                               >
@@ -324,7 +331,9 @@ function handleStepChange(step: number) {
                             >
                               <p>
                                 <SupabaseMessageParts
-                                  :message="t('supabase.setup.technicalDetailsRequest')"
+                                  :message="
+                                    t('supabase.setup.technicalDetailsRequest')
+                                  "
                                 >
                                   <template #route>
                                     <ULink
@@ -332,7 +341,11 @@ function handleStepChange(step: number) {
                                       target="_blank"
                                       class="underline"
                                     >
-                                      {{ t('supabase.setup.technicalDetailsRoute') }}</ULink
+                                      {{
+                                        t(
+                                          'supabase.setup.technicalDetailsRoute'
+                                        )
+                                      }}</ULink
                                     >
                                   </template>
                                   <template #files>
@@ -341,7 +354,11 @@ function handleStepChange(step: number) {
                                       target="_blank"
                                       class="underline"
                                     >
-                                      {{ t('supabase.setup.technicalDetailsFiles') }}</ULink
+                                      {{
+                                        t(
+                                          'supabase.setup.technicalDetailsFiles'
+                                        )
+                                      }}</ULink
                                     >
                                   </template>
                                 </SupabaseMessageParts>
@@ -374,7 +391,9 @@ function handleStepChange(step: number) {
                 <hgroup class="text-center">
                   <span class="text-3xl">🎉</span>
 
-                  <h1 class="font-bold text-2xl">{{ t('supabase.setup.doneTitle') }}</h1>
+                  <h1 class="font-bold text-2xl">
+                    {{ t('supabase.setup.doneTitle') }}
+                  </h1>
                 </hgroup>
 
                 <p class="text-balance text-center text-lg">

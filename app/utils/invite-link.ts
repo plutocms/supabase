@@ -20,9 +20,9 @@ const OTP_TYPES: readonly string[] = ['invite', 'magiclink', 'signup']
  * - `none`: the link holds nothing. The page then looks for a session.
  */
 export type InviteLink =
-  | { kind: 'otp', tokenHash: string, type: InviteOtpType }
-  | { kind: 'session', accessToken: string, refreshToken: string }
-  | { kind: 'error', code: string, description?: string }
+  | { kind: 'otp'; tokenHash: string; type: InviteOtpType }
+  | { kind: 'session'; accessToken: string; refreshToken: string }
+  | { kind: 'error'; code: string; description?: string }
   | { kind: 'none' }
 
 type QueryValue = string | null | undefined | Array<string | null>

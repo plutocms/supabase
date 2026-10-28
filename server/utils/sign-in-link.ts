@@ -40,7 +40,9 @@ export async function sendSignInLink(
     options: {
       shouldCreateUser: options.createUser,
       emailRedirectTo: options.redirectTo,
-      data: options.displayName ? { display_name: options.displayName } : undefined,
+      data: options.displayName
+        ? { display_name: options.displayName }
+        : undefined,
     },
   })
 
@@ -52,14 +54,17 @@ export async function sendSignInLink(
  * SMTP, Supabase sends auth emails only to members of the project's
  * organization.
  */
-export function isEmailNotAuthorizedError(error: { code?: string } | null | undefined): boolean {
+export function isEmailNotAuthorizedError(
+  error: { code?: string } | null | undefined
+): boolean {
   return error?.code === 'email_address_not_authorized'
 }
 
 export function emailNotAuthorizedError() {
   return createPlutoError({
     statusCode: 400,
-    message: 'Supabase\'s built-in email sends only to members of your Supabase organization. Set up custom SMTP in Supabase to invite other addresses.',
+    message:
+      "Supabase's built-in email sends only to members of your Supabase organization. Set up custom SMTP in Supabase to invite other addresses.",
     key: 'supabase.access.errors.emailNotAuthorized',
   })
 }
@@ -69,14 +74,17 @@ export function emailNotAuthorizedError() {
  * 60 seconds, and a few per hour for the project with the built-in mailer.
  * This is not the in-memory limit of `rate-limit.ts`.
  */
-export function isEmailRateLimitError(error: { code?: string, status?: number } | null | undefined): boolean {
+export function isEmailRateLimitError(
+  error: { code?: string; status?: number } | null | undefined
+): boolean {
   return error?.status === 429 || error?.code === 'over_email_send_rate_limit'
 }
 
 export function emailRateLimitError() {
   return createPlutoError({
     statusCode: 429,
-    message: 'Supabase sent too many emails. Wait a minute for the same address, or up to an hour with the built-in mailer. Custom SMTP in Supabase raises this limit.',
+    message:
+      'Supabase sent too many emails. Wait a minute for the same address, or up to an hour with the built-in mailer. Custom SMTP in Supabase raises this limit.',
     key: 'supabase.access.errors.emailRateLimited',
   })
 }
@@ -85,20 +93,27 @@ export function emailRateLimitError() {
  * True when Supabase refuses the address itself, for example an example or
  * test domain (`example.com`), or an address it cannot deliver to.
  */
-export function isEmailInvalidError(error: { code?: string } | null | undefined): boolean {
+export function isEmailInvalidError(
+  error: { code?: string } | null | undefined
+): boolean {
   return error?.code === 'email_address_invalid'
 }
 
 export function emailInvalidError() {
   return createPlutoError({
     statusCode: 400,
-    message: 'Supabase does not accept this email address. Use a real address: Supabase refuses example and test domains.',
+    message:
+      'Supabase does not accept this email address. Use a real address: Supabase refuses example and test domains.',
     key: 'supabase.access.errors.emailInvalid',
   })
 }
 
 /** Maps a GoTrue error of `signInWithOtp` to a Pluto error. */
-export function signInLinkError(error: { code?: string, status?: number, message: string }) {
+export function signInLinkError(error: {
+  code?: string
+  status?: number
+  message: string
+}) {
   if (isEmailNotAuthorizedError(error)) {
     return emailNotAuthorizedError()
   }
@@ -114,7 +129,8 @@ export function signInLinkError(error: { code?: string, status?: number, message
   if (error.code === 'signup_disabled' || error.code === 'otp_disabled') {
     return createPlutoError({
       statusCode: 503,
-      message: 'Public sign-up is off. Set NUXT_SUPABASE_SECRET_KEY on the server to send invites.',
+      message:
+        'Public sign-up is off. Set NUXT_SUPABASE_SECRET_KEY on the server to send invites.',
       key: 'supabase.access.errors.signupDisabled',
     })
   }

@@ -42,7 +42,10 @@ describe('createRateLimiter', () => {
 
   it('reports the seconds to wait', () => {
     let time = 0
-    const limiter = createRateLimiter({ limit: 1, windowMs: 600_000 }, () => time)
+    const limiter = createRateLimiter(
+      { limit: 1, windowMs: 600_000 },
+      () => time
+    )
 
     limiter.hit('a')
     time = 60_000
@@ -59,7 +62,8 @@ describe('enforceInviteRateLimit', () => {
   })
 
   it('allows 10 invites and answers 429 for the 11th', async () => {
-    const { enforceInviteRateLimit } = await import('../server/utils/rate-limit')
+    const { enforceInviteRateLimit } =
+      await import('../server/utils/rate-limit')
 
     for (let i = 0; i < 10; i++) {
       expect(() => enforceInviteRateLimit('limit-user')).not.toThrow()

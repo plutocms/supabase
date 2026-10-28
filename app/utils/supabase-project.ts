@@ -9,21 +9,26 @@ export const RESEND_SMTP = {
 } as const
 
 /** The page where Resend connects itself to a Supabase project. */
-export const RESEND_SUPABASE_INTEGRATION_URL = 'https://resend.com/settings/integrations'
+export const RESEND_SUPABASE_INTEGRATION_URL =
+  'https://resend.com/settings/integrations'
 
 /**
  * Reads the project ref from the Supabase URL: `https://<ref>.supabase.co`
  * (and `.supabase.red`). A custom domain, a local URL or a bad value gives
  * null.
  */
-export function supabaseProjectRef(url: string | null | undefined): string | null {
+export function supabaseProjectRef(
+  url: string | null | undefined
+): string | null {
   if (!url) {
     return null
   }
 
   try {
     const { hostname } = new URL(url)
-    const match = /^([a-z0-9]{10,})\.supabase\.(?:co|red)$/.exec(hostname.toLowerCase())
+    const match = /^([a-z0-9]{10,})\.supabase\.(?:co|red)$/.exec(
+      hostname.toLowerCase()
+    )
 
     return match?.[1] ?? null
   } catch {

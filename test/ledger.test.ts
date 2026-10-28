@@ -42,7 +42,7 @@ describe('ledgerDdl', () => {
     const statements = splitStatements(ledgerDdl)
 
     const backfillIndex = statements.findIndex((s) =>
-      s.includes('migration_name = \'001_baseline.sql\'')
+      s.includes("migration_name = '001_baseline.sql'")
     )
     const notNullIndex = statements.findIndex((s) =>
       s.includes('alter column migration_name set not null')

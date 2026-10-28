@@ -26,7 +26,10 @@ export default defineEventHandler(async (event) => {
     // Without the fallback, the admin guard would see an admin with no
     // capability and keep them out of /admin/migrations, the one page that
     // can apply the missing migration.
-    console.error('my_capabilities() failed, falling back to profiles.is_admin:', error.message)
+    console.error(
+      'my_capabilities() failed, falling back to profiles.is_admin:',
+      error.message
+    )
 
     const { data: profile } = await client
       .from('profiles')

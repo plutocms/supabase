@@ -6,12 +6,14 @@ import { createPlutoErrorStub } from './fixtures/i18n-stub'
 // guards.test.ts.
 interface RpcResult {
   data: unknown
-  error: { code?: string, message: string } | null
+  error: { code?: string; message: string } | null
 }
 
 // The sign-in link (the invite path without the service key).
-let otpCalls: Array<{ url: string, key: string, auth: unknown, args: unknown }>
-let otpResult: { error: { code?: string, status?: number, message: string } | null }
+let otpCalls: Array<{ url: string; key: string; auth: unknown; args: unknown }>
+let otpResult: {
+  error: { code?: string; status?: number; message: string } | null
+}
 
 vi.mock('@supabase/supabase-js', () => ({
   createClient: (url: string, key: string, options: { auth: unknown }) => ({
@@ -29,23 +31,31 @@ let user: { sub: string } | null
 let rpcResults: Record<string, RpcResult>
 // Results used in order before `rpcResults`, for a function called twice.
 let rpcQueue: Record<string, RpcResult[]>
-let rpcCalls: Array<{ name: string, args: unknown }>
+let rpcCalls: Array<{ name: string; args: unknown }>
 let serviceKeyMissing: boolean
-let inviteResult: { data: { user: { id: string } } | null, error: { code?: string, message: string } | null }
-let getUserResult: { data: { user: { email: string | null, email_confirmed_at: string | null } | null }, error: null }
-let inviteCalls: Array<{ email: string, options: unknown }>
+let inviteResult: {
+  data: { user: { id: string } } | null
+  error: { code?: string; message: string } | null
+}
+let getUserResult: {
+  data: {
+    user: { email: string | null; email_confirmed_at: string | null } | null
+  }
+  error: null
+}
+let inviteCalls: Array<{ email: string; options: unknown }>
 let deleteCalls: string[]
 // Pluto mail (a Nitro auto-import of @plutocms/pluto).
 let mailConfigured: boolean
 let mailSendError: { code: string } | null
 let sentMail: Array<Record<string, unknown>>
-let renderCalls: Array<{ name: string, data: unknown, options: unknown }>
+let renderCalls: Array<{ name: string; data: unknown; options: unknown }>
 let websiteTitle: string | null
 // What generateLink answers.
-let generateCalls: Array<{ type: string, email: string, options: unknown }>
-let generateError: { code?: string, message: string } | null
+let generateCalls: Array<{ type: string; email: string; options: unknown }>
+let generateError: { code?: string; message: string } | null
 // Errors used in order before `generateError` (null = success).
-let generateQueue: Array<{ code?: string, message: string } | null>
+let generateQueue: Array<{ code?: string; message: string } | null>
 let generateVerification: string
 let body: unknown
 let counter = 0
@@ -57,7 +67,8 @@ vi.mock('#supabase/server', () => ({
       select: () => ({
         eq: () => ({
           maybeSingle: async () => ({
-            data: websiteTitle === null ? null : { setting_value: websiteTitle },
+            data:
+              websiteTitle === null ? null : { setting_value: websiteTitle },
             error: null,
           }),
         }),
@@ -66,7 +77,10 @@ vi.mock('#supabase/server', () => ({
     rpc: async (name: string, args: unknown) => {
       rpcCalls.push({ name, args })
 
-      return rpcQueue[name]?.shift() ?? rpcResults[name] ?? { data: true, error: null }
+      return (
+        rpcQueue[name]?.shift() ??
+        rpcResults[name] ?? { data: true, error: null }
+      )
     },
   }),
   serverSupabaseServiceRole: () => {
@@ -88,10 +102,15 @@ vi.mock('#supabase/server', () => ({
             return { error: null }
           },
           getUserById: async () => getUserResult,
-          generateLink: async (params: { type: string, email: string, options: unknown }) => {
+          generateLink: async (params: {
+            type: string
+            email: string
+            options: unknown
+          }) => {
             generateCalls.push(params)
 
-            const failure = generateQueue.length > 0 ? generateQueue.shift()! : generateError
+            const failure =
+              generateQueue.length > 0 ? generateQueue.shift()! : generateError
 
             if (failure) {
               return { data: null, error: failure }
@@ -99,7 +118,9 @@ vi.mock('#supabase/server', () => ({
 
             return {
               data: {
-                user: { id: params.type === 'invite' ? 'new-user' : 'old-user' },
+                user: {
+                  id: params.type === 'invite' ? 'new-user' : 'old-user',
+                },
                 properties: {
                   hashed_token: 'hash-1',
                   verification_type: generateVerification || params.type,
@@ -138,13 +159,20 @@ beforeEach(() => {
   generateError = null
   generateQueue = []
   generateVerification = ''
-  body = { email: '  Ada@Example.com ', roleKeys: ['editor'], displayName: 'Ada' }
+  body = {
+    email: '  Ada@Example.com ',
+    roleKeys: ['editor'],
+    displayName: 'Ada',
+  }
   vi.spyOn(console, 'error').mockImplementation(() => {})
   vi.stubGlobal('defineEventHandler', (handler: unknown) => handler)
   vi.stubGlobal('createError', (input: object) => input)
   vi.stubGlobal('createPlutoError', createPlutoErrorStub)
   vi.stubGlobal('readBody', async () => body)
-  vi.stubGlobal('getRequestURL', () => new URL('https://site.test/admin/users?x=1'))
+  vi.stubGlobal(
+    'getRequestURL',
+    () => new URL('https://site.test/admin/users?x=1')
+  )
   vi.stubGlobal('useRuntimeConfig', () => ({
     public: {
       supabase: { url: 'https://project.supabase.test', key: 'anon-key' },
@@ -152,15 +180,23 @@ beforeEach(() => {
       websiteName: 'Config Site',
     },
   }))
-  vi.stubGlobal('getPlutoMailStatus', async () => ({ configured: mailConfigured }))
-  vi.stubGlobal('renderPlutoEmail', async (name: string, data: unknown, options: unknown) => {
-    renderCalls.push({ name, data, options })
+  vi.stubGlobal('getPlutoMailStatus', async () => ({
+    configured: mailConfigured,
+  }))
+  vi.stubGlobal(
+    'renderPlutoEmail',
+    async (name: string, data: unknown, options: unknown) => {
+      renderCalls.push({ name, data, options })
 
-    return { subject: 'Subject', html: '<p>Hi</p>', text: 'Hi' }
-  })
+      return { subject: 'Subject', html: '<p>Hi</p>', text: 'Hi' }
+    }
+  )
   vi.stubGlobal('sendPlutoMail', async (message: Record<string, unknown>) => {
     if (mailSendError) {
-      throw Object.assign(new Error('provider text with a@b.test'), mailSendError)
+      throw Object.assign(
+        new Error('provider text with a@b.test'),
+        mailSendError
+      )
     }
 
     sentMail.push(message)
@@ -180,17 +216,34 @@ afterEach(() => {
 vi.stubGlobal('defineEventHandler', (handler: unknown) => handler)
 
 const { requireAdminRole } = await import('../server/utils/admin-role-guard')
-const invite = (await import('../server/api/_pluto/supabase/access/users/invite.post')).default as (e: unknown) => Promise<unknown>
-const resend = (await import('../server/api/_pluto/supabase/access/users/[id]/resend.post')).default as (e: unknown) => Promise<unknown>
-const putRoles = (await import('../server/api/_pluto/supabase/access/users/[id]/roles.put')).default as (e: unknown) => Promise<unknown>
-const delRoles = (await import('../server/api/_pluto/supabase/access/users/[id]/roles.delete')).default as (e: unknown) => Promise<unknown>
-const createRole = (await import('../server/api/_pluto/supabase/access/roles.post')).default as (e: unknown) => Promise<unknown>
-const inviteLink = (await import('../server/api/_pluto/supabase/access/users/invite-link.post')).default as (e: unknown) => Promise<unknown>
-const capabilities = (await import('../server/api/_pluto/supabase/access/capabilities.get')).default as (e: unknown) => Promise<unknown>
-const deleteRole = (await import('../server/api/_pluto/supabase/access/roles/[key].delete')).default as (e: unknown) => Promise<unknown>
+const invite = (
+  await import('../server/api/_pluto/supabase/access/users/invite.post')
+).default as (e: unknown) => Promise<unknown>
+const resend = (
+  await import('../server/api/_pluto/supabase/access/users/[id]/resend.post')
+).default as (e: unknown) => Promise<unknown>
+const putRoles = (
+  await import('../server/api/_pluto/supabase/access/users/[id]/roles.put')
+).default as (e: unknown) => Promise<unknown>
+const delRoles = (
+  await import('../server/api/_pluto/supabase/access/users/[id]/roles.delete')
+).default as (e: unknown) => Promise<unknown>
+const createRole = (
+  await import('../server/api/_pluto/supabase/access/roles.post')
+).default as (e: unknown) => Promise<unknown>
+const inviteLink = (
+  await import('../server/api/_pluto/supabase/access/users/invite-link.post')
+).default as (e: unknown) => Promise<unknown>
+const capabilities = (
+  await import('../server/api/_pluto/supabase/access/capabilities.get')
+).default as (e: unknown) => Promise<unknown>
+const deleteRole = (
+  await import('../server/api/_pluto/supabase/access/roles/[key].delete')
+).default as (e: unknown) => Promise<unknown>
 
 const ID = '11111111-1111-4111-8111-111111111111'
-const event = (params: Record<string, string> = {}) => ({ context: { params } }) as never
+const event = (params: Record<string, string> = {}) =>
+  ({ context: { params } }) as never
 
 describe('requireAdminRole', () => {
   it('returns the user for an admin', async () => {
@@ -221,7 +274,9 @@ describe('requireAdminRole', () => {
   it('answers 403 when the rpc fails', async () => {
     rpcResults.is_admin = { data: null, error: { message: 'boom' } }
 
-    await expect(requireAdminRole(event())).rejects.toMatchObject({ statusCode: 403 })
+    await expect(requireAdminRole(event())).rejects.toMatchObject({
+      statusCode: 403,
+    })
   })
 })
 
@@ -274,7 +329,13 @@ describe('pOST /api/_pluto/supabase/access/users/invite', () => {
 
   it('answers 503 without the service key when public sign-up is off', async () => {
     serviceKeyMissing = true
-    otpResult = { error: { code: 'signup_disabled', status: 422, message: 'Signups not allowed' } }
+    otpResult = {
+      error: {
+        code: 'signup_disabled',
+        status: 422,
+        message: 'Signups not allowed',
+      },
+    }
 
     await expect(invite(event())).rejects.toMatchObject({
       statusCode: 503,
@@ -284,7 +345,13 @@ describe('pOST /api/_pluto/supabase/access/users/invite', () => {
 
   it('explains the built-in mailer limit without the service key', async () => {
     serviceKeyMissing = true
-    otpResult = { error: { code: 'email_address_not_authorized', status: 400, message: 'not authorized' } }
+    otpResult = {
+      error: {
+        code: 'email_address_not_authorized',
+        status: 400,
+        message: 'not authorized',
+      },
+    }
 
     await expect(invite(event())).rejects.toMatchObject({
       statusCode: 400,
@@ -294,7 +361,9 @@ describe('pOST /api/_pluto/supabase/access/users/invite', () => {
 
   it('explains an address Supabase refuses', async () => {
     serviceKeyMissing = true
-    otpResult = { error: { code: 'email_address_invalid', status: 400, message: 'invalid' } }
+    otpResult = {
+      error: { code: 'email_address_invalid', status: 400, message: 'invalid' },
+    }
 
     await expect(invite(event())).rejects.toMatchObject({
       statusCode: 400,
@@ -303,7 +372,13 @@ describe('pOST /api/_pluto/supabase/access/users/invite', () => {
   })
 
   it('explains the built-in mailer limit with the service key', async () => {
-    inviteResult = { data: null, error: { code: 'email_address_not_authorized', message: 'not authorized' } }
+    inviteResult = {
+      data: null,
+      error: {
+        code: 'email_address_not_authorized',
+        message: 'not authorized',
+      },
+    }
 
     await expect(invite(event())).rejects.toMatchObject({
       statusCode: 400,
@@ -313,7 +388,13 @@ describe('pOST /api/_pluto/supabase/access/users/invite', () => {
 
   it('answers 429 without the service key when Supabase limits the emails', async () => {
     serviceKeyMissing = true
-    otpResult = { error: { code: 'over_email_send_rate_limit', status: 429, message: 'rate limit' } }
+    otpResult = {
+      error: {
+        code: 'over_email_send_rate_limit',
+        status: 429,
+        message: 'rate limit',
+      },
+    }
 
     // Supabase's limit has its own message, not the in-memory brake's.
     await expect(invite(event())).rejects.toMatchObject({
@@ -323,7 +404,10 @@ describe('pOST /api/_pluto/supabase/access/users/invite', () => {
   })
 
   it('answers 429 with the service key when Supabase limits the emails', async () => {
-    inviteResult = { data: null, error: { code: 'over_email_send_rate_limit', message: 'rate limit' } }
+    inviteResult = {
+      data: null,
+      error: { code: 'over_email_send_rate_limit', message: 'rate limit' },
+    }
 
     await expect(invite(event())).rejects.toMatchObject({
       statusCode: 429,
@@ -407,7 +491,10 @@ describe('pOST /api/_pluto/supabase/access/users/invite', () => {
   })
 
   it('answers 502 for another invite error', async () => {
-    inviteResult = { data: null, error: { code: 'unexpected_failure', message: 'smtp' } }
+    inviteResult = {
+      data: null,
+      error: { code: 'unexpected_failure', message: 'smtp' },
+    }
 
     await expect(invite(event())).rejects.toMatchObject({
       statusCode: 502,
@@ -446,22 +533,30 @@ describe('pOST /api/_pluto/supabase/access/users/[id]/resend', () => {
 
   it('refuses a user who accepted the invite', async () => {
     getUserResult = {
-      data: { user: { email: 'a@example.com', email_confirmed_at: '2026-01-01' } },
+      data: {
+        user: { email: 'a@example.com', email_confirmed_at: '2026-01-01' },
+      },
       error: null,
     }
 
-    await expect(resend(event({ id: ID }))).rejects.toMatchObject({ statusCode: 409 })
+    await expect(resend(event({ id: ID }))).rejects.toMatchObject({
+      statusCode: 409,
+    })
     expect(inviteCalls).toEqual([])
   })
 
   it('refuses an id that is not a UUID', async () => {
-    await expect(resend(event({ id: 'nope' }))).rejects.toMatchObject({ statusCode: 400 })
+    await expect(resend(event({ id: 'nope' }))).rejects.toMatchObject({
+      statusCode: 400,
+    })
   })
 
   it('sends a sign-in link that creates no account when the service key is missing', async () => {
     serviceKeyMissing = true
     rpcResults.list_staff_users = {
-      data: [{ id: ID, email: 'pending@example.com', email_confirmed_at: null }],
+      data: [
+        { id: ID, email: 'pending@example.com', email_confirmed_at: null },
+      ],
       error: null,
     }
 
@@ -479,18 +574,24 @@ describe('pOST /api/_pluto/supabase/access/users/[id]/resend', () => {
   it('refuses a confirmed user when the service key is missing', async () => {
     serviceKeyMissing = true
     rpcResults.list_staff_users = {
-      data: [{ id: ID, email: 'a@example.com', email_confirmed_at: '2026-01-01' }],
+      data: [
+        { id: ID, email: 'a@example.com', email_confirmed_at: '2026-01-01' },
+      ],
       error: null,
     }
 
-    await expect(resend(event({ id: ID }))).rejects.toMatchObject({ statusCode: 409 })
+    await expect(resend(event({ id: ID }))).rejects.toMatchObject({
+      statusCode: 409,
+    })
     expect(otpCalls).toEqual([])
   })
 
   it('makes no service call for a caller who is not an admin', async () => {
     rpcResults.is_admin = { data: false, error: null }
 
-    await expect(resend(event({ id: ID }))).rejects.toMatchObject({ statusCode: 403 })
+    await expect(resend(event({ id: ID }))).rejects.toMatchObject({
+      statusCode: 403,
+    })
     expect(inviteCalls).toEqual([])
   })
 })
@@ -569,7 +670,8 @@ describe('roles routes', () => {
 })
 
 describe('pOST /api/_pluto/supabase/access/users/invite with Pluto mail', () => {
-  const LINK = 'https://site.test/admin/accept-invite?token_hash=hash-1&type=invite'
+  const LINK =
+    'https://site.test/admin/accept-invite?token_hash=hash-1&type=invite'
 
   beforeEach(() => {
     mailConfigured = true
@@ -578,12 +680,23 @@ describe('pOST /api/_pluto/supabase/access/users/invite with Pluto mail', () => 
       data: [{ key: 'editor', label: 'Editor' }],
       error: null,
     }
-    body = { email: 'ada@example.com', roleKeys: ['editor'], displayName: 'Ada', locale: 'pt-BR' }
-    user = { sub: `admin-${counter++}`, user_metadata: { display_name: 'Grace' } } as never
+    body = {
+      email: 'ada@example.com',
+      roleKeys: ['editor'],
+      displayName: 'Ada',
+      locale: 'pt-BR',
+    }
+    user = {
+      sub: `admin-${counter++}`,
+      user_metadata: { display_name: 'Grace' },
+    } as never
   })
 
   it('makes the link, sets the roles and sends the Pluto email', async () => {
-    await expect(invite(event())).resolves.toEqual({ status: 'invited', emailSent: true })
+    await expect(invite(event())).resolves.toEqual({
+      status: 'invited',
+      emailSent: true,
+    })
 
     // GoTrue sends nothing: generateLink, not inviteUserByEmail.
     expect(inviteCalls).toEqual([])
@@ -597,7 +710,9 @@ describe('pOST /api/_pluto/supabase/access/users/invite with Pluto mail', () => 
         },
       },
     ])
-    expect(rpcCalls.find((call) => call.name === 'set_user_roles')?.args).toEqual({
+    expect(
+      rpcCalls.find((call) => call.name === 'set_user_roles')?.args
+    ).toEqual({
       target: 'new-user',
       role_keys: ['editor'],
     })
@@ -624,7 +739,10 @@ describe('pOST /api/_pluto/supabase/access/users/invite with Pluto mail', () => 
 
     await invite(event())
 
-    expect(renderCalls[0]?.options).toEqual({ locale: 'pt-BR', siteName: 'Config Site' })
+    expect(renderCalls[0]?.options).toEqual({
+      locale: 'pt-BR',
+      siteName: 'Config Site',
+    })
   })
 
   it('keeps the user and the roles, and returns the link, when the send fails', async () => {
@@ -704,16 +822,25 @@ describe('pOST /api/_pluto/supabase/access/users/[id]/resend with Pluto mail', (
       data: [{ id: ID, email: 'pending@example.com', roles: ['editor'] }],
       error: null,
     }
-    rpcResults.list_roles = { data: [{ key: 'editor', label: 'Editor' }], error: null }
+    rpcResults.list_roles = {
+      data: [{ key: 'editor', label: 'Editor' }],
+      error: null,
+    }
   })
 
   it('sends the Pluto email with a new link', async () => {
     body = { locale: 'pt-BR' }
 
-    await expect(resend(event({ id: ID }))).resolves.toEqual({ status: 'sent', emailSent: true })
+    await expect(resend(event({ id: ID }))).resolves.toEqual({
+      status: 'sent',
+      emailSent: true,
+    })
 
     expect(inviteCalls).toEqual([])
-    expect(generateCalls[0]).toMatchObject({ type: 'invite', email: 'pending@example.com' })
+    expect(generateCalls[0]).toMatchObject({
+      type: 'invite',
+      email: 'pending@example.com',
+    })
     expect(sentMail[0]).toMatchObject({ to: 'pending@example.com' })
     expect(sentMail[0]!.idempotencyKey).toMatch(new RegExp(`^invite/${ID}/`))
     expect(renderCalls[0]?.options).toMatchObject({ locale: 'pt-BR' })
@@ -731,11 +858,15 @@ describe('pOST /api/_pluto/supabase/access/users/[id]/resend with Pluto mail', (
 
   it('refuses a user who accepted the invite', async () => {
     getUserResult = {
-      data: { user: { email: 'a@example.com', email_confirmed_at: '2026-01-01' } },
+      data: {
+        user: { email: 'a@example.com', email_confirmed_at: '2026-01-01' },
+      },
       error: null,
     }
 
-    await expect(resend(event({ id: ID }))).rejects.toMatchObject({ statusCode: 409 })
+    await expect(resend(event({ id: ID }))).rejects.toMatchObject({
+      statusCode: 409,
+    })
     expect(generateCalls).toEqual([])
   })
 })
@@ -785,12 +916,17 @@ describe('pOST /api/_pluto/supabase/access/users/invite-link', () => {
   it('never returns a link for a confirmed account, only the roles', async () => {
     rpcResults.find_user_id_by_email = { data: 'old-user', error: null }
     getUserResult = {
-      data: { user: { email: 'ada@example.com', email_confirmed_at: '2026-01-01' } },
+      data: {
+        user: { email: 'ada@example.com', email_confirmed_at: '2026-01-01' },
+      },
       error: null,
     }
 
     // A magic link signs in as the account: an admin must not get one.
-    await expect(inviteLink(event())).resolves.toEqual({ status: 'granted', link: null })
+    await expect(inviteLink(event())).resolves.toEqual({
+      status: 'granted',
+      link: null,
+    })
     expect(generateCalls).toEqual([])
     expect(rpcCalls.map((call) => call.name)).toContain('add_user_roles')
   })
@@ -803,7 +939,9 @@ describe('pOST /api/_pluto/supabase/access/users/invite-link', () => {
       link: 'https://site.test/admin/accept-invite?token_hash=hash-1&type=magiclink',
     })
 
-    expect(generateCalls).toMatchObject([{ type: 'magiclink', email: 'ada@example.com' }])
+    expect(generateCalls).toMatchObject([
+      { type: 'magiclink', email: 'ada@example.com' },
+    ])
     expect(rpcCalls.map((call) => call.name)).toContain('add_user_roles')
     expect(deleteCalls).toEqual([])
   })
@@ -825,8 +963,13 @@ describe('pOST /api/_pluto/supabase/access/users/invite-link', () => {
     // The invite link fails with email_exists, then the magic link works.
     generateQueue = [{ code: 'email_exists', message: 'exists' }, null]
 
-    await expect(inviteLink(event())).resolves.toMatchObject({ status: 'granted' })
-    expect(generateCalls.map((call) => call.type)).toEqual(['invite', 'magiclink'])
+    await expect(inviteLink(event())).resolves.toMatchObject({
+      status: 'granted',
+    })
+    expect(generateCalls.map((call) => call.type)).toEqual([
+      'invite',
+      'magiclink',
+    ])
     expect(deleteCalls).toEqual([])
   })
 
@@ -870,6 +1013,8 @@ describe('gET /api/_pluto/supabase/access/capabilities', () => {
   it('refuses a caller who is not an admin', async () => {
     rpcResults.is_admin = { data: false, error: null }
 
-    await expect(capabilities(event())).rejects.toMatchObject({ statusCode: 403 })
+    await expect(capabilities(event())).rejects.toMatchObject({
+      statusCode: 403,
+    })
   })
 })

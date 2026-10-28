@@ -136,7 +136,8 @@ export function mapAccessError(error: PgErrorLike) {
   if (isMissingAccessFunction(error)) {
     return createPlutoError({
       statusCode: 409,
-      message: 'Apply the pending database migrations to manage users and roles.',
+      message:
+        'Apply the pending database migrations to manage users and roles.',
       key: 'supabase.access.errors.migrationPending',
     })
   }

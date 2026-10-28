@@ -20,7 +20,11 @@ const { t } = usePlutoI18n()
 
     <template #footer>
       <div class="flex w-full justify-end">
-        <UButton color="neutral" variant="outline" @click="emit('close', false)">
+        <UButton
+          color="neutral"
+          variant="outline"
+          @click="emit('close', false)"
+        >
           {{ t('pluto.common.close') }}
         </UButton>
       </div>

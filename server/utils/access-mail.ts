@@ -21,8 +21,13 @@ function inviteFailed() {
 }
 
 /** Finds the id of the account with this email, or null. */
-export async function findUserIdByEmail(client: UserClient, email: string): Promise<string | null> {
-  const { data, error } = await client.rpc('find_user_id_by_email', { p_email: email })
+export async function findUserIdByEmail(
+  client: UserClient,
+  email: string
+): Promise<string | null> {
+  const { data, error } = await client.rpc('find_user_id_by_email', {
+    p_email: email,
+  })
 
   if (error) {
     throw mapAccessError(error)
@@ -32,8 +37,15 @@ export async function findUserIdByEmail(client: UserClient, email: string): Prom
 }
 
 /** Adds roles to a user. It keeps the roles the user has. */
-export async function addRoles(client: UserClient, target: string, roleKeys: string[]): Promise<void> {
-  const { error } = await client.rpc('add_user_roles', { target, role_keys: roleKeys })
+export async function addRoles(
+  client: UserClient,
+  target: string,
+  roleKeys: string[]
+): Promise<void> {
+  const { error } = await client.rpc('add_user_roles', {
+    target,
+    role_keys: roleKeys,
+  })
 
   if (error) {
     throw mapAccessError(error)
@@ -44,7 +56,11 @@ export async function addRoles(client: UserClient, target: string, roleKeys: str
  * The URL that the user opens to accept an invite. The accept-invite page
  * reads `token_hash` and `type`, then calls `verifyOtp`.
  */
-export function acceptInviteUrl(origin: string, hashedToken: string, type: AcceptLinkType): string {
+export function acceptInviteUrl(
+  origin: string,
+  hashedToken: string,
+  type: AcceptLinkType
+): string {
   const url = new URL(INVITE_ACCEPT_PATH, origin)
 
   url.searchParams.set('token_hash', hashedToken)
@@ -62,8 +78,7 @@ interface GenerateLinkParams {
 }
 
 type GeneratedLink =
-  | { kind: 'link', userId: string, link: string }
-  | { kind: 'exists' }
+  { kind: 'link'; userId: string; link: string } | { kind: 'exists' }
 
 /**
  * Makes a one-time link with the service role key. GoTrue sends no email and
@@ -78,17 +93,23 @@ export async function generateAcceptLink(
   params: GenerateLinkParams
 ): Promise<GeneratedLink> {
   const options = { redirectTo: params.redirectTo }
-  const { data, error } = params.type === 'invite'
-    ? await service.auth.admin.generateLink({
-        type: 'invite',
-        email: params.email,
-        options: { ...options, data: params.displayName ? { display_name: params.displayName } : {} },
-      })
-    : await service.auth.admin.generateLink({
-        type: 'magiclink',
-        email: params.email,
-        options,
-      })
+  const { data, error } =
+    params.type === 'invite'
+      ? await service.auth.admin.generateLink({
+          type: 'invite',
+          email: params.email,
+          options: {
+            ...options,
+            data: params.displayName
+              ? { display_name: params.displayName }
+              : {},
+          },
+        })
+      : await service.auth.admin.generateLink({
+          type: 'magiclink',
+          email: params.email,
+          options,
+        })
 
   if (error) {
     if (error.code === 'email_exists' || error.code === 'user_already_exists') {
@@ -118,7 +139,11 @@ export async function generateAcceptLink(
     ? (verification as AcceptLinkType)
     : params.type
 
-  return { kind: 'link', userId, link: acceptInviteUrl(params.origin, hashedToken, type) }
+  return {
+    kind: 'link',
+    userId,
+    link: acceptInviteUrl(params.origin, hashedToken, type),
+  }
 }
 
 interface ProvisionParams {
@@ -160,7 +185,9 @@ export function serviceKeyRequiredError() {
  *   If the roles fail, the new user is deleted.
  * - The account appears after the lookup (a race): the roles are added.
  */
-export async function provisionAccess(params: ProvisionParams): Promise<ProvisionResult> {
+export async function provisionAccess(
+  params: ProvisionParams
+): Promise<ProvisionResult> {
   const { client, service, email, roleKeys } = params
   const link = (type: 'invite' | 'magiclink') =>
     generateAcceptLink(service, { ...params, type })
@@ -177,7 +204,8 @@ export async function provisionAccess(params: ProvisionParams): Promise<Provisio
     // admin from taking over a customer's or another admin's account. Only an
     // account that never confirmed (a pending invite, or a sign-up with no
     // confirmation) gets a link, because it cannot sign in without one.
-    const { data: found, error: lookupError } = await service.auth.admin.getUserById(userId)
+    const { data: found, error: lookupError } =
+      await service.auth.admin.getUserById(userId)
 
     if (lookupError || !found.user) {
       console.error('invite: getUserById failed for an existing account')
@@ -224,7 +252,9 @@ export async function provisionAccess(params: ProvisionParams): Promise<Provisio
   })
 
   if (setError) {
-    const { error: undoError } = await service.auth.admin.deleteUser(made.userId)
+    const { error: undoError } = await service.auth.admin.deleteUser(
+      made.userId
+    )
 
     if (undoError) {
       console.error('invite: could not delete the new user:', undoError.message)
@@ -266,7 +296,10 @@ export async function inviteSiteName(client: UserClient): Promise<string> {
 }
 
 /** The labels of the roles, in the order of the keys. A key with no label stays as it is. */
-async function roleLabels(client: UserClient, roleKeys: string[]): Promise<string[]> {
+async function roleLabels(
+  client: UserClient,
+  roleKeys: string[]
+): Promise<string[]> {
   try {
     const { data } = await client.rpc('list_roles')
     const labels = new Map((data ?? []).map((role) => [role.key, role.label]))
@@ -292,7 +325,9 @@ interface InviteMailParams {
  * fails. The caller keeps the user and the roles, and gives the link to the
  * admin. The log holds the error code only: no recipient, link or key.
  */
-export async function sendInviteMail(params: InviteMailParams): Promise<boolean> {
+export async function sendInviteMail(
+  params: InviteMailParams
+): Promise<boolean> {
   try {
     const [siteName, roles] = await Promise.all([
       inviteSiteName(params.client),
@@ -314,14 +349,19 @@ export async function sendInviteMail(params: InviteMailParams): Promise<boolean>
   } catch (error) {
     const code = (error as { code?: unknown } | null)?.code
 
-    console.error('invite: the Pluto mail send failed:', typeof code === 'string' ? code : 'unknown')
+    console.error(
+      'invite: the Pluto mail send failed:',
+      typeof code === 'string' ? code : 'unknown'
+    )
 
     return false
   }
 }
 
 /** The name of the admin who invites, for the email. Empty when unknown. */
-export function inviterNameOf(user: { user_metadata?: Record<string, unknown> | null }): string | undefined {
+export function inviterNameOf(user: {
+  user_metadata?: Record<string, unknown> | null
+}): string | undefined {
   const meta = user.user_metadata ?? {}
 
   for (const value of [meta.display_name, meta.full_name, meta.name]) {
@@ -337,12 +377,16 @@ export function inviterNameOf(user: { user_metadata?: Record<string, unknown> | 
  * Checks the optional email language against the admin languages. Throws a
  * 400 for a language the admin does not have.
  */
-export function assertInviteLocale(event: H3Event, locale: string | undefined): void {
+export function assertInviteLocale(
+  event: H3Event,
+  locale: string | undefined
+): void {
   if (locale === undefined) {
     return
   }
 
-  const adminLocales = useRuntimeConfig(event).public.plutoI18n?.adminLocales ?? []
+  const adminLocales =
+    useRuntimeConfig(event).public.plutoI18n?.adminLocales ?? []
 
   if (!adminLocales.includes(locale)) {
     throw createPlutoError({

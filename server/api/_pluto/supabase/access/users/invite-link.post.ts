@@ -1,6 +1,12 @@
 import { serverSupabaseClient } from '#supabase/server'
-import { inviteBodySchema, inviteRedirectUrl } from '../../../../../utils/access-invite'
-import { provisionAccess, serviceKeyRequiredError } from '../../../../../utils/access-mail'
+import {
+  inviteBodySchema,
+  inviteRedirectUrl,
+} from '../../../../../utils/access-invite'
+import {
+  provisionAccess,
+  serviceKeyRequiredError,
+} from '../../../../../utils/access-mail'
 import { requireAdminRole } from '../../../../../utils/admin-role-guard'
 import { enforceInviteRateLimit } from '../../../../../utils/rate-limit'
 import { optionalServiceClient } from '../../../../../utils/service-client'
@@ -24,7 +30,10 @@ export default defineEventHandler(async (event) => {
 
   enforceInviteRateLimit(caller.sub)
 
-  const { email, roleKeys, displayName } = await parseBody(event, inviteBodySchema)
+  const { email, roleKeys, displayName } = await parseBody(
+    event,
+    inviteBodySchema
+  )
   const service = optionalServiceClient(event)
 
   if (!service) {

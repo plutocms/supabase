@@ -1,5 +1,8 @@
 import type { PlutoContentType } from '@plutocms/pluto/shared/types/content'
-import { fieldColumn, mapColumnsToFields } from '@plutocms/pluto/shared/utils/content-map'
+import {
+  fieldColumn,
+  mapColumnsToFields,
+} from '@plutocms/pluto/shared/utils/content-map'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Both client sources are fakes. The session client comes from
@@ -20,10 +23,15 @@ vi.mock('@supabase/supabase-js', () => ({
   },
 }))
 
-const { createSupabaseContentAdapter } = await import('../server/utils/content-adapter')
+const { createSupabaseContentAdapter } =
+  await import('../server/utils/content-adapter')
 
 /** A chainable stand-in for a PostgREST builder. It records each call and resolves to `result`. */
-function makeBuilder(result: { data: unknown, error: unknown, count?: number }) {
+function makeBuilder(result: {
+  data: unknown
+  error: unknown
+  count?: number
+}) {
   const calls: Array<[string, unknown[]]> = []
   const builder: Record<string, unknown> = {
     then: (resolve: (value: unknown) => unknown) => resolve(result),
@@ -78,7 +86,9 @@ beforeEach(() => {
   vi.stubGlobal('mapColumnsToFields', mapColumnsToFields)
   vi.stubGlobal('isPublicRead', () => publicRead)
   vi.stubGlobal('useRuntimeConfig', () => ({
-    public: { supabase: { url: 'https://example.supabase.co', key: 'anon-key' } },
+    public: {
+      supabase: { url: 'https://example.supabase.co', key: 'anon-key' },
+    },
   }))
 })
 
@@ -92,10 +102,15 @@ describe('list filters', () => {
     const { builder, calls } = makeBuilder({ data: [], error: null, count: 0 })
     sessionFrom.mockReturnValue(builder)
     const type = makeType({
-      fields: [{ name: 'title', type: 'text' }, { name: 'rank', type: 'number', column: 'rank_num' }],
+      fields: [
+        { name: 'title', type: 'text' },
+        { name: 'rank', type: 'number', column: 'rank_num' },
+      ],
     } as never)
 
-    await createSupabaseContentAdapter().list(ctxFor(type), { filters: { title: 'Hello', rank: '3' } })
+    await createSupabaseContentAdapter().list(ctxFor(type), {
+      filters: { title: 'Hello', rank: '3' },
+    })
 
     expect(calls).toContainEqual(['eq', ['title', 'Hello']])
     expect(calls).toContainEqual(['eq', ['rank_num', '3']])
@@ -106,7 +121,9 @@ describe('timestamps', () => {
   it('copies the created, updated and published-at columns onto a listed item', async () => {
     const { builder } = makeBuilder({ data: [row], error: null, count: 1 })
     sessionFrom.mockReturnValue(builder)
-    const type = makeType({ status: { publishedAtColumn: 'published_at' } } as never)
+    const type = makeType({
+      status: { publishedAtColumn: 'published_at' },
+    } as never)
 
     const result = await createSupabaseContentAdapter().list(ctxFor(type), {})
 
@@ -126,13 +143,18 @@ describe('timestamps', () => {
 
     const item = await createSupabaseContentAdapter().get(ctxFor(makeType()), 1)
 
-    expect(item).toMatchObject({ created_at: row.created_at, updated_at: row.updated_at })
+    expect(item).toMatchObject({
+      created_at: row.created_at,
+      updated_at: row.updated_at,
+    })
     expect(item).not.toHaveProperty('published_at')
   })
 
   it('names the timestamp columns in timestampKeys', () => {
     const adapter = createSupabaseContentAdapter()
-    const type = makeType({ status: { publishedAtColumn: 'published_at' } } as never)
+    const type = makeType({
+      status: { publishedAtColumn: 'published_at' },
+    } as never)
 
     expect(adapter.timestampKeys!(type)).toEqual({
       created: 'created_at',
@@ -140,7 +162,11 @@ describe('timestamps', () => {
       published: 'published_at',
     })
     expect(adapter.timestampKeys!(makeType({ timestamps: false }))).toEqual({})
-    expect(adapter.timestampKeys!(makeType({ timestamps: { created: 'made_at', updated: false } }))).toEqual({
+    expect(
+      adapter.timestampKeys!(
+        makeType({ timestamps: { created: 'made_at', updated: false } })
+      )
+    ).toEqual({
       created: 'made_at',
     })
   })
@@ -154,7 +180,10 @@ describe('timestamps', () => {
       sort: { field: 'updated_at', direction: 'desc' },
     })
 
-    expect(calls).toContainEqual(['order', ['updated_at', { ascending: false }]])
+    expect(calls).toContainEqual([
+      'order',
+      ['updated_at', { ascending: false }],
+    ])
     expect(warn).not.toHaveBeenCalled()
   })
 
@@ -195,8 +224,16 @@ describe('anonymous public reads', () => {
     expect(sessionFrom).not.toHaveBeenCalled()
     expect(anonymousFrom).toHaveBeenCalledTimes(2)
     expect(createClient).toHaveBeenCalledTimes(1)
-    expect(createClient).toHaveBeenCalledWith('https://example.supabase.co', 'anon-key', {
-      auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
-    })
+    expect(createClient).toHaveBeenCalledWith(
+      'https://example.supabase.co',
+      'anon-key',
+      {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false,
+        },
+      }
+    )
   })
 })

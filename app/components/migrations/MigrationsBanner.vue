@@ -14,9 +14,9 @@ const title = computed(() =>
 
 const isVisible = computed(
   () =>
-    Boolean(status.value)
-    && pendingCount.value > 0
-    && !route.path.startsWith('/admin/migrations')
+    Boolean(status.value) &&
+    pendingCount.value > 0 &&
+    !route.path.startsWith('/admin/migrations')
 )
 </script>
 
@@ -30,7 +30,8 @@ const isVisible = computed(
         icon="lucide:triangle-alert"
       >
         <template #description>
-          <ULink to="/admin/migrations" class="underline"> {{ t('supabase.migrations.goTo') }} </ULink
+          <ULink to="/admin/migrations" class="underline">
+            {{ t('supabase.migrations.goTo') }} </ULink
           >.
         </template>
       </UAlert>

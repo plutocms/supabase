@@ -10,25 +10,30 @@ afterEach(() => {
   vi.unstubAllGlobals()
 })
 
-const { ACCESS_ERRORS, mapAccessError, parseAccessCode }
-  = await import('../server/utils/access-errors')
+const { ACCESS_ERRORS, mapAccessError, parseAccessCode } =
+  await import('../server/utils/access-errors')
 
 describe('parseAccessCode', () => {
   it('reads the code of a pluto message', () => {
-    expect(parseAccessCode({ code: 'P0001', message: 'pluto:last_admin' })).toBe(
-      'last_admin'
-    )
+    expect(
+      parseAccessCode({ code: 'P0001', message: 'pluto:last_admin' })
+    ).toBe('last_admin')
   })
 
   it('ignores an unknown code and a plain message', () => {
-    expect(parseAccessCode({ code: 'P0001', message: 'pluto:nope' })).toBeUndefined()
+    expect(
+      parseAccessCode({ code: 'P0001', message: 'pluto:nope' })
+    ).toBeUndefined()
     expect(parseAccessCode({ code: 'P0001', message: 'boom' })).toBeUndefined()
     expect(parseAccessCode(null)).toBeUndefined()
   })
 
   it('reads a Postgres permission error as forbidden', () => {
     expect(
-      parseAccessCode({ code: '42501', message: 'permission denied for function x' })
+      parseAccessCode({
+        code: '42501',
+        message: 'permission denied for function x',
+      })
     ).toBe('forbidden')
   })
 })
@@ -45,7 +50,9 @@ describe('mapAccessError', () => {
   ]
 
   it.each(cases)('%s gives %i with its key', (code, statusCode, key) => {
-    expect(mapAccessError({ code: 'P0001', message: `pluto:${code}` })).toMatchObject({
+    expect(
+      mapAccessError({ code: 'P0001', message: `pluto:${code}` })
+    ).toMatchObject({
       statusCode,
       data: { i18n: { key } },
     })
@@ -53,7 +60,10 @@ describe('mapAccessError', () => {
 
   it('gives 409 when the access functions are missing', () => {
     expect(
-      mapAccessError({ code: 'PGRST202', message: 'Could not find the function' })
+      mapAccessError({
+        code: 'PGRST202',
+        message: 'Could not find the function',
+      })
     ).toMatchObject({
       statusCode: 409,
       data: { i18n: { key: 'supabase.access.errors.migrationPending' } },

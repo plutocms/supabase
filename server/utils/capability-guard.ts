@@ -44,7 +44,9 @@ export async function requireCapability(
   }
 
   const client = await serverSupabaseClient<Database>(event)
-  const { data, error } = await client.rpc('has_capability', { cap: capability })
+  const { data, error } = await client.rpc('has_capability', {
+    cap: capability,
+  })
 
   if (error || data !== true) {
     // A custom `message` without a `messageKey` has no translation, so it
@@ -56,7 +58,8 @@ export async function requireCapability(
     throw createPlutoError({
       statusCode: 403,
       message:
-        options?.message ?? `Your account is missing the "${capability}" permission.`,
+        options?.message ??
+        `Your account is missing the "${capability}" permission.`,
       key: options?.messageKey ?? 'supabase.errors.missingPermission',
       params: { capability },
     })

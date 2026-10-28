@@ -74,14 +74,16 @@ describe('sUPABASE_PUBLIC_PATHS', () => {
     SUPABASE_PUBLIC_PATHS.find((entry) => entry.path === path)?.signedIn
 
   it('lists every public auth page and the setup page', () => {
-    expect(SUPABASE_PUBLIC_PATHS.map((entry) => entry.path).toSorted()).toEqual([
-      '/admin/accept-invite',
-      '/admin/confirm',
-      '/admin/forgot-password',
-      '/admin/setup',
-      '/admin/signup',
-      '/admin/update-password',
-    ])
+    expect(SUPABASE_PUBLIC_PATHS.map((entry) => entry.path).toSorted()).toEqual(
+      [
+        '/admin/accept-invite',
+        '/admin/confirm',
+        '/admin/forgot-password',
+        '/admin/setup',
+        '/admin/signup',
+        '/admin/update-password',
+      ]
+    )
   })
 
   it('does not list the login page, because core always has it', () => {
@@ -107,8 +109,12 @@ describe('sUPABASE_PUBLIC_PATHS', () => {
 
 describe('setupStateFromResponse', () => {
   it('reads the first setup flag', () => {
-    expect(setupStateFromResponse({ success: true, is_first_setup: true })).toBe('pending')
-    expect(setupStateFromResponse({ success: true, is_first_setup: false })).toBe('done')
+    expect(
+      setupStateFromResponse({ success: true, is_first_setup: true })
+    ).toBe('pending')
+    expect(
+      setupStateFromResponse({ success: true, is_first_setup: false })
+    ).toBe('done')
   })
 
   it('gives unknown for a failed or empty answer', () => {

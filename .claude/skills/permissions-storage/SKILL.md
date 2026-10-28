@@ -219,15 +219,15 @@ other at the same time.
 
 ### Routes
 
-| Route | Guard |
-|---|---|
-| `GET /api/_pluto/supabase/access/users`, `GET /api/_pluto/supabase/access/roles` | `users:read` |
-| `POST /api/_pluto/supabase/access/users/invite` | admin, rate limit (10 per 10 minutes per caller) |
-| `POST /api/_pluto/supabase/access/users/invite-link` | admin, same rate limit; needs the service role key (503 `serviceKeyRequired`) |
-| `GET /api/_pluto/supabase/access/capabilities` | admin; `{ serviceKey, mail: { configured } }` |
-| `POST /api/_pluto/supabase/access/users/[id]/resend` | admin, rate limit; only while `email_confirmed_at` is empty |
-| `PUT` and `DELETE /api/_pluto/supabase/access/users/[id]/roles` | admin (DELETE sets an empty list) |
-| `POST /api/_pluto/supabase/access/roles`, `PUT` and `DELETE /api/_pluto/supabase/access/roles/[key]` | admin |
+| Route                                                                                                | Guard                                                                         |
+| ---------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `GET /api/_pluto/supabase/access/users`, `GET /api/_pluto/supabase/access/roles`                     | `users:read`                                                                  |
+| `POST /api/_pluto/supabase/access/users/invite`                                                      | admin, rate limit (10 per 10 minutes per caller)                              |
+| `POST /api/_pluto/supabase/access/users/invite-link`                                                 | admin, same rate limit; needs the service role key (503 `serviceKeyRequired`) |
+| `GET /api/_pluto/supabase/access/capabilities`                                                       | admin; `{ serviceKey, mail: { configured } }`                                 |
+| `POST /api/_pluto/supabase/access/users/[id]/resend`                                                 | admin, rate limit; only while `email_confirmed_at` is empty                   |
+| `PUT` and `DELETE /api/_pluto/supabase/access/users/[id]/roles`                                      | admin (DELETE sets an empty list)                                             |
+| `POST /api/_pluto/supabase/access/roles`, `PUT` and `DELETE /api/_pluto/supabase/access/roles/[key]` | admin                                                                         |
 
 The invite route first looks the email up (`find_user_id_by_email`). An email that has an
 account (confirmed or not) gets the roles added, with no email (`{ status: 'granted' }`), and the

@@ -27,7 +27,10 @@ export interface ValidationError {
  * A nested field path (for example `address.zip`) is joined with `.` to
  * build `field`.
  */
-export async function parseBody<T>(event: H3Event, schema: ZodSchema<T>): Promise<T> {
+export async function parseBody<T>(
+  event: H3Event,
+  schema: ZodSchema<T>
+): Promise<T> {
   const body = await readBody(event)
   const result = schema.safeParse(body)
 

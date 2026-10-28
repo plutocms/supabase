@@ -10,7 +10,8 @@ import { createPlutoErrorStub } from './fixtures/i18n-stub'
 // to resolve.
 vi.mock('#supabase/server', () => ({ serverSupabaseClient: vi.fn() }))
 
-const { resolveStatusColumn, resolveTimestampColumn, toContentError } = await import('../server/utils/content-adapter')
+const { resolveStatusColumn, resolveTimestampColumn, toContentError } =
+  await import('../server/utils/content-adapter')
 
 // `toContentError` calls the global `createError`, which Nitro normally
 // auto-imports from 'h3'. Outside a Nuxt/Nitro build there is no such
@@ -67,7 +68,9 @@ describe('resolveTimestampColumn', () => {
   })
 
   it('honors a custom column name override', () => {
-    const type = makeType({ timestamps: { created: 'inserted_at', updated: 'changed_at' } })
+    const type = makeType({
+      timestamps: { created: 'inserted_at', updated: 'changed_at' },
+    })
 
     expect(resolveTimestampColumn(type, 'created')).toBe('inserted_at')
     expect(resolveTimestampColumn(type, 'updated')).toBe('changed_at')
@@ -98,29 +101,48 @@ describe('resolveStatusColumn', () => {
 
 describe('toContentError', () => {
   it('maps 23505 (unique_violation) to a 409', () => {
-    const error = new PostgrestError({ message: 'duplicate key', details: '', hint: '', code: '23505' })
+    const error = new PostgrestError({
+      message: 'duplicate key',
+      details: '',
+      hint: '',
+      code: '23505',
+    })
     const result = toContentError(error)
 
     expect(result.statusCode).toBe(409)
-    expect(result.statusMessage).toBe('A record with this value already exists.')
+    expect(result.statusMessage).toBe(
+      'A record with this value already exists.'
+    )
     expect(result.data).toMatchObject({
       i18n: { key: 'supabase.errors.duplicateRecord' },
     })
   })
 
   it('maps 23503 (foreign_key_violation) to a 400', () => {
-    const error = new PostgrestError({ message: 'violates foreign key', details: '', hint: '', code: '23503' })
+    const error = new PostgrestError({
+      message: 'violates foreign key',
+      details: '',
+      hint: '',
+      code: '23503',
+    })
     const result = toContentError(error)
 
     expect(result.statusCode).toBe(400)
-    expect(result.statusMessage).toBe('This references a record that does not exist.')
+    expect(result.statusMessage).toBe(
+      'This references a record that does not exist.'
+    )
     expect(result.data).toMatchObject({
       i18n: { key: 'supabase.errors.missingReference' },
     })
   })
 
   it('maps any other code to a 500, using the raw message', () => {
-    const error = new PostgrestError({ message: 'connection refused', details: '', hint: '', code: '08006' })
+    const error = new PostgrestError({
+      message: 'connection refused',
+      details: '',
+      hint: '',
+      code: '08006',
+    })
     const result = toContentError(error)
 
     expect(result.statusCode).toBe(500)
@@ -129,7 +151,12 @@ describe('toContentError', () => {
 
   it('logs the raw error before returning the mapped one', () => {
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
-    const error = new PostgrestError({ message: 'duplicate key', details: '', hint: '', code: '23505' })
+    const error = new PostgrestError({
+      message: 'duplicate key',
+      details: '',
+      hint: '',
+      code: '23505',
+    })
 
     toContentError(error)
 

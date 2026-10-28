@@ -19,7 +19,8 @@ function read(name: string): string {
 
 const allSql = [...files.map(read), stripComments(ledgerDdl)].join('\n')
 
-const GRANT = /grant ([a-z]+(?:, [a-z]+)*) on (?:table )?public\.(\w+) to ([a-z_]+(?:, [a-z_]+)*);/gi
+const GRANT =
+  /grant ([a-z]+(?:, [a-z]+)*) on (?:table )?public\.(\w+) to ([a-z_]+(?:, [a-z_]+)*);/gi
 
 interface Grant {
   privileges: string[]
@@ -92,16 +93,18 @@ describe('data API grants (core layer)', () => {
         expect(privilege).not.toMatch(/^(truncate|references|trigger|all)/)
       }
     }
-    expect(allSql).not.toMatch(
-      /grant\s+(all|truncate|references|trigger)\b/i
-    )
+    expect(allSql).not.toMatch(/grant\s+(all|truncate|references|trigger)\b/i)
   })
 
   it('006 grants the exact matrix', () => {
     const crud = 'delete,insert,select,update'
 
     expect(matrix(read('006_data_api_grants.sql'))).toEqual({
-      healthcheck: { anon: 'select', authenticated: 'select,update', service_role: crud },
+      healthcheck: {
+        anon: 'select',
+        authenticated: 'select,update',
+        service_role: crud,
+      },
       settings: { authenticated: 'insert,select,update', service_role: crud },
       profiles: { authenticated: 'select', service_role: crud },
       pluto_migrations: { authenticated: 'select', service_role: crud },
@@ -166,7 +169,9 @@ describe('007_restrict_staff_reads.sql', () => {
     ]) {
       const [name, table] = old.split(' on public.')
 
-      expect(sql).toContain(`drop policy if exists "${name}" on public.${table};`)
+      expect(sql).toContain(
+        `drop policy if exists "${name}" on public.${table};`
+      )
     }
   })
 
@@ -175,7 +180,9 @@ describe('007_restrict_staff_reads.sql', () => {
 
     expect(text).toMatch(/on public\.settings for select/i)
     expect(text).toMatch(/to authenticated, dashboard_user/i)
-    expect(text).toMatch(/exists \(select 1 from public\.my_capabilities\(\)\)/i)
+    expect(text).toMatch(
+      /exists \(select 1 from public\.my_capabilities\(\)\)/i
+    )
     expect(text).not.toMatch(/using \(true\)/i)
   })
 

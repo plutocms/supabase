@@ -1,6 +1,9 @@
 import { serverSupabaseClient } from '#supabase/server'
 import { mapAccessError } from '../../../../../../utils/access-errors'
-import { requireUserId, rolesBodySchema } from '../../../../../../utils/access-invite'
+import {
+  requireUserId,
+  rolesBodySchema,
+} from '../../../../../../utils/access-invite'
 import { requireAdminRole } from '../../../../../../utils/admin-role-guard'
 import { parseBody } from '../../../../../../utils/validate'
 

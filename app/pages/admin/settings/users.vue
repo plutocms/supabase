@@ -17,10 +17,18 @@ import {
 } from '../../../utils/access-ui'
 
 // The modals and the slideover load on demand. They stay out of the page chunk.
-const InviteModal = defineAsyncComponent(() => import('../../../components/access/InviteModal.vue'))
-const EditRolesSlideover = defineAsyncComponent(() => import('../../../components/access/EditRolesSlideover.vue'))
-const RevokeModal = defineAsyncComponent(() => import('../../../components/access/RevokeModal.vue'))
-const LinkModal = defineAsyncComponent(() => import('../../../components/access/LinkModal.vue'))
+const InviteModal = defineAsyncComponent(
+  () => import('../../../components/access/InviteModal.vue')
+)
+const EditRolesSlideover = defineAsyncComponent(
+  () => import('../../../components/access/EditRolesSlideover.vue')
+)
+const RevokeModal = defineAsyncComponent(
+  () => import('../../../components/access/RevokeModal.vue')
+)
+const LinkModal = defineAsyncComponent(
+  () => import('../../../components/access/LinkModal.vue')
+)
 
 const { t, d, locale } = usePlutoI18n()
 const toast = useToast()
@@ -30,7 +38,8 @@ const permissions = usePlutoPermissions()
 const auth = usePlutoAuth()
 
 useHead({
-  title: () => `${t('supabase.access.users.title')} - ${t('pluto.pages.settings')}`,
+  title: () =>
+    `${t('supabase.access.users.title')} - ${t('pluto.pages.settings')}`,
 })
 
 const users = ref<AccessUser[]>([])
@@ -65,7 +74,9 @@ async function load() {
 
 async function loadCapabilities() {
   try {
-    capabilities.value = await $fetch<AccessCapabilities>('/api/_pluto/supabase/access/capabilities')
+    capabilities.value = await $fetch<AccessCapabilities>(
+      '/api/_pluto/supabase/access/capabilities'
+    )
   } catch {
     // The invite works without it. Only the "Copy invite link" action hides.
     capabilities.value = null
@@ -75,11 +86,15 @@ async function loadCapabilities() {
 onMounted(load)
 
 // Only an admin can read this, so ask after the permissions are known.
-watch(isAdmin, (admin) => {
-  if (admin && !capabilities.value) {
-    void loadCapabilities()
-  }
-}, { immediate: true })
+watch(
+  isAdmin,
+  (admin) => {
+    if (admin && !capabilities.value) {
+      void loadCapabilities()
+    }
+  },
+  { immediate: true }
+)
 
 const columns = computed<TableColumn<AccessUser>[]>(() => [
   { id: 'user', header: t('supabase.access.users.columns.user') },
@@ -89,7 +104,10 @@ const columns = computed<TableColumn<AccessUser>[]>(() => [
   { id: 'actions', header: '' },
 ])
 
-function dateText(value: string | null, options: Intl.DateTimeFormatOptions): string {
+function dateText(
+  value: string | null,
+  options: Intl.DateTimeFormatOptions
+): string {
   return value ? d(new Date(value), options) : ''
 }
 
@@ -134,10 +152,13 @@ async function copyLink(user: AccessUser) {
   }
 
   try {
-    const result = await $fetch<{ link: string | null }>('/api/_pluto/supabase/access/users/invite-link', {
-      method: 'POST',
-      body: { email: user.email, roleKeys: user.roles },
-    })
+    const result = await $fetch<{ link: string | null }>(
+      '/api/_pluto/supabase/access/users/invite-link',
+      {
+        method: 'POST',
+        body: { email: user.email, roleKeys: user.roles },
+      }
+    )
 
     // A confirmed account gets no link: it signs in with its own password.
     if (!result.link) {
@@ -163,7 +184,7 @@ async function copyLink(user: AccessUser) {
 // --- Resend ---
 async function resend(user: AccessUser) {
   try {
-    const result = await $fetch<{ emailSent?: boolean, link?: string }>(
+    const result = await $fetch<{ emailSent?: boolean; link?: string }>(
       `/api/_pluto/supabase/access/users/${user.id}/resend`,
       { method: 'POST', body: { locale: locale.value } }
     )
@@ -238,8 +259,12 @@ function menuItems(user: AccessUser): DropdownMenuItem[][] {
   <div class="flex flex-col gap-y-6">
     <div class="flex flex-wrap items-start justify-between gap-4">
       <div>
-        <h2 class="text-xl font-semibold">{{ t('supabase.access.users.title') }}</h2>
-        <p class="text-muted text-sm">{{ t('supabase.access.users.description') }}</p>
+        <h2 class="text-xl font-semibold">
+          {{ t('supabase.access.users.title') }}
+        </h2>
+        <p class="text-muted text-sm">
+          {{ t('supabase.access.users.description') }}
+        </p>
       </div>
 
       <UButton v-if="isAdmin" icon="lucide:user-plus" @click="openInvite">
@@ -248,7 +273,11 @@ function menuItems(user: AccessUser): DropdownMenuItem[][] {
     </div>
 
     <!-- Loading -->
-    <div v-if="status === 'loading'" class="flex flex-col gap-y-3" aria-busy="true">
+    <div
+      v-if="status === 'loading'"
+      class="flex flex-col gap-y-3"
+      aria-busy="true"
+    >
       <USkeleton v-for="row in 4" :key="row" class="h-12 w-full" />
     </div>
 
@@ -257,7 +286,14 @@ function menuItems(user: AccessUser): DropdownMenuItem[][] {
       v-else-if="status === 'error'"
       :title="t('supabase.access.users.error.title')"
       :description="loadError"
-      :actions="[{ label: t('pluto.common.tryAgain'), color: 'neutral', variant: 'outline', onClick: load }]"
+      :actions="[
+        {
+          label: t('pluto.common.tryAgain'),
+          color: 'neutral',
+          variant: 'outline',
+          onClick: load,
+        },
+      ]"
       color="error"
       variant="subtle"
       icon="lucide:circle-x"
@@ -268,16 +304,33 @@ function menuItems(user: AccessUser): DropdownMenuItem[][] {
       v-else-if="users.length === 0"
       :title="t('supabase.access.users.empty.title')"
       :description="t('supabase.access.users.empty.description')"
-      :actions="isAdmin ? [{ label: t('supabase.access.users.invite'), icon: 'lucide:user-plus', onClick: openInvite }] : []"
+      :actions="
+        isAdmin
+          ? [
+              {
+                label: t('supabase.access.users.invite'),
+                icon: 'lucide:user-plus',
+                onClick: openInvite,
+              },
+            ]
+          : []
+      "
       icon="lucide:users"
     />
 
     <!-- The list -->
-    <UTable v-else :data="users" :columns="columns" class="border-default rounded-lg border">
+    <UTable
+      v-else
+      :data="users"
+      :columns="columns"
+      class="border-default rounded-lg border"
+    >
       <template #user-cell="{ row }">
         <div class="flex min-w-0 flex-col">
           <span class="flex items-center gap-2">
-            <span class="text-highlighted truncate font-medium">{{ userDisplayName(row.original) }}</span>
+            <span class="text-highlighted truncate font-medium">{{
+              userDisplayName(row.original)
+            }}</span>
             <UBadge
               v-if="row.original.id === selfId"
               :label="t('supabase.access.users.you')"
@@ -286,7 +339,9 @@ function menuItems(user: AccessUser): DropdownMenuItem[][] {
               size="sm"
             />
           </span>
-          <span v-if="row.original.email" class="text-muted truncate text-sm">{{ row.original.email }}</span>
+          <span v-if="row.original.email" class="text-muted truncate text-sm">{{
+            row.original.email
+          }}</span>
         </div>
       </template>
 
@@ -325,7 +380,13 @@ function menuItems(user: AccessUser): DropdownMenuItem[][] {
               variant="subtle"
             />
             <span v-if="row.original.invited_at" class="text-muted text-xs">
-              {{ t('supabase.access.users.status.invitedOn', { date: dateText(row.original.invited_at, { dateStyle: 'medium' }) }) }}
+              {{
+                t('supabase.access.users.status.invitedOn', {
+                  date: dateText(row.original.invited_at, {
+                    dateStyle: 'medium',
+                  }),
+                })
+              }}
             </span>
           </template>
         </div>
@@ -333,16 +394,30 @@ function menuItems(user: AccessUser): DropdownMenuItem[][] {
 
       <template #lastSignIn-cell="{ row }">
         <span v-if="row.original.last_sign_in_at" class="text-sm">
-          {{ dateText(row.original.last_sign_in_at, { dateStyle: 'medium', timeStyle: 'short' }) }}
+          {{
+            dateText(row.original.last_sign_in_at, {
+              dateStyle: 'medium',
+              timeStyle: 'short',
+            })
+          }}
         </span>
-        <span v-else class="text-muted text-sm">{{ t('supabase.access.users.neverSignedIn') }}</span>
+        <span v-else class="text-muted text-sm">{{
+          t('supabase.access.users.neverSignedIn')
+        }}</span>
       </template>
 
       <template #actions-cell="{ row }">
         <div v-if="isAdmin" class="flex justify-end">
-          <UDropdownMenu :items="menuItems(row.original)" :content="{ align: 'end' }">
+          <UDropdownMenu
+            :items="menuItems(row.original)"
+            :content="{ align: 'end' }"
+          >
             <UButton
-              :aria-label="t('supabase.access.users.actionsLabel', { name: userDisplayName(row.original) })"
+              :aria-label="
+                t('supabase.access.users.actionsLabel', {
+                  name: userDisplayName(row.original),
+                })
+              "
               icon="lucide:ellipsis"
               color="neutral"
               variant="ghost"

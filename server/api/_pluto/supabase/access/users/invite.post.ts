@@ -54,7 +54,10 @@ export default defineEventHandler(async (event) => {
 
   enforceInviteRateLimit(caller.sub)
 
-  const { email, roleKeys, displayName, locale } = await parseBody(event, inviteBodySchema)
+  const { email, roleKeys, displayName, locale } = await parseBody(
+    event,
+    inviteBodySchema
+  )
 
   assertInviteLocale(event, locale)
 
@@ -120,7 +123,9 @@ export default defineEventHandler(async (event) => {
     const linkedId = await findUserIdByEmail(client, email)
 
     if (!linkedId) {
-      console.error('invite: the sign-in link was sent, but no account has this email')
+      console.error(
+        'invite: the sign-in link was sent, but no account has this email'
+      )
 
       throw createPlutoError({
         statusCode: 502,
