@@ -73,7 +73,7 @@ describe('splitStatements', () => {
     expect(statements[1]).toContain('select 2;')
   })
 
-  describe('regression: do $$ ... $$ blocks from public/schema.sql (pre-conversion)', () => {
+  describe('regression: do $$ ... $$ blocks', () => {
     it('keeps an idempotent-policy do block as one statement', () => {
       const sql = `do $$
 begin
