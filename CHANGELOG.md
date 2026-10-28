@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.15.0](https://github.com/plutocms/supabase/compare/v0.14.1...v0.15.0) (2026-10-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* read migrations only from db/migrations ([#108](https://github.com/plutocms/supabase/issues/108))
+
+### Features
+
+* read migrations only from db/migrations ([#108](https://github.com/plutocms/supabase/issues/108)) ([a6c8683](https://github.com/plutocms/supabase/commit/a6c8683ba2f7da04976e87188d6ff6be3ed01503))
+
+
+### Bug Fixes
+
+* **deps:** use @plutocms/pluto 0.29 and @plutocms/utils 0.3 ([#110](https://github.com/plutocms/supabase/issues/110)) ([21a4549](https://github.com/plutocms/supabase/commit/21a4549ccff024131bc4cf00eedbd9ae07ba4a1d))
+
 ## [0.14.1](https://github.com/plutocms/supabase/compare/v0.14.0...v0.14.1) (2026-10-27)
 
 
