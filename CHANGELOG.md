@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.1](https://github.com/plutocms/supabase/compare/v0.15.0...v0.15.1) (2026-10-28)
+
+
+### Bug Fixes
+
+* **deps:** use @plutocms/pluto 0.30; Prettier formatting and canonical Tailwind classes ([#111](https://github.com/plutocms/supabase/issues/111)) ([925c138](https://github.com/plutocms/supabase/commit/925c1386ad2c4380e2e3217766c0ae342d96cae8))
+
 ## [0.15.0](https://github.com/plutocms/supabase/compare/v0.14.1...v0.15.0) (2026-10-28)
 
 
