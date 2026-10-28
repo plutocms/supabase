@@ -4,7 +4,6 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import { basename, dirname, join, relative } from 'node:path'
 import { createResolver, defineNuxtModule, getLayerDirectories } from 'nuxt/kit'
 
-const schemaPattern = /^schema\.(.+)\.sql$/
 const noTransactionPattern = /^--\s*pluto:no-transaction\b/
 
 /**
@@ -66,8 +65,8 @@ function detectNoTransaction(content: string): boolean {
   return firstNonBlankLine ? noTransactionPattern.test(firstNonBlankLine) : false
 }
 
-function readMigrationFile(dir: string, fileName: string, name: string): PlutoMigrationFile {
-  const content = readFileSync(join(dir, fileName), 'utf-8')
+function readMigrationFile(dir: string, name: string): PlutoMigrationFile {
+  const content = readFileSync(join(dir, name), 'utf-8')
 
   return {
     name,
@@ -78,10 +77,9 @@ function readMigrationFile(dir: string, fileName: string, name: string): PlutoMi
 }
 
 /**
- * Discovers `db/migrations/*.sql` (or, for a layer not yet converted, the
- * legacy `public/schema.sql` / `public/schema.[name].sql`) across all Nuxt
- * layers, reads their content at build time, and populates runtimeConfig
- * so the migrations engine can apply them at server startup.
+ * Discovers `db/migrations/*.sql` across all Nuxt layers, reads their
+ * content at build time, and populates runtimeConfig so the migrations
+ * engine can apply them at server startup.
  *
  * Also seeds the consuming app's shared/types/supabase.ts with a
  * re-export of this layer's own committed snapshot when the consumer
@@ -153,81 +151,36 @@ export default defineNuxtModule({
     for (const layer of layerDirs) {
       const migrationsDir = join(layer.root, 'db/migrations')
 
-      if (existsSync(migrationsDir)) {
-        let fileNames: string[] = []
+      if (!existsSync(migrationsDir)) {
+        continue
+      }
+
+      let fileNames: string[] = []
+      try {
+        fileNames = readdirSync(migrationsDir).filter((file) =>
+          file.endsWith('.sql')
+        )
+      } catch {
+        console.error(
+          `[pluto-migrations] Failed to read migrations directory: ${migrationsDir}`
+        )
+        continue
+      }
+
+      fileNames.sort(compareFileNames)
+
+      const files: PlutoMigrationFile[] = []
+      for (const fileName of fileNames) {
         try {
-          fileNames = readdirSync(migrationsDir).filter((file) =>
-            file.endsWith('.sql')
-          )
+          files.push(readMigrationFile(migrationsDir, fileName))
         } catch {
           console.error(
-            `[pluto-migrations] Failed to read migrations directory: ${migrationsDir}`
+            `[pluto-migrations] Failed to read migration file: ${fileName}`
           )
-          continue
-        }
-
-        fileNames.sort(compareFileNames)
-
-        const files: PlutoMigrationFile[] = []
-        for (const fileName of fileNames) {
-          try {
-            files.push(readMigrationFile(migrationsDir, fileName, fileName))
-          } catch {
-            console.error(
-              `[pluto-migrations] Failed to read migration file: ${fileName}`
-            )
-          }
-        }
-
-        assignLayer(deriveLayerKey(layer.root), files)
-        continue
-      }
-
-      // Legacy fallback for a layer not yet converted to db/migrations/,
-      // exactly as before: a single public/schema.sql (always key `core`)
-      // and/or public/schema.[name].sql (key comes from the file name, not
-      // package.json — this keeps working for an unconverted layer without
-      // requiring it to match its package name).
-      const publicDir = join(layer.root, 'public')
-
-      if (!existsSync(publicDir)) {
-        continue
-      }
-
-      let publicFiles: string[] = []
-      try {
-        publicFiles = readdirSync(publicDir)
-      } catch {
-        continue
-      }
-
-      for (const fileName of publicFiles) {
-        if (fileName === 'schema.sql') {
-          try {
-            assignLayer('core', [
-              readMigrationFile(publicDir, fileName, '001_baseline.sql'),
-            ])
-          } catch {
-            console.error(
-              `[pluto-migrations] Failed to read schema file: ${fileName}`
-            )
-          }
-          continue
-        }
-
-        const match = fileName.match(schemaPattern)
-        if (match?.[1]) {
-          try {
-            assignLayer(match[1], [
-              readMigrationFile(publicDir, fileName, '001_baseline.sql'),
-            ])
-          } catch {
-            console.error(
-              `[pluto-migrations] Failed to read schema file: ${fileName}`
-            )
-          }
         }
       }
+
+      assignLayer(deriveLayerKey(layer.root), files)
     }
 
     // Populate runtimeConfig with every layer's ordered migration files.
