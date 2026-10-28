@@ -1,5 +1,6 @@
 // @ts-check
 import antfu from '@antfu/eslint-config'
+import prettier from 'eslint-config-prettier'
 import betterTailwindcss from 'eslint-plugin-better-tailwindcss'
 import { getDefaultSelectors } from 'eslint-plugin-better-tailwindcss/defaults'
 import withNuxt from './.nuxt/eslint.config.mjs'
@@ -8,14 +9,18 @@ import withNuxt from './.nuxt/eslint.config.mjs'
 export default withNuxt(
   // @ts-ignore - Antfu's config is ESM only, but Nuxt's ESLint config is CJS --- IGNORE ---
   antfu({
-    ignores: ['**/*.md', '.agents/**', '.github/**', 'shared/types/supabase.ts'],
+    // Prettier formats the code (format on save, `bun run prettier`). ESLint checks the code,
+    // not its layout, so the two never undo each other.
+    stylistic: false,
+    ignores: [
+      '**/*.md',
+      '.agents/**',
+      '.github/**',
+      'shared/types/supabase.ts',
+    ],
 
     rules: {
       'node/prefer-global/process': ['off', 'never'],
-
-      'style/indent-binary-ops': 'off',
-      'style/arrow-parens': ['warn', 'always'],
-      'style/brace-style': ['warn', '1tbs'],
 
       'vue/block-order': [
         'warn',
@@ -23,9 +28,6 @@ export default withNuxt(
           order: ['script', 'template', 'style'],
         },
       ],
-
-      'vue/multiline-html-element-content-newline': 'off',
-      'vue/html-closing-bracket-newline': 'off',
 
       'vue/html-self-closing': [
         'warn',
@@ -65,29 +67,6 @@ export default withNuxt(
       'vue/multi-word-component-names': 'off',
 
       'vue/eqeqeq': ['error', 'always'],
-
-      'style/comma-dangle': [
-        'warn',
-        {
-          arrays: 'always-multiline',
-          objects: 'always-multiline',
-          functions: 'never',
-          imports: 'always-multiline',
-        },
-      ],
-
-      'vue/comma-dangle': [
-        'warn',
-        {
-          arrays: 'always-multiline',
-          objects: 'always-multiline',
-          functions: 'never',
-        },
-      ],
-
-      'style/operator-linebreak': 'off',
-
-      'vue/singleline-html-element-content-newline': 'off',
     },
   }),
   // Canonical Tailwind classes (the same suggestion as Tailwind IntelliSense,
@@ -103,7 +82,11 @@ export default withNuxt(
         rootFontSize: 16,
         selectors: [
           ...getDefaultSelectors(),
-          { kind: 'attribute', name: '^(?:v-bind:)?ui$', match: [{ type: 'objectValues' }] },
+          {
+            kind: 'attribute',
+            name: '^(?:v-bind:)?ui$',
+            match: [{ type: 'objectValues' }],
+          },
         ],
       },
     },
@@ -112,5 +95,7 @@ export default withNuxt(
       // The fix of the rule above can leave double spaces in a class list.
       'better-tailwindcss/no-unnecessary-whitespace': 'error',
     },
-  }
+  },
+  // Last: turns off every rule that Prettier covers (the Vue template layout rules too).
+  prettier
 )
