@@ -62,13 +62,28 @@ describe('user helpers', () => {
   })
 
   it('names a user by display name, username or email', () => {
-    expect(userDisplayName({ display_name: 'Ada', username: 'a', email: 'a@x.test' })).toBe('Ada')
-    expect(userDisplayName({ display_name: ' ', username: 'ada', email: 'a@x.test' })).toBe('ada')
-    expect(userDisplayName({ display_name: null, username: null, email: 'a@x.test' })).toBe('a@x.test')
+    expect(
+      userDisplayName({ display_name: 'Ada', username: 'a', email: 'a@x.test' })
+    ).toBe('Ada')
+    expect(
+      userDisplayName({ display_name: ' ', username: 'ada', email: 'a@x.test' })
+    ).toBe('ada')
+    expect(
+      userDisplayName({ display_name: null, username: null, email: 'a@x.test' })
+    ).toBe('a@x.test')
   })
 
   it('looks a role label up, or keeps the key', () => {
-    const roles = [{ key: 'editor', label: 'Editor', description: '', is_builtin: false, capabilities: [], user_count: 0 }]
+    const roles = [
+      {
+        key: 'editor',
+        label: 'Editor',
+        description: '',
+        is_builtin: false,
+        capabilities: [],
+        user_count: 0,
+      },
+    ]
 
     expect(roleLabelOf(roles, 'editor')).toBe('Editor')
     expect(roleLabelOf(roles, 'ghost')).toBe('ghost')
@@ -93,18 +108,30 @@ describe('invite errors', () => {
   })
 
   it('knows the three mailer errors', () => {
-    for (const code of ['emailNotAuthorized', 'emailRateLimited', 'emailInvalid']) {
-      expect(isInviteMailError(fetchError(`supabase.access.errors.${code}`))).toBe(true)
+    for (const code of [
+      'emailNotAuthorized',
+      'emailRateLimited',
+      'emailInvalid',
+    ]) {
+      expect(
+        isInviteMailError(fetchError(`supabase.access.errors.${code}`))
+      ).toBe(true)
     }
 
-    expect(isInviteMailError(fetchError('supabase.access.errors.lastAdmin'))).toBe(false)
-    expect(isInviteMailError(fetchError('supabase.access.errors.inviteFailed'))).toBe(false)
+    expect(
+      isInviteMailError(fetchError('supabase.access.errors.lastAdmin'))
+    ).toBe(false)
+    expect(
+      isInviteMailError(fetchError('supabase.access.errors.inviteFailed'))
+    ).toBe(false)
   })
 })
 
 describe('supabaseProjectRef', () => {
   it('reads the ref of a hosted project', () => {
-    expect(supabaseProjectRef('https://abcdefghijklmnop.supabase.co')).toBe('abcdefghijklmnop')
+    expect(supabaseProjectRef('https://abcdefghijklmnop.supabase.co')).toBe(
+      'abcdefghijklmnop'
+    )
   })
 
   it('returns null for a local or custom URL, or a bad value', () => {
@@ -118,8 +145,10 @@ describe('supabaseProjectRef', () => {
     expect(supabaseDashboardLinks('abcdefghijklmnop')).toEqual({
       project: 'https://supabase.com/dashboard/project/abcdefghijklmnop',
       smtp: 'https://supabase.com/dashboard/project/abcdefghijklmnop/auth/smtp',
-      templates: 'https://supabase.com/dashboard/project/abcdefghijklmnop/auth/templates',
-      rateLimits: 'https://supabase.com/dashboard/project/abcdefghijklmnop/auth/rate-limits',
+      templates:
+        'https://supabase.com/dashboard/project/abcdefghijklmnop/auth/templates',
+      rateLimits:
+        'https://supabase.com/dashboard/project/abcdefghijklmnop/auth/rate-limits',
     })
   })
 })

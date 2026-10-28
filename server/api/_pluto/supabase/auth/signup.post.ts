@@ -7,7 +7,11 @@ import { parseBody } from '../../../../utils/validate'
 // into the same clean 400 shape as every other validation failure, instead
 // of a raw auth-service error reaching the caller.
 const signupSchema = z.object({
-  username: z.string().trim().min(3, 'Username must be at least 3 characters.').max(100),
+  username: z
+    .string()
+    .trim()
+    .min(3, 'Username must be at least 3 characters.')
+    .max(100),
   display_name: z.string().trim().min(1, 'Display name is required.').max(200),
   email: z.string().trim().email('Email must be a valid email address.'),
   password: z.string().min(6, 'Password must be at least 6 characters.'),

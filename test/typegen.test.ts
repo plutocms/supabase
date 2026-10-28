@@ -77,10 +77,10 @@ describe('keepInternalSupabase', () => {
     // After `eslint --fix`: an interface and single quotes.
     const eslintStyle = existing
       .replace('export type Database = {', 'export interface Database {')
-      .replace('"14.5"', '\'14.5\'')
+      .replace('"14.5"', "'14.5'")
 
     expect(keepInternalSupabase(generated, eslintStyle)).toContain(
-      'PostgrestVersion: \'14.5\''
+      "PostgrestVersion: '14.5'"
     )
   })
 

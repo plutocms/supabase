@@ -75,14 +75,20 @@ describe('resolveAuthErrorText', () => {
     const noKeys = { t: (key: string) => key, te: () => false }
 
     expect(
-      resolveAuthErrorText({ code: 'weak_password', message: 'Too weak' }, noKeys)
+      resolveAuthErrorText(
+        { code: 'weak_password', message: 'Too weak' },
+        noKeys
+      )
     ).toBe('Too weak')
   })
 })
 
 describe('auth error keys', () => {
   it('all exist in en, and the unknown key too', () => {
-    for (const key of [...Object.values(AUTH_ERROR_KEYS), AUTH_UNKNOWN_ERROR_KEY]) {
+    for (const key of [
+      ...Object.values(AUTH_ERROR_KEYS),
+      AUTH_UNKNOWN_ERROR_KEY,
+    ]) {
       expect(i18n.te(key), key).toBe(true)
     }
   })

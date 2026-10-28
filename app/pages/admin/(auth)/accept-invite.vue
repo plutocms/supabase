@@ -86,11 +86,23 @@ async function submitForm() {
 
 <template>
   <PlutoAdminAuthCard
-    :title="state === 'ready' ? t('supabase.auth.invite.title') : t('supabase.auth.invite.pageTitle')"
-    :description="state === 'ready' ? t('supabase.auth.invite.description') : undefined"
+    :title="
+      state === 'ready'
+        ? t('supabase.auth.invite.title')
+        : t('supabase.auth.invite.pageTitle')
+    "
+    :description="
+      state === 'ready' ? t('supabase.auth.invite.description') : undefined
+    "
   >
-    <div v-if="state === 'checking'" class="flex items-center justify-center py-10">
-      <UIcon name="lucide:loader-circle" class="size-6 animate-spin text-muted" />
+    <div
+      v-if="state === 'checking'"
+      class="flex items-center justify-center py-10"
+    >
+      <UIcon
+        name="lucide:loader-circle"
+        class="size-6 animate-spin text-muted"
+      />
     </div>
 
     <div v-else-if="state !== 'ready'" class="space-y-6 py-10 text-center">
@@ -99,7 +111,11 @@ async function submitForm() {
       </span>
 
       <p>
-        {{ state === 'expired' ? t('supabase.auth.invite.expired') : t('supabase.auth.invite.invalid') }}
+        {{
+          state === 'expired'
+            ? t('supabase.auth.invite.expired')
+            : t('supabase.auth.invite.invalid')
+        }}
       </p>
 
       <div class="flex items-center justify-center">

@@ -27,11 +27,15 @@ export function slugifyRoleKey(label: string): string {
 }
 
 export function isValidRoleKey(key: string): boolean {
-  return key.length > 0 && key.length <= ROLE_KEY_MAX && ROLE_KEY_PATTERN.test(key)
+  return (
+    key.length > 0 && key.length <= ROLE_KEY_MAX && ROLE_KEY_PATTERN.test(key)
+  )
 }
 
 /** `invited` until the user accepts the invite, then `active`. */
-export function userStatus(user: Pick<AccessUser, 'email_confirmed_at'>): 'active' | 'invited' {
+export function userStatus(
+  user: Pick<AccessUser, 'email_confirmed_at'>
+): 'active' | 'invited' {
   return user.email_confirmed_at ? 'active' : 'invited'
 }
 
@@ -39,13 +43,22 @@ export function userStatus(user: Pick<AccessUser, 'email_confirmed_at'>): 'activ
  * True when the user is an administrator. The `admin` role or the profile flag
  * counts, the same as `public.is_admin()`.
  */
-export function isAdminUser(user: Pick<AccessUser, 'is_admin' | 'roles'>): boolean {
+export function isAdminUser(
+  user: Pick<AccessUser, 'is_admin' | 'roles'>
+): boolean {
   return user.is_admin || user.roles.includes(ADMIN_ROLE_KEY)
 }
 
 /** The name to show for a user: the display name, the username, else the email. */
-export function userDisplayName(user: Pick<AccessUser, 'display_name' | 'username' | 'email'>): string {
-  return user.display_name?.trim() || user.username?.trim() || user.email?.trim() || ''
+export function userDisplayName(
+  user: Pick<AccessUser, 'display_name' | 'username' | 'email'>
+): string {
+  return (
+    user.display_name?.trim() ||
+    user.username?.trim() ||
+    user.email?.trim() ||
+    ''
+  )
 }
 
 /** Looks a role label up by key. A key with no role stays as it is. */
@@ -58,7 +71,10 @@ export function sameKeys(a: string[], b: string[]): boolean {
   const left = [...a].toSorted()
   const right = [...b].toSorted()
 
-  return left.length === right.length && left.every((key, index) => key === right[index])
+  return (
+    left.length === right.length &&
+    left.every((key, index) => key === right[index])
+  )
 }
 
 /**
@@ -66,7 +82,9 @@ export function sameKeys(a: string[], b: string[]): boolean {
  * undefined. An `ofetch` error holds the body in `data`.
  */
 export function errorKeyOf(error: unknown): string | undefined {
-  const body = (error as { data?: { data?: { i18n?: { key?: unknown } } } } | null)?.data
+  const body = (
+    error as { data?: { data?: { i18n?: { key?: unknown } } } } | null
+  )?.data
   const key = body?.data?.i18n?.key
 
   return typeof key === 'string' ? key : undefined
@@ -85,7 +103,10 @@ export const INVITE_MAIL_ERROR_KEYS = [
 export function isInviteMailError(error: unknown): boolean {
   const key = errorKeyOf(error)
 
-  return key !== undefined && (INVITE_MAIL_ERROR_KEYS as readonly string[]).includes(key)
+  return (
+    key !== undefined &&
+    (INVITE_MAIL_ERROR_KEYS as readonly string[]).includes(key)
+  )
 }
 
 /** The name of a language in that language, for example `Português (Brasil)`. */

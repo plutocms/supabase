@@ -40,7 +40,8 @@ async function getClient(event: H3Event): Promise<SupabaseClient> {
 }
 
 /** The anonymous client and the url/key pair it was built from. */
-let anonymousClient: { url: string, key: string, client: SupabaseClient } | undefined
+let anonymousClient:
+  { url: string; key: string; client: SupabaseClient } | undefined
 
 /**
  * A Supabase client with no user session, for public reads of the public
@@ -51,9 +52,16 @@ let anonymousClient: { url: string, key: string, client: SupabaseClient } | unde
  * whole process.
  */
 function getAnonymousClient(event: H3Event): SupabaseClient {
-  const { url, key } = useRuntimeConfig(event).public.supabase as { url: string, key: string }
+  const { url, key } = useRuntimeConfig(event).public.supabase as {
+    url: string
+    key: string
+  }
 
-  if (!anonymousClient || anonymousClient.url !== url || anonymousClient.key !== key) {
+  if (
+    !anonymousClient ||
+    anonymousClient.url !== url ||
+    anonymousClient.key !== key
+  ) {
     anonymousClient = {
       url,
       key,
@@ -98,7 +106,9 @@ export function resolveTimestampColumn(
  * `undefined` when status is disabled entirely (`type.status === false`
  * or unset).
  */
-export function resolveStatusColumn(type: PlutoContentType): string | undefined {
+export function resolveStatusColumn(
+  type: PlutoContentType
+): string | undefined {
   if (!type.status) {
     return undefined
   }
@@ -123,7 +133,9 @@ function resolveSortColumn(type: PlutoContentType, fieldName: string): string {
 function timestampColumns(type: PlutoContentType): string[] {
   const { created, updated, published } = timestampKeys(type)
 
-  return [created, updated, published].filter((column): column is string => column !== undefined)
+  return [created, updated, published].filter(
+    (column): column is string => column !== undefined
+  )
 }
 
 /**
@@ -131,8 +143,12 @@ function timestampColumns(type: PlutoContentType): string[] {
  * because a timestamp is not a declared field. A key is missing when its
  * timestamp is off. Core uses this to sort and to show the public dates.
  */
-function timestampKeys(type: PlutoContentType): { created?: string, updated?: string, published?: string } {
-  const keys: { created?: string, updated?: string, published?: string } = {}
+function timestampKeys(type: PlutoContentType): {
+  created?: string
+  updated?: string
+  published?: string
+} {
+  const keys: { created?: string; updated?: string; published?: string } = {}
 
   const created = resolveTimestampColumn(type, 'created')
   if (created) {
@@ -158,7 +174,10 @@ function timestampKeys(type: PlutoContentType): { created?: string, updated?: st
  * declares, and a timestamp is not a field. A field with the same name as a
  * timestamp column keeps its own value.
  */
-function toItem(type: PlutoContentType, row: Record<string, unknown>): PlutoContentItem {
+function toItem(
+  type: PlutoContentType,
+  row: Record<string, unknown>
+): PlutoContentItem {
   const item = mapColumnsToFields(type, row)
 
   for (const column of timestampColumns(type)) {
@@ -202,7 +221,11 @@ export function toContentError(error: PostgrestError) {
 }
 
 /** Resolves a field's storage column by name, warning and falling back to the raw name when the field is missing. This signals a misconfigured content type. */
-function resolveFieldColumn(type: PlutoContentType, fieldName: string, context: string): string {
+function resolveFieldColumn(
+  type: PlutoContentType,
+  fieldName: string,
+  context: string
+): string {
   const field = type.fields.find((candidate) => candidate.name === fieldName)
 
   if (field) {
@@ -216,7 +239,10 @@ function resolveFieldColumn(type: PlutoContentType, fieldName: string, context: 
   return fieldName
 }
 
-async function list(ctx: PlutoContentContext, query: PlutoContentQuery): Promise<PlutoContentListResult> {
+async function list(
+  ctx: PlutoContentContext,
+  query: PlutoContentQuery
+): Promise<PlutoContentListResult> {
   const client = await getClient(ctx.event)
   const pkColumn = ctx.type.primaryKey ?? 'id'
 
@@ -224,7 +250,8 @@ async function list(ctx: PlutoContentContext, query: PlutoContentQuery): Promise
 
   const statusColumn = resolveStatusColumn(ctx.type)
   if (statusColumn && query.includeUnpublished !== true) {
-    const publishedValue = (ctx.type.status && ctx.type.status.publishedValue) || 'published'
+    const publishedValue =
+      (ctx.type.status && ctx.type.status.publishedValue) || 'published'
     builder = builder.eq(statusColumn, publishedValue)
   }
 
@@ -233,14 +260,20 @@ async function list(ctx: PlutoContentContext, query: PlutoContentQuery): Promise
   }
 
   if (query.search) {
-    const titleColumn = resolveFieldColumn(ctx.type, ctx.type.titleField, 'titleField')
+    const titleColumn = resolveFieldColumn(
+      ctx.type,
+      ctx.type.titleField,
+      'titleField'
+    )
     builder = builder.ilike(titleColumn, `%${query.search}%`)
   }
 
   const sort = query.sort ?? ctx.type.defaultSort
   if (sort) {
     const sortColumn = resolveSortColumn(ctx.type, sort.field)
-    builder = builder.order(sortColumn, { ascending: sort.direction !== 'desc' })
+    builder = builder.order(sortColumn, {
+      ascending: sort.direction !== 'desc',
+    })
   } else {
     const createdColumn = resolveTimestampColumn(ctx.type, 'created')
     builder = builder.order(createdColumn ?? pkColumn, { ascending: false })
@@ -260,7 +293,9 @@ async function list(ctx: PlutoContentContext, query: PlutoContentQuery): Promise
   }
 
   return {
-    data: (data ?? []).map((row: Record<string, unknown>) => toItem(ctx.type, row)),
+    data: (data ?? []).map((row: Record<string, unknown>) =>
+      toItem(ctx.type, row)
+    ),
     total: count ?? undefined,
   }
 }
@@ -279,7 +314,10 @@ function isInvalidIdShape(error: PostgrestError): boolean {
   return error.code === '22P02'
 }
 
-async function get(ctx: PlutoContentContext, idOrSlug: string | number): Promise<PlutoContentItem | null> {
+async function get(
+  ctx: PlutoContentContext,
+  idOrSlug: string | number
+): Promise<PlutoContentItem | null> {
   const client = await getClient(ctx.event)
   const pkColumn = ctx.type.primaryKey ?? 'id'
 
@@ -298,7 +336,11 @@ async function get(ctx: PlutoContentContext, idOrSlug: string | number): Promise
   }
 
   if (ctx.type.slug) {
-    const slugColumn = resolveFieldColumn(ctx.type, ctx.type.slug.field, 'slug.field')
+    const slugColumn = resolveFieldColumn(
+      ctx.type,
+      ctx.type.slug.field,
+      'slug.field'
+    )
 
     const bySlug = await client
       .from(ctx.type.source)
@@ -318,7 +360,10 @@ async function get(ctx: PlutoContentContext, idOrSlug: string | number): Promise
   return null
 }
 
-async function create(ctx: PlutoContentContext, values: Record<string, unknown>): Promise<PlutoContentItem> {
+async function create(
+  ctx: PlutoContentContext,
+  values: Record<string, unknown>
+): Promise<PlutoContentItem> {
   const client = await getClient(ctx.event)
   const row = mapFieldsToColumns(ctx.type, values)
 
@@ -387,10 +432,10 @@ async function update(
   // edit route: stamp published-at the first time a row is published, but
   // never overwrite an already-set value on a later edit.
   if (
-    statusColumn
-    && ctx.type.status
-    && ctx.type.status.publishedAtColumn
-    && row[statusColumn] === ctx.type.status.publishedValue
+    statusColumn &&
+    ctx.type.status &&
+    ctx.type.status.publishedAtColumn &&
+    row[statusColumn] === ctx.type.status.publishedValue
   ) {
     const publishedAtColumn = ctx.type.status.publishedAtColumn
     // Selects the whole row rather than the one dynamic column name:
@@ -407,7 +452,10 @@ async function update(
       throw toContentError(fetchError)
     }
 
-    if (existing && (existing as Record<string, unknown>)[publishedAtColumn] == null) {
+    if (
+      existing &&
+      (existing as Record<string, unknown>)[publishedAtColumn] == null
+    ) {
       row[publishedAtColumn] = new Date().toISOString()
     }
   }
@@ -426,7 +474,10 @@ async function update(
   return toItem(ctx.type, data)
 }
 
-async function remove(ctx: PlutoContentContext, id: string | number): Promise<void> {
+async function remove(
+  ctx: PlutoContentContext,
+  id: string | number
+): Promise<void> {
   const client = await getClient(ctx.event)
   const pkColumn = ctx.type.primaryKey ?? 'id'
 
@@ -445,7 +496,7 @@ async function remove(ctx: PlutoContentContext, id: string | number): Promise<vo
  */
 async function countCreated(
   ctx: PlutoContentContext,
-  range: { from: string, to: string }
+  range: { from: string; to: string }
 ): Promise<number | null> {
   const createdColumn = resolveTimestampColumn(ctx.type, 'created')
   if (!createdColumn) {

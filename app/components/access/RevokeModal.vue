@@ -27,7 +27,9 @@ async function revoke() {
   working.value = true
 
   try {
-    await $fetch(`/api/_pluto/supabase/access/users/${props.user.id}/roles`, { method: 'DELETE' })
+    await $fetch(`/api/_pluto/supabase/access/users/${props.user.id}/roles`, {
+      method: 'DELETE',
+    })
 
     toast.add({
       title: t('supabase.access.toasts.revoked'),
@@ -56,7 +58,9 @@ async function revoke() {
 <template>
   <UModal
     :title="t('supabase.access.revoke.title')"
-    :description="t('supabase.access.revoke.body', { name: userDisplayName(user) })"
+    :description="
+      t('supabase.access.revoke.body', { name: userDisplayName(user) })
+    "
     :close="{ onClick: () => emit('close', false) }"
   >
     <template #body>
@@ -71,10 +75,19 @@ async function revoke() {
 
     <template #footer>
       <div class="flex w-full justify-end gap-2">
-        <UButton color="neutral" variant="outline" @click="emit('close', false)">
+        <UButton
+          color="neutral"
+          variant="outline"
+          @click="emit('close', false)"
+        >
           {{ t('pluto.common.cancel') }}
         </UButton>
-        <UButton :loading="working" color="error" icon="lucide:user-x" @click="revoke">
+        <UButton
+          :loading="working"
+          color="error"
+          icon="lucide:user-x"
+          @click="revoke"
+        >
           {{ t('supabase.access.revoke.confirm') }}
         </UButton>
       </div>

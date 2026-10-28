@@ -23,7 +23,9 @@ async function remove() {
   working.value = true
 
   try {
-    await $fetch(`/api/_pluto/supabase/access/roles/${props.role.key}`, { method: 'DELETE' })
+    await $fetch(`/api/_pluto/supabase/access/roles/${props.role.key}`, {
+      method: 'DELETE',
+    })
 
     toast.add({
       title: t('supabase.access.toasts.roleDeleted'),
@@ -52,7 +54,9 @@ async function remove() {
   >
     <template #body>
       <UAlert
-        :description="t('supabase.access.deleteRole.usersLose', role.user_count)"
+        :description="
+          t('supabase.access.deleteRole.usersLose', role.user_count)
+        "
         :color="role.user_count > 0 ? 'warning' : 'neutral'"
         variant="subtle"
         icon="lucide:users"
@@ -61,10 +65,19 @@ async function remove() {
 
     <template #footer>
       <div class="flex w-full justify-end gap-2">
-        <UButton color="neutral" variant="outline" @click="emit('close', false)">
+        <UButton
+          color="neutral"
+          variant="outline"
+          @click="emit('close', false)"
+        >
           {{ t('pluto.common.cancel') }}
         </UButton>
-        <UButton :loading="working" color="error" icon="lucide:trash-2" @click="remove">
+        <UButton
+          :loading="working"
+          color="error"
+          icon="lucide:trash-2"
+          @click="remove"
+        >
           {{ t('supabase.access.deleteRole.confirm') }}
         </UButton>
       </div>

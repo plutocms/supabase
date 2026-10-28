@@ -73,10 +73,13 @@ export function useMigrations() {
     let result: RunMigrationsResponse
 
     try {
-      result = await $fetch<RunMigrationsResponse>('/api/_pluto/supabase/migrations/run', {
-        method: 'POST',
-        body: connectionString ? { connectionString } : undefined,
-      })
+      result = await $fetch<RunMigrationsResponse>(
+        '/api/_pluto/supabase/migrations/run',
+        {
+          method: 'POST',
+          body: connectionString ? { connectionString } : undefined,
+        }
+      )
     } catch (error) {
       // The route answers a failed run with an HTTP error that carries
       // `needsConnectionString` or `error` in its data. Turn it back into
@@ -84,13 +87,17 @@ export function useMigrations() {
       // (for example a dropped connection) goes on to the caller.
       const failure = failureData(error)
 
-      if (failure?.needsConnectionString !== true && typeof failure?.error !== 'string') {
+      if (
+        failure?.needsConnectionString !== true &&
+        typeof failure?.error !== 'string'
+      ) {
         throw error
       }
 
       result = {
         success: false,
-        needsConnectionString: failure.needsConnectionString === true ? true : undefined,
+        needsConnectionString:
+          failure.needsConnectionString === true ? true : undefined,
         error: typeof failure.error === 'string' ? failure.error : undefined,
       }
     }

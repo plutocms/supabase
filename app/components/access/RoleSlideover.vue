@@ -94,7 +94,10 @@ function groupValue(group: CapabilityGroup): string[] {
 function setGroup(group: CapabilityGroup, value: string[]) {
   const keys = new Set(group.items.map((item) => item.key))
 
-  selected.value = [...selected.value.filter((current) => !keys.has(current)), ...value]
+  selected.value = [
+    ...selected.value.filter((current) => !keys.has(current)),
+    ...value,
+  ]
 }
 
 const keyError = computed(() =>
@@ -112,11 +115,11 @@ async function save() {
   submitted.value = true
 
   if (
-    saving.value
-    || fullAccess.value
-    || !label.value.trim()
-    || keyError.value
-    || capabilitiesError.value
+    saving.value ||
+    fullAccess.value ||
+    !label.value.trim() ||
+    keyError.value ||
+    capabilitiesError.value
   ) {
     return
   }
@@ -136,7 +139,10 @@ async function save() {
         body: { ...body, key: key.value },
       })
     } else {
-      await $fetch(`/api/_pluto/supabase/access/roles/${props.role!.key}`, { method: 'PUT', body })
+      await $fetch(`/api/_pluto/supabase/access/roles/${props.role!.key}`, {
+        method: 'PUT',
+        body,
+      })
     }
 
     toast.add({
@@ -180,7 +186,11 @@ async function save() {
       <form v-else class="flex flex-col gap-y-5" @submit.prevent="save">
         <UFormField
           :label="t('supabase.access.role.label')"
-          :error="submitted && !label.trim() ? t('supabase.access.errors.invalidLabel') : undefined"
+          :error="
+            submitted && !label.trim()
+              ? t('supabase.access.errors.invalidLabel')
+              : undefined
+          "
           required
         >
           <UInput
@@ -222,8 +232,14 @@ async function save() {
           required
         >
           <div class="flex flex-col gap-y-4">
-            <div v-for="group in groups" :key="group.id" class="flex flex-col gap-y-2">
-              <h3 class="text-highlighted text-sm font-semibold">{{ group.label }}</h3>
+            <div
+              v-for="group in groups"
+              :key="group.id"
+              class="flex flex-col gap-y-2"
+            >
+              <h3 class="text-highlighted text-sm font-semibold">
+                {{ group.label }}
+              </h3>
               <UCheckboxGroup
                 :model-value="groupValue(group)"
                 :items="groupItems(group)"
@@ -242,7 +258,12 @@ async function save() {
         <UButton color="neutral" variant="outline" @click="open = false">
           {{ fullAccess ? t('pluto.common.close') : t('pluto.common.cancel') }}
         </UButton>
-        <UButton v-if="!fullAccess" :loading="saving" icon="lucide:save" @click="save">
+        <UButton
+          v-if="!fullAccess"
+          :loading="saving"
+          icon="lucide:save"
+          @click="save"
+        >
           {{ t('supabase.access.role.save') }}
         </UButton>
       </div>

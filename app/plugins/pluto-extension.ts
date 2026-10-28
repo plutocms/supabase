@@ -52,9 +52,7 @@ export default defineNuxtPlugin(() => {
   async function fetchSetupState(): Promise<SetupState> {
     let state: SetupState = 'unknown'
     try {
-      state = setupStateFromResponse(
-        await $fetch('/api/_pluto/supabase/setup')
-      )
+      state = setupStateFromResponse(await $fetch('/api/_pluto/supabase/setup'))
     } catch (error) {
       if (import.meta.dev) {
         console.error('Error checking first setup status:', error)
@@ -220,8 +218,16 @@ export default defineNuxtPlugin(() => {
     // gated by requireAdmin (public.is_admin() directly), never a named
     // capability — see server/utils/admin-guard.ts for why.
     capabilities: [
-      { id: 'settings-manage', key: 'settings:manage', label: 'supabase.capabilities.settingsManage' },
-      { id: 'users-read', key: 'users:read', label: 'supabase.capabilities.usersRead' },
+      {
+        id: 'settings-manage',
+        key: 'settings:manage',
+        label: 'supabase.capabilities.settingsManage',
+      },
+      {
+        id: 'users-read',
+        key: 'users:read',
+        label: 'supabase.capabilities.usersRead',
+      },
     ],
     // The admin language of the signed-in user, stored in profiles.locale
     // (005_profile_locale.sql). A save error carries the translated server
@@ -229,12 +235,17 @@ export default defineNuxtPlugin(() => {
     localeDriver: {
       id: 'supabase',
       load: async () => {
-        const response = await $fetch<{ locale: string | null }>('/api/_pluto/supabase/me/locale')
+        const response = await $fetch<{ locale: string | null }>(
+          '/api/_pluto/supabase/me/locale'
+        )
         return response.locale
       },
       save: async (locale) => {
         try {
-          await $fetch('/api/_pluto/supabase/me/locale', { method: 'PUT', body: { locale } })
+          await $fetch('/api/_pluto/supabase/me/locale', {
+            method: 'PUT',
+            body: { locale },
+          })
         } catch (error) {
           throw new Error(errorText(error))
         }
@@ -243,7 +254,9 @@ export default defineNuxtPlugin(() => {
     permissionsDriver: {
       id: 'supabase',
       load: async () => {
-        const response = await $fetch<{ capabilities: string[] }>('/api/_pluto/supabase/me/capabilities')
+        const response = await $fetch<{ capabilities: string[] }>(
+          '/api/_pluto/supabase/me/capabilities'
+        )
         return response.capabilities
       },
     },

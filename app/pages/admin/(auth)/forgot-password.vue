@@ -25,8 +25,14 @@ async function submitForm() {
 
 <template>
   <PlutoAdminAuthCard
-    :title="isEmailSent ? t('supabase.auth.forgot.sentTitle') : t('supabase.auth.forgot.title')"
-    :description="isEmailSent ? undefined : t('supabase.auth.forgot.description')"
+    :title="
+      isEmailSent
+        ? t('supabase.auth.forgot.sentTitle')
+        : t('supabase.auth.forgot.title')
+    "
+    :description="
+      isEmailSent ? undefined : t('supabase.auth.forgot.description')
+    "
   >
     <div v-if="isEmailSent" class="space-y-6 py-10">
       <div class="text-center space-y-4">
@@ -37,7 +43,9 @@ async function submitForm() {
         </hgroup>
 
         <p>
-          <SupabaseMessageParts :message="t('supabase.auth.forgot.sentDescription')">
+          <SupabaseMessageParts
+            :message="t('supabase.auth.forgot.sentDescription')"
+          >
             <template #email>
               <strong>{{ email }}</strong>
             </template>
@@ -54,7 +62,6 @@ async function submitForm() {
 
     <form v-else @submit.prevent="submitForm">
       <div class="flex flex-col gap-y-6">
-
         <UFormField :label="t('supabase.auth.fields.email')">
           <UInput
             v-model="email"

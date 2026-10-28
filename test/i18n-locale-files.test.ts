@@ -116,8 +116,7 @@ function sourceFiles(folder: string): string[] {
   return files
 }
 
-const KEY_LITERAL =
-  /(['"`])((?:supabase|pluto)\.[\w-]+(?:\.[\w-]+)+)\1/g
+const KEY_LITERAL = /(['"`])((?:supabase|pluto)\.[\w-]+(?:\.[\w-]+)+)\1/g
 
 function usedKeys(namespace: 'supabase' | 'pluto'): Map<string, string[]> {
   const used = new Map<string, string[]>()

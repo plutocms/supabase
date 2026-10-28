@@ -37,7 +37,7 @@ export function authErrorKey(error: unknown): string | undefined {
  */
 export function resolveAuthErrorText(
   error: unknown,
-  i18n: { t: (key: string) => string, te: (key: string) => boolean }
+  i18n: { t: (key: string) => string; te: (key: string) => boolean }
 ): string {
   const key = authErrorKey(error)
 

@@ -22,28 +22,28 @@ registers an `authDriver` and a few other registry entries. See the `admin-shell
 
 ## The driver
 
-| Field | Value |
-|---|---|
-| `user()` | `mapSupabaseUser(useSupabaseUser())`. The user is the JWT claims, so the id is `sub`. The name is `display_name`, then `full_name`, then `name`, from `user_metadata`. |
-| `loggedIn()` | `Boolean(useSupabaseSession().value)`. The session cookie gives the same answer on the server and in the first client render, so there is no hydration mismatch. |
-| `ready()` | Resolves at once. The module plugin of `@nuxtjs/supabase` reads the session before this plugin runs. |
-| `refresh()` | Reads the session and the claims again. |
-| `signOut()` | `supabase.auth.signOut()`, then clears the session and claims state. Core shows the toast and goes to `/admin/login`. |
-| `signIn` | `AuthSignIn` (registered with `defineAsyncComponent`). It keeps the old keys, the old error text and the `first_setup` write. It opens `redirect`, else `/admin/home`. |
-| `guard(to)` | The setup guard. See "The setup guard". |
-| `links` | Sign up (always shown, as the old page did) and forgot password. |
-| `publicPaths` | See below. |
+| Field         | Value                                                                                                                                                                  |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `user()`      | `mapSupabaseUser(useSupabaseUser())`. The user is the JWT claims, so the id is `sub`. The name is `display_name`, then `full_name`, then `name`, from `user_metadata`. |
+| `loggedIn()`  | `Boolean(useSupabaseSession().value)`. The session cookie gives the same answer on the server and in the first client render, so there is no hydration mismatch.       |
+| `ready()`     | Resolves at once. The module plugin of `@nuxtjs/supabase` reads the session before this plugin runs.                                                                   |
+| `refresh()`   | Reads the session and the claims again.                                                                                                                                |
+| `signOut()`   | `supabase.auth.signOut()`, then clears the session and claims state. Core shows the toast and goes to `/admin/login`.                                                  |
+| `signIn`      | `AuthSignIn` (registered with `defineAsyncComponent`). It keeps the old keys, the old error text and the `first_setup` write. It opens `redirect`, else `/admin/home`. |
+| `guard(to)`   | The setup guard. See "The setup guard".                                                                                                                                |
+| `links`       | Sign up (always shown, as the old page did) and forgot password.                                                                                                       |
+| `publicPaths` | See below.                                                                                                                                                             |
 
 ## Public paths
 
-| Path | A signed-in user | Why |
-|---|---|---|
-| `/admin/signup` | goes to the admin home | The old guard did the same. |
-| `/admin/forgot-password` | goes to the admin home | The old guard did the same. |
-| `/admin/confirm` | stays on the page | A confirm link signs the user in. |
-| `/admin/update-password` | stays on the page | A recovery link signs the user in. |
-| `/admin/accept-invite` | stays on the page | An invite link signs the user in. See "Accepting an invite". |
-| `/admin/setup` | stays on the page | The setup guard decides. |
+| Path                     | A signed-in user       | Why                                                          |
+| ------------------------ | ---------------------- | ------------------------------------------------------------ |
+| `/admin/signup`          | goes to the admin home | The old guard did the same.                                  |
+| `/admin/forgot-password` | goes to the admin home | The old guard did the same.                                  |
+| `/admin/confirm`         | stays on the page      | A confirm link signs the user in.                            |
+| `/admin/update-password` | stays on the page      | A recovery link signs the user in.                           |
+| `/admin/accept-invite`   | stays on the page      | An invite link signs the user in. See "Accepting an invite". |
+| `/admin/setup`           | stays on the page      | The setup guard decides.                                     |
 
 ## Accepting an invite
 
@@ -52,14 +52,14 @@ uses PKCE, but the default invite email gives implicit-flow tokens in the URL ha
 client does not read. So the page reads the link itself, with the pure helper
 `parseInviteLink(query, hash)` in `app/utils/invite-link.ts`:
 
-| Link | What the page does |
-|---|---|
-| `?token_hash=...&type=invite` (the recommended email template, or an invite link from Pluto mail) | `verifyOtp({ type: 'invite', token_hash })` |
-| `?token_hash=...&type=magiclink` (a copied link for an account that exists; `signup` also works) | `verifyOtp({ type: 'magiclink', token_hash })` |
-| `#access_token=...&refresh_token=...` (the default invite email, or the sign-in link sent without the service key) | `setSession({ access_token, refresh_token })` |
-| `#error_code=otp_expired` (or any `error_code`) | "Link expired, ask for a new invite" |
-| no token, but a session | goes on to the password form |
-| nothing | "Invalid link" |
+| Link                                                                                                               | What the page does                             |
+| ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------- |
+| `?token_hash=...&type=invite` (the recommended email template, or an invite link from Pluto mail)                  | `verifyOtp({ type: 'invite', token_hash })`    |
+| `?token_hash=...&type=magiclink` (a copied link for an account that exists; `signup` also works)                   | `verifyOtp({ type: 'magiclink', token_hash })` |
+| `#access_token=...&refresh_token=...` (the default invite email, or the sign-in link sent without the service key) | `setSession({ access_token, refresh_token })`  |
+| `#error_code=otp_expired` (or any `error_code`)                                                                    | "Link expired, ask for a new invite"           |
+| no token, but a session                                                                                            | goes on to the password form                   |
+| nothing                                                                                                            | "Invalid link"                                 |
 
 The page clears the URL with `history.replaceState`, then shows a password and confirm form. It
 calls `updateUser({ password })` through `useAuth().updatePassword`, then the driver `refresh()`,

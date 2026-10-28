@@ -51,8 +51,14 @@ async function submitForm() {
 
 <template>
   <PlutoAdminAuthCard
-    :title="isPasswordUpdated ? t('supabase.auth.update.doneTitle') : t('supabase.auth.update.title')"
-    :description="isPasswordUpdated ? undefined : t('supabase.auth.update.description')"
+    :title="
+      isPasswordUpdated
+        ? t('supabase.auth.update.doneTitle')
+        : t('supabase.auth.update.title')
+    "
+    :description="
+      isPasswordUpdated ? undefined : t('supabase.auth.update.description')
+    "
   >
     <div v-if="isPasswordUpdated" class="space-y-6 py-10">
       <div class="text-center space-y-4">
@@ -76,7 +82,6 @@ async function submitForm() {
 
     <form v-else @submit.prevent="submitForm">
       <div class="flex flex-col gap-y-6">
-
         <UFormField :label="t('supabase.auth.update.newPassword')">
           <UInput
             v-model="form.password"

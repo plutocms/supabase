@@ -76,7 +76,7 @@ checksum) ...`). If any statement in the file fails, that whole file rolls back 
 it is applied, and no row is written for it. A retry only re-attempts files not yet recorded in
 the ledger; already-applied files in the same layer are left alone.
 
-A failure in one file stops the *rest of that layer's* files (a later file often depends on an
+A failure in one file stops the _rest of that layer's_ files (a later file often depends on an
 earlier one), reported as `status: 'failed'` with `error: 'Skipped: an earlier migration in
 this layer failed.'`. It never blocks another layer's migrations — each layer runs
 independently.

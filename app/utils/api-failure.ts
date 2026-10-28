@@ -6,7 +6,9 @@
  * error holds the whole response body in `data`, so the extra data sits in
  * `data.data`. Returns `undefined` when the error has none.
  */
-export function failureData(error: unknown): Record<string, unknown> | undefined {
+export function failureData(
+  error: unknown
+): Record<string, unknown> | undefined {
   const body = (error as { data?: unknown } | null | undefined)?.data
   const data = (body as { data?: unknown } | null | undefined)?.data
 

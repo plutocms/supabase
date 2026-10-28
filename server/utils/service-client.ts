@@ -15,4 +15,6 @@ export function optionalServiceClient(event: H3Event) {
 }
 
 /** The client of `optionalServiceClient`, when the key is set. */
-export type ServiceClient = NonNullable<ReturnType<typeof optionalServiceClient>>
+export type ServiceClient = NonNullable<
+  ReturnType<typeof optionalServiceClient>
+>

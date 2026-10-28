@@ -189,7 +189,9 @@ async function applyMigrations(useForm: boolean) {
 
 <template>
   <AdminView>
-    <h1 class="text-3xl font-bold lg:text-4xl">{{ t('supabase.migrations.title') }}</h1>
+    <h1 class="text-3xl font-bold lg:text-4xl">
+      {{ t('supabase.migrations.title') }}
+    </h1>
 
     <UAlert
       v-if="isReconnecting"
@@ -266,7 +268,10 @@ async function applyMigrations(useForm: boolean) {
               class="flex flex-col gap-y-4"
               @submit="applyMigrations(true)"
             >
-              <UFormField :label="t('supabase.connection.connectionString')" required>
+              <UFormField
+                :label="t('supabase.connection.connectionString')"
+                required
+              >
                 <UInput
                   v-model="connectionForm.connectionString"
                   :disabled="isRunning"
@@ -388,7 +393,7 @@ async function applyMigrations(useForm: boolean) {
               :key="`${result.layerName}/${result.migrationName}`"
             >
               <span class="font-mono"
-              >{{ result.layerName }}/{{ result.migrationName }}</span
+                >{{ result.layerName }}/{{ result.migrationName }}</span
               >
               — {{ statusText(result.status) }}
               <span v-if="result.error" class="text-error">

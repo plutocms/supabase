@@ -174,7 +174,12 @@ describe('pUT /api/_pluto/supabase/me/locale', () => {
     await expect((await postHandler())({})).rejects.toMatchObject({
       statusCode: 500,
       statusMessage: 'Could not save your language: boom',
-      data: { i18n: { key: 'supabase.errors.localeSave', params: { message: 'boom' } } },
+      data: {
+        i18n: {
+          key: 'supabase.errors.localeSave',
+          params: { message: 'boom' },
+        },
+      },
     })
   })
 })

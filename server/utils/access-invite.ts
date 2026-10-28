@@ -45,7 +45,7 @@ export function inviteRedirectUrl(origin: string): string {
 
 /** True when GoTrue says that an account with this email already exists. */
 export function isEmailExistsError(
-  error: { code?: string, status?: number } | null | undefined
+  error: { code?: string; status?: number } | null | undefined
 ): boolean {
   return error?.code === 'email_exists' || error?.code === 'user_already_exists'
 }

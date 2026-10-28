@@ -85,16 +85,21 @@ async function submit() {
   mailProblem.value = null
 
   try {
-    const result = await $fetch<AccessInviteResult>('/api/_pluto/supabase/access/users/invite', {
-      method: 'POST',
-      body: { ...body(), locale: emailLocale.value },
-    })
+    const result = await $fetch<AccessInviteResult>(
+      '/api/_pluto/supabase/access/users/invite',
+      {
+        method: 'POST',
+        body: { ...body(), locale: emailLocale.value },
+      }
+    )
 
     emit('done')
 
     if (result.status === 'granted') {
       toast.add({
-        title: t('supabase.access.toasts.granted', { email: email.value.trim() }),
+        title: t('supabase.access.toasts.granted', {
+          email: email.value.trim(),
+        }),
         color: 'success',
         icon: 'lucide:circle-check',
       })
@@ -103,13 +108,17 @@ async function submit() {
       // The user exists and has the roles. Only the email failed.
       link.value = result.link
       toast.add({
-        title: t('supabase.access.toasts.emailFailed', { email: email.value.trim() }),
+        title: t('supabase.access.toasts.emailFailed', {
+          email: email.value.trim(),
+        }),
         color: 'warning',
         icon: 'lucide:triangle-alert',
       })
     } else {
       toast.add({
-        title: t('supabase.access.toasts.invited', { email: email.value.trim() }),
+        title: t('supabase.access.toasts.invited', {
+          email: email.value.trim(),
+        }),
         color: 'success',
         icon: 'lucide:circle-check',
       })
@@ -139,10 +148,13 @@ async function copyLink() {
   submitting.value = true
 
   try {
-    const result = await $fetch<{ status: 'invited' | 'granted', link: string | null }>(
-      '/api/_pluto/supabase/access/users/invite-link',
-      { method: 'POST', body: body() }
-    )
+    const result = await $fetch<{
+      status: 'invited' | 'granted'
+      link: string | null
+    }>('/api/_pluto/supabase/access/users/invite-link', {
+      method: 'POST',
+      body: body(),
+    })
 
     mailProblem.value = null
     emit('done')
@@ -180,8 +192,16 @@ async function setupEmail() {
 <template>
   <UModal
     v-model:open="open"
-    :title="link ? t('supabase.access.invite.linkTitle') : t('supabase.access.invite.title')"
-    :description="link ? t('supabase.access.invite.linkDescription') : t('supabase.access.invite.description')"
+    :title="
+      link
+        ? t('supabase.access.invite.linkTitle')
+        : t('supabase.access.invite.title')
+    "
+    :description="
+      link
+        ? t('supabase.access.invite.linkDescription')
+        : t('supabase.access.invite.description')
+    "
   >
     <template #body>
       <AccessLinkField v-if="link" :link="link" />
@@ -219,10 +239,7 @@ async function setupEmail() {
           </template>
         </UAlert>
 
-        <p
-          v-if="mailProblem && !canCopyLink"
-          class="text-muted text-sm"
-        >
+        <p v-if="mailProblem && !canCopyLink" class="text-muted text-sm">
           {{ t('supabase.access.invite.needsKey') }}
         </p>
 
@@ -248,7 +265,11 @@ async function setupEmail() {
 
         <UFormField
           :label="t('supabase.access.invite.roles')"
-          :error="showRolesError && roleKeys.length === 0 ? t('supabase.access.invite.rolesRequired') : undefined"
+          :error="
+            showRolesError && roleKeys.length === 0
+              ? t('supabase.access.invite.rolesRequired')
+              : undefined
+          "
           required
         >
           <UCheckboxGroup v-model="roleKeys" :items="roleItems" />
@@ -258,7 +279,11 @@ async function setupEmail() {
           :label="t('supabase.access.invite.locale')"
           :description="t('supabase.access.invite.localeHint')"
         >
-          <USelect v-model="emailLocale" :items="localeItems" class="w-full sm:w-64" />
+          <USelect
+            v-model="emailLocale"
+            :items="localeItems"
+            class="w-full sm:w-64"
+          />
         </UFormField>
 
         <!-- Enter in a field submits the form. -->

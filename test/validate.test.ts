@@ -30,7 +30,9 @@ describe('parseBody', () => {
   it('returns the parsed body unchanged when it matches the schema', async () => {
     bodyToReturn = { name: 'Widget' }
 
-    await expect(parseBody(fakeEvent, schema)).resolves.toEqual({ name: 'Widget' })
+    await expect(parseBody(fakeEvent, schema)).resolves.toEqual({
+      name: 'Widget',
+    })
   })
 
   it('throws the standard 400 shape when the body fails the schema', async () => {

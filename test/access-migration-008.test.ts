@@ -16,7 +16,7 @@ const sql = strip(
   )
 )
 
-const functions: Array<{ name: string, args: string }> = [
+const functions: Array<{ name: string; args: string }> = [
   { name: 'list_staff_users', args: '' },
   { name: 'list_roles', args: '' },
   { name: 'find_user_id_by_email', args: 'text' },
@@ -43,23 +43,29 @@ describe('008_users_and_roles_admin.sql', () => {
     expect(sql).not.toMatch(/create table/i)
   })
 
-  it.each(functions)('$name is plpgsql, security definer, empty search_path', ({ name }) => {
-    const text = body(name)
+  it.each(functions)(
+    '$name is plpgsql, security definer, empty search_path',
+    ({ name }) => {
+      const text = body(name)
 
-    expect(text, name).not.toBe('')
-    expect(text).toMatch(/language plpgsql/i)
-    expect(text).toMatch(/security definer/i)
-    expect(text).toMatch(/set search_path = ''/i)
-  })
+      expect(text, name).not.toBe('')
+      expect(text).toMatch(/language plpgsql/i)
+      expect(text).toMatch(/security definer/i)
+      expect(text).toMatch(/set search_path = ''/i)
+    }
+  )
 
-  it.each(functions)('$name revokes from public, anon and grants the rest', ({ name, args }) => {
-    expect(sql).toContain(
-      `revoke execute on function public.${name}(${args}) from public, anon;`
-    )
-    expect(sql).toContain(
-      `grant execute on function public.${name}(${args}) to authenticated, service_role;`
-    )
-  })
+  it.each(functions)(
+    '$name revokes from public, anon and grants the rest',
+    ({ name, args }) => {
+      expect(sql).toContain(
+        `revoke execute on function public.${name}(${args}) from public, anon;`
+      )
+      expect(sql).toContain(
+        `grant execute on function public.${name}(${args}) to authenticated, service_role;`
+      )
+    }
+  )
 
   it('lists need users:read, every write needs is_admin', () => {
     for (const name of ['list_staff_users', 'list_roles']) {
@@ -90,7 +96,7 @@ describe('008_users_and_roles_admin.sql', () => {
       'delete_role',
     ]) {
       expect(body(name), name).toContain(
-        'pg_advisory_xact_lock(hashtext(\'pluto.user_roles\'))'
+        "pg_advisory_xact_lock(hashtext('pluto.user_roles'))"
       )
     }
   })
@@ -98,8 +104,8 @@ describe('008_users_and_roles_admin.sql', () => {
   it('set_user_roles checks the last admin and syncs profiles.is_admin', () => {
     const text = body('set_user_roles')
 
-    expect(text).toContain('message = \'pluto:last_admin\'')
-    expect(text).toContain('message = \'pluto:unknown_role\'')
+    expect(text).toContain("message = 'pluto:last_admin'")
+    expect(text).toContain("message = 'pluto:unknown_role'")
     expect(text).toMatch(
       /update public\.profiles p set is_admin = \('admin' = any\(keys\)\)/
     )
@@ -116,19 +122,19 @@ describe('008_users_and_roles_admin.sql', () => {
 
   it('create_role and update_role refuse the wildcard and an empty role', () => {
     for (const name of ['create_role', 'update_role']) {
-      expect(body(name), name).toContain('message = \'pluto:wildcard\'')
-      expect(body(name), name).toContain('message = \'pluto:empty_role\'')
+      expect(body(name), name).toContain("message = 'pluto:wildcard'")
+      expect(body(name), name).toContain("message = 'pluto:empty_role'")
     }
 
-    expect(body('create_role')).toContain('message = \'pluto:role_exists\'')
-    expect(body('create_role')).toContain('p_key !~ \'^[a-z0-9_]+$\'')
+    expect(body('create_role')).toContain("message = 'pluto:role_exists'")
+    expect(body('create_role')).toContain("p_key !~ '^[a-z0-9_]+$'")
   })
 
   it('update_role refuses admin, delete_role refuses a built-in role', () => {
     expect(body('update_role')).toMatch(
       /if p_key = 'admin' then raise exception[^;]*pluto:builtin_role/
     )
-    expect(body('delete_role')).toContain('message = \'pluto:builtin_role\'')
+    expect(body('delete_role')).toContain("message = 'pluto:builtin_role'")
     expect(body('delete_role')).toMatch(/return affected;/)
   })
 

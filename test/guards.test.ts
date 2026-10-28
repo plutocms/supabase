@@ -9,7 +9,10 @@ let profileResult: {
   data: { is_admin: boolean } | null
   error: { message: string } | null
 }
-let capabilityResult: { data: boolean | null, error: { message: string } | null }
+let capabilityResult: {
+  data: boolean | null
+  error: { message: string } | null
+}
 
 vi.mock('#supabase/server', () => ({
   serverSupabaseUser: async () => user,

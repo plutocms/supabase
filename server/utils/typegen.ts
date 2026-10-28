@@ -15,9 +15,10 @@ const execFileAsync = promisify(execFile)
  */
 function resolveSupabaseBin(rootDir: string): string {
   // On Windows, npm installs `supabase.cmd` and Bun installs `supabase.exe`.
-  const binNames = process.platform === 'win32'
-    ? ['supabase.cmd', 'supabase.exe']
-    : ['supabase']
+  const binNames =
+    process.platform === 'win32'
+      ? ['supabase.cmd', 'supabase.exe']
+      : ['supabase']
   const localBin = binNames
     .map((name) => join(rootDir, 'node_modules/.bin', name))
     .find((path) => existsSync(path))
@@ -25,7 +26,8 @@ function resolveSupabaseBin(rootDir: string): string {
 }
 
 // The block, with its leading comment lines. The block has no nested braces.
-const INTERNAL_BLOCK = /(?:^[ \t]*\/\/[^\n]*\n)*^[ \t]*__InternalSupabase:\s*\{[^{}]*\}[ \t]*\n/m
+const INTERNAL_BLOCK =
+  /(?:^[ \t]*\/\/[^\n]*\n)*^[ \t]*__InternalSupabase:\s*\{[^{}]*\}[ \t]*\n/m
 // The block itself. The name alone is not enough: the output also has it in
 // `Omit<Database, '__InternalSupabase'>`.
 const HAS_BLOCK = /^[ \t]*__InternalSupabase:\s*\{/m

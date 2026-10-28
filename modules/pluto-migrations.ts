@@ -1,6 +1,12 @@
 import type { PlutoMigrationFile } from '../shared/types/migrations'
 import { createHash } from 'node:crypto'
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import {
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  writeFileSync,
+} from 'node:fs'
 import { basename, dirname, join, relative } from 'node:path'
 import { createResolver, defineNuxtModule, getLayerDirectories } from 'nuxt/kit'
 
@@ -49,7 +55,10 @@ function deriveLayerKey(layerRoot: string): string {
 }
 
 function computeChecksum(content: string): string {
-  return createHash('sha256').update(content, 'utf-8').digest('hex').slice(0, 16)
+  return createHash('sha256')
+    .update(content, 'utf-8')
+    .digest('hex')
+    .slice(0, 16)
 }
 
 /**
@@ -62,7 +71,9 @@ function detectNoTransaction(content: string): boolean {
     .map((line) => line.trim())
     .find((line) => line.length > 0)
 
-  return firstNonBlankLine ? noTransactionPattern.test(firstNonBlankLine) : false
+  return firstNonBlankLine
+    ? noTransactionPattern.test(firstNonBlankLine)
+    : false
 }
 
 function readMigrationFile(dir: string, name: string): PlutoMigrationFile {

@@ -1,6 +1,11 @@
 import { serverSupabaseClient } from '#supabase/server'
 import { mapAccessError } from '../../../../../../utils/access-errors'
-import { inviteRedirectUrl, isEmailExistsError, requireUserId, resendBodySchema } from '../../../../../../utils/access-invite'
+import {
+  inviteRedirectUrl,
+  isEmailExistsError,
+  requireUserId,
+  resendBodySchema,
+} from '../../../../../../utils/access-invite'
 import {
   assertInviteLocale,
   generateAcceptLink,
@@ -122,7 +127,9 @@ export default defineEventHandler(async (event) => {
     }
 
     const { data: staff } = await client.rpc('list_staff_users')
-    const roleKeys = Array.isArray(staff) ? (staff.find((row) => row.id === id)?.roles ?? []) : []
+    const roleKeys = Array.isArray(staff)
+      ? (staff.find((row) => row.id === id)?.roles ?? [])
+      : []
     const sent = await sendInviteMail({
       client,
       to: email,
@@ -138,9 +145,12 @@ export default defineEventHandler(async (event) => {
       : { status: 'sent' as const, emailSent: false, link: made.link }
   }
 
-  const { error: inviteError } = await service.auth.admin.inviteUserByEmail(email, {
-    redirectTo,
-  })
+  const { error: inviteError } = await service.auth.admin.inviteUserByEmail(
+    email,
+    {
+      redirectTo,
+    }
+  )
 
   if (inviteError) {
     if (isEmailExistsError(inviteError)) {

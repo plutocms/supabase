@@ -62,8 +62,10 @@ async function submitForm() {
       description: resolveAuthErrorText(
         {
           code: failureData(error)?.code,
-          message: (error as { data?: { statusMessage?: string } }).data?.statusMessage
-            ?? errorText(error, 'supabase.auth.errors.unknown'),
+          message:
+            (error as { data?: { statusMessage?: string } }).data
+              ?.statusMessage ??
+            errorText(error, 'supabase.auth.errors.unknown'),
         },
         { t, te }
       ),
@@ -78,7 +80,11 @@ async function submitForm() {
 
 <template>
   <PlutoAdminAuthCard
-    :title="isEmailVerificationMessageVisible ? t('supabase.auth.signup.almostThere') : t('supabase.auth.signup.title')"
+    :title="
+      isEmailVerificationMessageVisible
+        ? t('supabase.auth.signup.almostThere')
+        : t('supabase.auth.signup.title')
+    "
   >
     <div v-if="isEmailVerificationMessageVisible" class="space-y-6 py-10">
       <div class="text-center space-y-4">
@@ -98,11 +104,7 @@ async function submitForm() {
           </template>
         </UAlert>
 
-        <UAlert
-          icon="lucide:alert-triangle"
-          color="warning"
-          variant="outline"
-        >
+        <UAlert icon="lucide:alert-triangle" color="warning" variant="outline">
           <template #description>
             {{ t('supabase.auth.signup.checkSpam') }}
           </template>
@@ -112,7 +114,6 @@ async function submitForm() {
 
     <form v-else @submit.prevent="submitForm">
       <div class="flex flex-col gap-y-6">
-
         <UFormField :label="t('supabase.auth.fields.email')" required>
           <UInput
             v-model="form.email"

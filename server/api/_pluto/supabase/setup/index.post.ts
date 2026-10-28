@@ -11,7 +11,10 @@ import { parseBody } from '../../../../utils/validate'
 // DSN, and so on), so this route's real security model is the
 // DATABASE_URL precedence check above, not a stricter format check here.
 const setupSchema = z.object({
-  connectionString: z.string().trim().min(1, 'Connection string must not be empty.'),
+  connectionString: z
+    .string()
+    .trim()
+    .min(1, 'Connection string must not be empty.'),
 })
 
 export default defineEventHandler(async (event) => {

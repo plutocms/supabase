@@ -3,7 +3,10 @@ import type { MigrationFileResult } from '../../../../utils/migrations'
 import { z } from 'zod'
 import { requireAdmin } from '../../../../utils/admin-guard'
 import { persistDatabaseUrl } from '../../../../utils/env-file'
-import { resolveConnectionString, runPendingMigrations } from '../../../../utils/migrations'
+import {
+  resolveConnectionString,
+  runPendingMigrations,
+} from '../../../../utils/migrations'
 import { scrubConnectionString } from '../../../../utils/scrub-connection-string'
 import { regenerateSupabaseTypes } from '../../../../utils/typegen'
 import { parseBody } from '../../../../utils/validate'
@@ -12,7 +15,11 @@ import { parseBody } from '../../../../utils/validate'
 // caller need not (and, per resolveConnectionString, cannot) supply one.
 const runMigrationsSchema = z
   .object({
-    connectionString: z.string().trim().min(1, 'Connection string must not be empty.').optional(),
+    connectionString: z
+      .string()
+      .trim()
+      .min(1, 'Connection string must not be empty.')
+      .optional(),
   })
   .optional()
 

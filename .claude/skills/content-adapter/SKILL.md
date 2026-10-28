@@ -61,7 +61,7 @@ published_at:
     : null,
 ```
 
-The adapter's version reads the same way, in general form: check the *current* row's
+The adapter's version reads the same way, in general form: check the _current_ row's
 `publishedAtColumn` value first; only set it when that value is null/undefined. A status update
 to anything other than `publishedValue` leaves `publishedAtColumn` alone — this adapter never
 clears it back to null the way the blog precedent's ternary does for a non-published status. A
@@ -116,11 +116,11 @@ maps it to an `H3`/Nuxt error safe to send to a client. The raw error is always 
 (`console.error`) first, in every branch, so the real message never disappears from server logs
 even when the client only sees a generic one.
 
-| Postgres code | Meaning | HTTP status | Client message |
-|---|---|---|---|
-| `23505` | `unique_violation` | 409 | "A record with this value already exists." |
-| `23503` | `foreign_key_violation` | 400 | "This references a record that does not exist." |
-| anything else | — | 500 | The raw `error.message` |
+| Postgres code | Meaning                 | HTTP status | Client message                                  |
+| ------------- | ----------------------- | ----------- | ----------------------------------------------- |
+| `23505`       | `unique_violation`      | 409         | "A record with this value already exists."      |
+| `23503`       | `foreign_key_violation` | 400         | "This references a record that does not exist." |
+| anything else | —                       | 500         | The raw `error.message`                         |
 
 ## The type-safety trade-off: an untyped client, on purpose
 

@@ -3,7 +3,11 @@
 // roles of the signed-in admin loads the permissions again, so the menu and
 // the tabs follow at once.
 import type { AccessRole, AccessUser } from '../../../shared/types/access'
-import { ADMIN_ROLE_KEY, sameKeys, userDisplayName } from '../../utils/access-ui'
+import {
+  ADMIN_ROLE_KEY,
+  sameKeys,
+  userDisplayName,
+} from '../../utils/access-ui'
 
 const props = defineProps<{
   user: AccessUser | null
@@ -43,14 +47,16 @@ const items = computed(() =>
 )
 
 const name = computed(() => (props.user ? userDisplayName(props.user) : ''))
-const unchanged = computed(() => !props.user || sameKeys(roleKeys.value, props.user.roles))
+const unchanged = computed(
+  () => !props.user || sameKeys(roleKeys.value, props.user.roles)
+)
 
 // The warning shows when the admin removes their own admin role.
 const removesOwnAdmin = computed(
   () =>
-    props.self
-    && (props.user?.roles.includes(ADMIN_ROLE_KEY) ?? false)
-    && !roleKeys.value.includes(ADMIN_ROLE_KEY)
+    props.self &&
+    (props.user?.roles.includes(ADMIN_ROLE_KEY) ?? false) &&
+    !roleKeys.value.includes(ADMIN_ROLE_KEY)
 )
 
 async function save() {

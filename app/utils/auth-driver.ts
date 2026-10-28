@@ -76,9 +76,7 @@ export type SetupState = 'pending' | 'done' | 'unknown'
  */
 export function setupStateFromResponse(data: unknown): SetupState {
   const response = data as
-    | { success?: boolean, is_first_setup?: boolean }
-    | null
-    | undefined
+    { success?: boolean; is_first_setup?: boolean } | null | undefined
 
   if (!response?.success) {
     return 'unknown'
