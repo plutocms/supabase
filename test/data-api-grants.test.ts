@@ -57,9 +57,10 @@ describe('data API grants (core layer)', () => {
   ].map((match) => match[1]!)
   const grants = parseGrants(allSql)
 
-  it('finds the seven core tables', () => {
+  it('finds the eight core tables', () => {
     expect([...new Set(tables)].sort()).toEqual([
       'healthcheck',
+      'media',
       'pluto_migrations',
       'profiles',
       'role_capabilities',

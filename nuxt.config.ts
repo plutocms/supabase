@@ -5,6 +5,16 @@ import type { PlutoMigrationFile } from './shared/types/migrations'
 const plutoLayer = process.env.PLUTO_PLUTO_PATH || '@plutocms/pluto'
 const utilsLayer = process.env.PLUTO_UTILS_PATH || '@plutocms/utils'
 
+// The host of the Supabase project, at build time. `@nuxt/image` may only read
+// remote images of the hosts in `image.domains` (the media files are in Storage).
+function supabaseHost(): string {
+  try {
+    return new URL(process.env.SUPABASE_URL ?? '').host
+  } catch {
+    return ''
+  }
+}
+
 export default defineNuxtConfig({
   extends: [[plutoLayer, { install: true }], utilsLayer],
 
@@ -22,6 +32,10 @@ export default defineNuxtConfig({
     supabaseKey: process.env.SUPABASE_KEY,
     plutoRootDir: '',
     plutoLayerMigrations: {} as Record<string, PlutoMigrationFile[]>,
+    public: {
+      // The core media library uses the Supabase driver (server/utils/media-driver.ts).
+      plutoMedia: { driver: 'supabase' },
+    },
   },
 
   alias: {
@@ -43,6 +57,10 @@ export default defineNuxtConfig({
       },
       standalone: false,
     },
+  },
+
+  image: {
+    domains: supabaseHost() ? [supabaseHost()] : [],
   },
 
   supabase: {
