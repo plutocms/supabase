@@ -7,7 +7,7 @@ description: Users and Roles settings pages
 
 This feature adds two tabs to Settings: **Users** and **Roles**. An admin invites users, changes
 their roles, revokes access, and edits the roles. It also adds a guide for the Supabase sign-in
-emails on the Email tab. It needs `@plutocms/pluto` 0.18 or later (the `settingsPages` and
+emails on the Email tab. It needs `@plutocms/core` 0.18 or later (the `settingsPages` and
 `mailPanels` registry buckets, `usePlutoCapabilities().groups`) and the migration
 `008_users_and_roles_admin.sql`. The server side is in the `permissions-storage` skill.
 
@@ -92,7 +92,7 @@ limit after custom SMTP is set. The panel never shows or stores a key.
 
 - Keep every key a full literal (`t('supabase.access.users.title')`). The locale test scans the
   code for them and fails on a key that no code uses.
-- The `pluto.*` keys used here must exist in the published `@plutocms/pluto` of the dev
+- The `pluto.*` keys used here must exist in the published `@plutocms/core` of the dev
   dependency. Use `pluto.common.*` for shared words.
 - A page file must exist for each `settingsPages` entry. Core renders the tabs and the no-permission
   alert. The page does not repeat the title.

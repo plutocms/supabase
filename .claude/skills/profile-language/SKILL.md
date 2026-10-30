@@ -6,7 +6,7 @@ description: Profile language
 # Profile language
 
 This feature stores the admin language of each user in the database. It plugs into the i18n
-system of `@plutocms/pluto` (see the `i18n` skill in `pluto`) through a locale driver. It adds:
+system of `@plutocms/core` (see the `i18n` skill in `pluto`) through a locale driver. It adds:
 
 - `db/migrations/005_profile_locale.sql` — the `profiles.locale` column, its format check, and
   the `public.set_my_locale(text)` function.

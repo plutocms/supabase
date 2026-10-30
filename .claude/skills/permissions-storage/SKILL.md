@@ -141,7 +141,7 @@ also accepts an admin who has the role only. See "Why migrations stay admin-only
 
 ## Client-side: `usePlutoPermissions()`
 
-`usePlutoPermissions()` (from `@plutocms/pluto`) reads whichever layer registered a
+`usePlutoPermissions()` (from `@plutocms/core`) reads whichever layer registered a
 `permissionsDriver` — this layer registers one, backed by `/api/_pluto/supabase/me/capabilities`. `can(capability)`
 tells a component whether to show or hide UI. This is never a security boundary by itself: the
 real enforcement is always the server-side `requireCapability` call, backed by RLS. Hiding a

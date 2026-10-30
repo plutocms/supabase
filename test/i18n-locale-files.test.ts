@@ -149,7 +149,7 @@ describe('translation keys used in the code', () => {
     expect(missing).toEqual([])
   })
 
-  it('has every pluto.* key in the en.json of @plutocms/pluto', () => {
+  it('has every pluto.* key in the en.json of @plutocms/core', () => {
     const plutoEn = flatten(
       JSON.parse(
         readFileSync(
@@ -157,7 +157,7 @@ describe('translation keys used in the code', () => {
             root,
             'node_modules',
             '@plutocms',
-            'pluto',
+            'core',
             'i18n',
             'locales',
             'en.json'

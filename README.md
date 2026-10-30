@@ -14,7 +14,7 @@ SUPABASE_URL=your-supabase-url
 SUPABASE_KEY=your-publishable-supabase-key
 ```
 
-2. Install the layer. It brings `@nuxtjs/supabase`, `@plutocms/pluto` and `@plutocms/utils`, so you do not add them:
+2. Install the layer. It brings `@nuxtjs/supabase`, `@plutocms/core` and `@plutocms/utils`, so you do not add them:
 
 ```bash
 npm i @plutocms/supabase
@@ -98,7 +98,7 @@ NUXT_PLUTO_MAIL_FROM="Your Site <hello@your-domain.com>"
 ```
 
 `Settings > Email` in the admin guides the setup (account, key, domain, test email). The
-`mail` skill of `@plutocms/pluto` lists every `NUXT_PLUTO_MAIL_*` variable. If the send fails,
+`mail` skill of `@plutocms/core` lists every `NUXT_PLUTO_MAIL_*` variable. If the send fails,
 the user and the roles stay, and the admin gets the invite link to send by hand.
 
 With the key, an admin can also copy the invite link (Users, then the row menu, or the invite

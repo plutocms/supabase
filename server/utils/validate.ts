@@ -4,7 +4,7 @@ import type { ZodSchema } from 'zod'
 /**
  * One field-level validation error.
  *
- * Matches `ContentValidationError` from `@plutocms/pluto`'s
+ * Matches `ContentValidationError` from `@plutocms/core`'s
  * `shared/utils/content-validate.ts`, so a zod failure and a content-model
  * failure look the same to a caller.
  */
@@ -17,7 +17,7 @@ export interface ValidationError {
  * Reads a request body and checks it against a zod schema.
  *
  * On success, returns the parsed, typed body. On failure, throws the same
- * 400 shape `@plutocms/pluto`'s generic content routes throw for a content
+ * 400 shape `@plutocms/core`'s generic content routes throw for a content
  * validation failure: `{ statusCode: 400, statusMessage: 'Validation
  * failed.', data: { errors } }`, with `errors` as `{ field, message }[]`.
  * Every route in this workspace should call this helper instead of

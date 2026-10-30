@@ -1,7 +1,7 @@
 # Content adapter
 
 This feature adds the first real `PlutoContentAdapter`, backed by Supabase/PostgREST. It plugs
-into `@plutocms/pluto`'s generic content routes (`/api/_pluto/content/[type]`, see that repo's
+into `@plutocms/core`'s generic content routes (`/api/_pluto/content/[type]`, see that repo's
 content-model skill), so any content type a layer declares maps onto a hand-authored table
 through one adapter, with no per-content-type server code. It also answers the public API of core
 (`GET /api/pluto/v1/content/<type>`, see "Public reads" below). It adds:
@@ -10,7 +10,7 @@ through one adapter, with no per-content-type server code. It also answers the p
   three exported pure helpers used by its own tests: `resolveTimestampColumn`,
   `resolveStatusColumn`, `toContentError`.
 - `server/plugins/content-adapter.ts` — registers the adapter at Nitro startup, through
-  `registerContentAdapter` (from `@plutocms/pluto`).
+  `registerContentAdapter` (from `@plutocms/core`).
 - `test/content-adapter-helpers.test.ts` — unit tests for the three pure helpers.
 - `test/content-adapter-reads.test.ts` — unit tests for filters, timestamps and the anonymous client,
   with a fake query builder.
@@ -37,7 +37,7 @@ layer's own repo, against a table this repo's migrations already created by hand
 
 ## Field/column mapping: delegated, not reimplemented
 
-Every method uses `@plutocms/pluto`'s own `fieldColumn`, `mapFieldsToColumns`, and
+Every method uses `@plutocms/core`'s own `fieldColumn`, `mapFieldsToColumns`, and
 `mapColumnsToFields` (from `shared/utils/content-map.ts`) for every translation between a
 field-keyed payload and a column-keyed database row. This adapter never reimplements that
 mapping. The one exception is a field named directly off a content type's own configuration

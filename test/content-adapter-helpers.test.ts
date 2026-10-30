@@ -1,4 +1,4 @@
-import type { PlutoContentType } from '@plutocms/pluto/shared/types/content'
+import type { PlutoContentType } from '@plutocms/core/shared/types/content'
 import { PostgrestError } from '@supabase/supabase-js'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPlutoErrorStub } from './fixtures/i18n-stub'
