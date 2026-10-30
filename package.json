@@ -1,7 +1,7 @@
 {
   "name": "@plutocms/supabase",
   "type": "module",
-  "version": "0.16.0",
+  "version": "0.17.0",
   "trustedDependencies": [
     "@parcel/watcher",
     "@plutocms/pluto",
