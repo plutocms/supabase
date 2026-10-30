@@ -6,7 +6,7 @@ description: Admin translation
 # Admin translation
 
 This feature translates the admin text of this layer. It uses the i18n system of
-`@plutocms/pluto` (see the `i18n` skill in `pluto`). The shipped languages are `en` and `pt-BR`.
+`@plutocms/core` (see the `i18n` skill in `pluto`). The shipped languages are `en` and `pt-BR`.
 The English text is the text that the UI showed before. It is the same, byte for byte.
 
 ## Files
@@ -72,7 +72,7 @@ UI shows the text with `usePlutoErrorText()`. The signup page does this.
 
 `test/i18n-locale-files.test.ts` checks parity between the locales. It also scans `app/`,
 `server/`, and `shared/` for literal `supabase.*` and `pluto.*` keys. Each key must exist
-(`pluto.*` keys in the `en.json` of `@plutocms/pluto`). Each `en.json` key must be used. A key that
+(`pluto.*` keys in the `en.json` of `@plutocms/core`). Each `en.json` key must be used. A key that
 the code builds at run time is invisible to the scan: keep it as a full literal in a map.
 
 In a test, stub `createPlutoError` with `createPlutoErrorStub`. Build a translator with

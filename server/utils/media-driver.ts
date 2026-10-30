@@ -87,7 +87,7 @@ function numericIds(ids: string[]): number[] {
  * Security checks the capabilities again (`has_capability`). New files go to
  * `media/<yyyy>/<mm>/<name>-<suffix>.<ext>`, and their previews next to them
  * (`db/migrations/010_media_preview.sql`). See the media skill of
- * `@plutocms/pluto`.
+ * `@plutocms/core`.
  */
 export function createSupabaseMediaDriver(): PlutoMediaDriver {
   async function readRow(client: SupabaseClient, id: string): Promise<MediaRow> {

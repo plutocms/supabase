@@ -45,7 +45,7 @@ let getUserResult: {
 }
 let inviteCalls: Array<{ email: string; options: unknown }>
 let deleteCalls: string[]
-// Pluto mail (a Nitro auto-import of @plutocms/pluto).
+// Pluto mail (a Nitro auto-import of @plutocms/core).
 let mailConfigured: boolean
 let mailSendError: { code: string } | null
 let sentMail: Array<Record<string, unknown>>

@@ -5,7 +5,7 @@ description: Auth driver
 
 # Auth driver
 
-This layer plugs Supabase sign-in into the admin shell of `@plutocms/pluto` (0.16 and later). Core
+This layer plugs Supabase sign-in into the admin shell of `@plutocms/core` (0.16 and later). Core
 owns the `/admin` parent route, the sign-in page, the route guard and the navbar. This layer
 registers an `authDriver` and a few other registry entries. See the `admin-shell` skill in `pluto`.
 
@@ -123,7 +123,7 @@ own `auth` middleware. They are gone.
 - `useAuth()` no longer returns `isLoggedIn`, `user`, `logout` or `allowedUnauthenticatedPaths`.
   Use `usePlutoAuth()` from core.
 - The `supabase.navbar.*` keys are removed. Core has `pluto.navbar.*`.
-- The layer needs `@plutocms/pluto` 0.16 or later.
+- The layer needs `@plutocms/core` 0.16 or later.
 
 ## Lost on purpose
 

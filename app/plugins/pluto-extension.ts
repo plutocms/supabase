@@ -102,7 +102,7 @@ export default defineNuxtPlugin(() => {
   definePlutoExtension({
     id: 'supabase',
     // Core renders the navbar, the login page and the route guard from this
-    // driver. See the admin-shell skill in @plutocms/pluto.
+    // driver. See the admin-shell skill in @plutocms/core.
     authDriver: {
       id: 'supabase-auth',
       // The JWT claims carry the id (`sub`) and the user metadata.

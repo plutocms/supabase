@@ -1,8 +1,8 @@
 import type { PlutoMigrationFile } from './shared/types/migrations'
 
-// Point these at a local checkout (e.g. `../pluto`, `../utils`) to test
+// Point these at a local checkout (e.g. `../pluto/packages/core`, `../utils`) to test
 // unpublished changes; unset, they resolve to the published npm packages.
-const plutoLayer = process.env.PLUTO_PLUTO_PATH || '@plutocms/pluto'
+const coreLayer = process.env.PLUTO_CORE_PATH || '@plutocms/core'
 const utilsLayer = process.env.PLUTO_UTILS_PATH || '@plutocms/utils'
 
 // The host of the Supabase project, at build time. `@nuxt/image` may only read
@@ -16,7 +16,7 @@ function supabaseHost(): string {
 }
 
 export default defineNuxtConfig({
-  extends: [[plutoLayer, { install: true }], utilsLayer],
+  extends: [[coreLayer, { install: true }], utilsLayer],
 
   modules: ['@nuxt/eslint', '@nuxtjs/supabase'],
 

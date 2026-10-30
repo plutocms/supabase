@@ -1,8 +1,8 @@
-import type { PlutoContentType } from '@plutocms/pluto/shared/types/content'
+import type { PlutoContentType } from '@plutocms/core/shared/types/content'
 import {
   fieldColumn,
   mapColumnsToFields,
-} from '@plutocms/pluto/shared/utils/content-map'
+} from '@plutocms/core/shared/utils/content-map'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Both client sources are fakes. The session client comes from
