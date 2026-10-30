@@ -39,6 +39,13 @@ async function getClient(event: H3Event): Promise<SupabaseClient> {
   return (await serverSupabaseClient(event)) as unknown as SupabaseClient
 }
 
+/**
+ * The client of a request: the anonymous client for a public read (no
+ * cookie, the same answer for everyone), else the client of the signed-in user.
+ * The media driver uses it too.
+ */
+export const supabaseRequestClient = getClient
+
 /** The anonymous client and the url/key pair it was built from. */
 let anonymousClient:
   { url: string; key: string; client: SupabaseClient } | undefined
