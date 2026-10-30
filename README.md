@@ -116,7 +116,7 @@ a page of another site cannot call them. A failure is an HTTP error with a trans
 
 The public content of the Supabase layers is read through the public API of core,
 `GET /api/pluto/v1/content/<type>` (and `/<id or slug>`). See
-[the public API](https://pluto.vulmix.dev/core/public-api). The routes are anonymous. This layer
+[the public API](https://pluto.vulmix.dev/docs/core/public-api). The routes are anonymous. This layer
 reads for them with an anon client that has no user session, so Row Level Security applies as for
 an anonymous visitor, and the answer is the same for everyone. A CDN can cache it. The adapter
 never uses the service role key for a read. The adapter also supports the `filters` of a public
