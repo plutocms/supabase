@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.0](https://github.com/plutocms/supabase/compare/v0.15.5...v0.16.0) (2026-10-30)
+
+
+### Features
+
+* the Supabase driver of the core media library ([#135](https://github.com/plutocms/supabase/issues/135)) ([94aa31a](https://github.com/plutocms/supabase/commit/94aa31a5b13ed3866e17a9e074876aa79f2bdba8))
+
 ## [0.15.5](https://github.com/plutocms/supabase/compare/v0.15.4...v0.15.5) (2026-10-29)
 
 
