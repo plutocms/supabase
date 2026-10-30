@@ -17,6 +17,23 @@ interface MediaRow {
   size: number | null
   width: number | null
   height: number | null
+  preview_path: string | null
+  preview_width: number | null
+  preview_height: number | null
+}
+
+/** `<yyyy>/<mm>/<name>`: the object key of a file, by the month of its record. */
+function monthKey(createdAt: string, fileName: string): string {
+  const date = new Date(createdAt)
+  return `${date.getUTCFullYear()}/${String(date.getUTCMonth() + 1).padStart(2, '0')}/${fileName}`
+}
+
+/** The order of a list. The id breaks a tie, so pages stay stable. */
+const ORDER: Record<PlutoMediaSort, { column: string; ascending: boolean }> = {
+  newest: { column: 'created_at', ascending: false },
+  oldest: { column: 'created_at', ascending: true },
+  name: { column: 'name', ascending: true },
+  size: { column: 'size', ascending: false },
 }
 
 function toRecord(client: SupabaseClient, row: MediaRow): PlutoMedia {
@@ -34,6 +51,16 @@ function toRecord(client: SupabaseClient, row: MediaRow): PlutoMedia {
     height: row.height,
     alt: row.alt ?? '',
     createdAt: row.created_at,
+    // A preview is always in the `media` bucket.
+    preview:
+      row.preview_path && row.preview_width && row.preview_height
+        ? {
+            url: client.storage.from(MEDIA_BUCKET).getPublicUrl(row.preview_path)
+              .data.publicUrl,
+            width: row.preview_width,
+            height: row.preview_height,
+          }
+        : null,
   }
 }
 
@@ -58,7 +85,8 @@ function numericIds(ids: string[]): number[] {
  * The media driver of the Supabase backend: the bytes in Supabase Storage,
  * the record in `public.media` (db/migrations/009_media.sql). Row Level
  * Security checks the capabilities again (`has_capability`). New files go to
- * `media/<yyyy>/<mm>/<name>-<suffix>.<ext>`. See the media skill of
+ * `media/<yyyy>/<mm>/<name>-<suffix>.<ext>`, and their previews next to them
+ * (`db/migrations/010_media_preview.sql`). See the media skill of
  * `@plutocms/pluto`.
  */
 export function createSupabaseMediaDriver(): PlutoMediaDriver {
@@ -90,11 +118,12 @@ export function createSupabaseMediaDriver(): PlutoMediaDriver {
 
     async list(event, query) {
       const client = await supabaseRequestClient(event)
+      const order = ORDER[query.sort ?? 'newest']
       let request = client
         .from('media')
         .select('*', { count: 'exact' })
-        .order('created_at', { ascending: false })
-        .order('id', { ascending: false })
+        .order(order.column, { ascending: order.ascending, nullsFirst: false })
+        .order('id', { ascending: order.ascending })
         .range(query.offset, query.offset + query.limit - 1)
       if (query.search) {
         // Commas and brackets have a meaning in a PostgREST `or` filter.
@@ -135,8 +164,10 @@ export function createSupabaseMediaDriver(): PlutoMediaDriver {
 
     async upload(event, input) {
       const client = await supabaseRequestClient(event)
-      const date = new Date(input.createdAt)
-      const path = `${date.getUTCFullYear()}/${String(date.getUTCMonth() + 1).padStart(2, '0')}/${input.fileName}`
+      const path = monthKey(input.createdAt, input.fileName)
+      const previewPath = input.preview
+        ? monthKey(input.createdAt, input.preview.fileName)
+        : null
       const storage = client.storage.from(MEDIA_BUCKET)
       const { error: uploadError } = await storage.upload(path, input.data, {
         contentType: input.mimeType,
@@ -145,6 +176,17 @@ export function createSupabaseMediaDriver(): PlutoMediaDriver {
       })
       if (uploadError) {
         throw failed(uploadError.message, 'pluto.media.errors.saveFailed')
+      }
+      if (input.preview && previewPath) {
+        const { error: previewError } = await storage.upload(
+          previewPath,
+          input.preview.data,
+          { contentType: input.preview.mimeType, cacheControl: '31536000', upsert: true }
+        )
+        if (previewError) {
+          await storage.remove([path])
+          throw failed(previewError.message, 'pluto.media.errors.saveFailed')
+        }
       }
       const { data, error } = await client
         .from('media')
@@ -158,12 +200,17 @@ export function createSupabaseMediaDriver(): PlutoMediaDriver {
           width: input.width,
           height: input.height,
           created_at: input.createdAt,
+          preview_path: previewPath,
+          preview_width: input.preview?.width ?? null,
+          preview_height: input.preview?.height ?? null,
         })
         .select('*')
         .single()
       if (error) {
         // No record without its file, and no file without its record.
-        const { error: cleanup } = await storage.remove([path])
+        const { error: cleanup } = await storage.remove(
+          previewPath ? [path, previewPath] : [path]
+        )
         if (cleanup) {
           console.warn('[media] could not remove the file of a failed upload:', path, cleanup.message)
         }
@@ -176,6 +223,9 @@ export function createSupabaseMediaDriver(): PlutoMediaDriver {
       const client = await supabaseRequestClient(event)
       const row = await readRow(client, id)
       const changes: Partial<MediaRow> = {}
+      if (patch.name !== undefined) {
+        changes.name = patch.name
+      }
       if (patch.alt !== undefined) {
         changes.alt = patch.alt || null
       }
@@ -197,6 +247,39 @@ export function createSupabaseMediaDriver(): PlutoMediaDriver {
       return toRecord(client, data as MediaRow)
     },
 
+    async setPreview(event, id, preview) {
+      const client = await supabaseRequestClient(event)
+      const row = await readRow(client, id)
+      const storage = client.storage.from(MEDIA_BUCKET)
+      const path = monthKey(row.created_at, preview.fileName)
+      const { error: uploadError } = await storage.upload(path, preview.data, {
+        contentType: preview.mimeType,
+        cacheControl: '31536000',
+        upsert: true,
+      })
+      if (uploadError) {
+        throw failed(uploadError.message, 'pluto.media.errors.saveFailed')
+      }
+      const { data, error } = await client
+        .from('media')
+        .update({
+          preview_path: path,
+          preview_width: preview.width,
+          preview_height: preview.height,
+        })
+        .eq('id', row.id)
+        .select('*')
+        .single()
+      if (error) {
+        throw failed(error.message, 'pluto.media.errors.saveFailed')
+      }
+      // An older preview with another name (another type) goes.
+      if (row.preview_path && row.preview_path !== path) {
+        await storage.remove([row.preview_path])
+      }
+      return toRecord(client, data as MediaRow)
+    },
+
     async remove(event, id) {
       const client = await supabaseRequestClient(event)
       const row = await readRow(client, id)
@@ -208,6 +291,9 @@ export function createSupabaseMediaDriver(): PlutoMediaDriver {
         if (error) {
           throw failed(error.message, 'pluto.media.errors.deleteFailed')
         }
+      }
+      if (row.preview_path) {
+        await client.storage.from(MEDIA_BUCKET).remove([row.preview_path])
       }
       const { error } = await client.from('media').delete().eq('id', row.id)
       if (error) {
