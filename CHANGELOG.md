@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.1](https://github.com/plutocms/supabase/compare/v0.18.0...v0.18.1) (2026-10-31)
+
+
+### Bug Fixes
+
+* apps that extend the layer no longer get the ESLint module or an install script ([#151](https://github.com/plutocms/supabase/issues/151)) ([818bf93](https://github.com/plutocms/supabase/commit/818bf93a44cea01e6a1b237ace33a325f45de590))
+
 ## [0.18.0](https://github.com/plutocms/supabase/compare/v0.17.0...v0.18.0) (2026-10-30)
 
 
