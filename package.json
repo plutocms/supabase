@@ -39,7 +39,7 @@
     "@antfu/eslint-config": "^9.5.1",
     "@nuxt/eslint-config": "^1.17.0",
     "@types/bun": "^1.4.3",
-    "@vueuse/nuxt": "^14.4.0",
+    "@vueuse/nuxt": "^15.0.0",
     "eslint": "^10.13.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-better-tailwindcss": "^4.10.0",
