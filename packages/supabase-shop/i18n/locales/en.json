@@ -1,0 +1,76 @@
+{
+  "supabase-shop": {
+    "nav": {
+      "products": "Products",
+      "createProduct": "Create new product",
+      "allProducts": "All products"
+    },
+    "pages": {
+      "newProduct": "New product"
+    },
+    "capabilities": {
+      "productsManage": "Create and edit products",
+      "productsDelete": "Delete products",
+      "manageTaxonomy": "Manage product categories and availability"
+    },
+    "navbar": {
+      "editProduct": "Edit product"
+    },
+    "category": {
+      "placeholder": "e.g: Chibi",
+      "created": "{name} created",
+      "createdDescription": "Your category has been created successfully.",
+      "createFailed": "An error occurred while creating the category."
+    },
+    "errors": {
+      "productsLoadFailed": "Could not load the products.",
+      "categoriesLoadFailed": "Could not load the categories.",
+      "categoryCreateFailed": "Could not create the category.",
+      "availabilityLoadFailed": "Could not load the availability statuses."
+    }
+  },
+  "content": {
+    "product": {
+      "label": "Product",
+      "labelPlural": "Products",
+      "fields": {
+        "name": {
+          "label": "Name",
+          "description": "The name shown in the store."
+        },
+        "media": {
+          "label": "Media",
+          "description": "Photos of the piece, and one optional 3D model."
+        },
+        "description": {
+          "label": "Description",
+          "description": "The text shown on the product page."
+        },
+        "slug": {
+          "label": "Slug",
+          "description": "The last part of the product link. It comes from the name. Use lowercase letters, numbers and hyphens."
+        },
+        "price": {
+          "label": "Price",
+          "description": "The price shown in the store."
+        },
+        "is_custom": {
+          "label": "Is custom",
+          "description": "Turn this on if you make the piece only when a customer orders it. The availability becomes \"commission\"."
+        },
+        "availability": {
+          "label": "Availability",
+          "description": "Tells the customer if the piece can be bought now."
+        },
+        "stock_quantity": {
+          "label": "Stock quantity",
+          "description": "How many units you have. It shows only for pieces in stock."
+        },
+        "category": {
+          "label": "Category",
+          "description": "Groups similar pieces in the store."
+        }
+      }
+    }
+  }
+}

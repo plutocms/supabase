@@ -1,0 +1,76 @@
+{
+  "supabase-shop": {
+    "nav": {
+      "products": "Produtos",
+      "createProduct": "Criar produto",
+      "allProducts": "Ver produtos"
+    },
+    "pages": {
+      "newProduct": "Novo produto"
+    },
+    "capabilities": {
+      "productsManage": "Criar e editar produtos",
+      "productsDelete": "Excluir produtos",
+      "manageTaxonomy": "Gerenciar categorias e disponibilidade dos produtos"
+    },
+    "navbar": {
+      "editProduct": "Editar produto"
+    },
+    "category": {
+      "placeholder": "ex.: Chibi",
+      "created": "{name} criada",
+      "createdDescription": "A categoria foi criada com sucesso.",
+      "createFailed": "Ocorreu um erro ao criar a categoria."
+    },
+    "errors": {
+      "productsLoadFailed": "Não foi possível carregar os produtos.",
+      "categoriesLoadFailed": "Não foi possível carregar as categorias.",
+      "categoryCreateFailed": "Não foi possível criar a categoria.",
+      "availabilityLoadFailed": "Não foi possível carregar as disponibilidades."
+    }
+  },
+  "content": {
+    "product": {
+      "label": "Produto",
+      "labelPlural": "Produtos",
+      "fields": {
+        "name": {
+          "label": "Nome",
+          "description": "O nome que aparece na loja."
+        },
+        "media": {
+          "label": "Fotos e modelo 3D",
+          "description": "Fotos da peça e, se quiser, um modelo 3D."
+        },
+        "description": {
+          "label": "Descrição",
+          "description": "O texto que aparece na página do produto."
+        },
+        "slug": {
+          "label": "Endereço na loja",
+          "description": "A parte final do link do produto. Vem do nome. Use letras minúsculas, números e hífens."
+        },
+        "price": {
+          "label": "Preço",
+          "description": "O preço que aparece na loja."
+        },
+        "is_custom": {
+          "label": "Sob encomenda",
+          "description": "Ative se você faz a peça só quando o cliente encomenda. A disponibilidade passa a ser \"sob encomenda\"."
+        },
+        "availability": {
+          "label": "Disponibilidade",
+          "description": "Mostra ao cliente se a peça pode ser comprada agora."
+        },
+        "stock_quantity": {
+          "label": "Quantidade em estoque",
+          "description": "Quantas unidades você tem. Aparece só para peças em estoque."
+        },
+        "category": {
+          "label": "Categoria",
+          "description": "Agrupa peças parecidas na loja."
+        }
+      }
+    }
+  }
+}
