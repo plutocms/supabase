@@ -268,11 +268,18 @@ function menuItems(user: AccessUser): DropdownMenuItem[][] {
 <template>
   <main>
     <AdminView>
+      <!-- The section (the Users item of the menu) and its tabs, like Settings. -->
+      <h1 class="text-3xl font-bold lg:text-4xl">
+        {{ t('supabase.access.users.title') }}
+      </h1>
+
+      <PlutoAdminNavTabs />
+
       <div class="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 class="text-3xl font-bold lg:text-4xl">
+          <h2 class="text-xl font-semibold">
             {{ t('supabase.access.users.title') }}
-          </h1>
+          </h2>
           <p class="text-muted text-sm">
             {{ t('supabase.access.users.description') }}
           </p>
