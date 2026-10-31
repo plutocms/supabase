@@ -11,7 +11,7 @@ policies shared by every project here.
 - Permissions storage: role-based capabilities backing server route guards and RLS policies, and
   the admin-only access API (invite, roles) of migration 008.
   @.claude/skills/permissions-storage/SKILL.md
-- Users and Roles: the Users and Roles tabs of Settings (invite, edit roles, revoke, copy invite
+- Users and Roles: the Users item of the admin menu, with the Users and Roles pages (invite, edit roles, revoke, copy invite
   link, roles editor), invites through Pluto mail, and a guide for the Supabase sign-in emails.
   @.claude/skills/users-and-roles/SKILL.md
 - Content adapter: a Supabase/PostgREST-backed `PlutoContentAdapter`, plugging any layer's
