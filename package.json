@@ -16,7 +16,7 @@
     "test": "bun run --cwd packages/supabase test && bun run --cwd packages/supabase-shop test && bun run --cwd packages/supabase-blog test"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^9.5.1",
+    "@antfu/eslint-config": "^10.0.0",
     "@nuxt/eslint-config": "^1.17.0",
     "eslint": "^10.13.0",
     "eslint-config-prettier": "^10.1.8",
