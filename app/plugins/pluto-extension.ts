@@ -163,25 +163,33 @@ export default defineNuxtPlugin(() => {
         component: SettingsGeneralPanel,
       },
     ],
-    // The Users and Roles tabs of Settings. The page files are in
-    // app/pages/admin/settings/. Users shows for `users:read` (an admin always
-    // has it). Roles is admin only: '*' is the admin-only capability.
-    settingsPages: [
+    // The Users item of the admin menu, between Media (900) and Settings
+    // (1000). A click opens the users. Its children are Users and Roles. The
+    // item shows for `users:read` (an admin always has it). Roles is admin
+    // only: without it, the item is a plain link to the users. The pages are
+    // app/pages/admin/users.vue and roles.vue.
+    nav: [
       {
         id: 'users',
-        order: 10,
+        order: 950,
         label: 'supabase.access.users.title',
         icon: 'lucide:users',
-        to: '/admin/settings/users',
-        capability: 'users:read',
-      },
-      {
-        id: 'roles',
-        order: 20,
-        label: 'supabase.access.roles.title',
-        icon: 'lucide:shield',
-        to: '/admin/settings/roles',
-        capability: '*',
+        to: '/admin/users',
+        match: ['/admin/roles'],
+        enabled: () => usePlutoPermissions().can('users:read'),
+        children: [
+          {
+            label: 'supabase.access.users.title',
+            to: '/admin/users',
+            icon: 'lucide:users',
+          },
+          {
+            label: 'supabase.access.roles.title',
+            to: '/admin/roles',
+            icon: 'lucide:shield',
+            enabled: () => usePlutoPermissions().isAdmin.value,
+          },
+        ],
       },
     ],
     // A guide on the Email tab: the sign-in emails come from Supabase.

@@ -1,24 +1,25 @@
 ---
 name: users-and-roles
-description: Users and Roles settings pages
+description: The Users and Roles pages of the admin
 ---
 
 # Users and Roles
 
-This feature adds two tabs to Settings: **Users** and **Roles**. An admin invites users, changes
-their roles, revokes access, and edits the roles. It also adds a guide for the Supabase sign-in
-emails on the Email tab. It needs `@plutocms/core` 0.18 or later (the `settingsPages` and
-`mailPanels` registry buckets, `usePlutoCapabilities().groups`) and the migration
+This feature adds a **Users** item to the admin menu, with two children: **Users** and **Roles**.
+A click on the item opens the users. An admin invites users, changes their roles, revokes access,
+and edits the roles. It also adds a guide for the Supabase sign-in emails on the Email tab. It needs
+`@plutocms/core` 0.40 or later (`enabled` on a nav child, the `mailPanels` registry bucket,
+`usePlutoCapabilities().groups`) and the migration
 `008_users_and_roles_admin.sql`. The server side is in the `permissions-storage` skill.
 
 ## Files
 
-- `app/plugins/pluto-extension.ts` — registers the `users` and `roles` `settingsPages`, the
+- `app/plugins/pluto-extension.ts` — registers the `users` nav item (order 950, between Media
+  and Settings; `match: ['/admin/roles']`; shown for `users:read`; the Roles child has
+  `enabled` for admins only, so a non-admin gets a plain link to the users), the
   `auth-emails` `mailPanel`, and the group label of this layer's capabilities.
-- `app/pages/admin/settings/users.vue` — the Users tab. Route `/admin/settings/users`, order 10,
-  capability `users:read`.
-- `app/pages/admin/settings/roles.vue` — the Roles tab. Route `/admin/settings/roles`, order 20,
-  capability `'*'` (admin only).
+- `app/pages/admin/users.vue` — the Users page. Route `/admin/users`, capability `users:read`.
+- `app/pages/admin/roles.vue` — the Roles page. Route `/admin/roles`, admin only.
 - `app/components/access/` — `InviteModal`, `EditRolesSlideover`, `RevokeModal`, `LinkModal`,
   `LinkField`, `CopyButton`, `RoleSlideover`, `DeleteRoleModal`.
 - `app/components/mail/AuthEmailsPanel.vue` — the Supabase sign-in emails guide.
@@ -30,7 +31,7 @@ emails on the Email tab. It needs `@plutocms/core` 0.18 or later (the `settingsP
   `AccessInviteResult`.
 - Tests: `test/access-ui.test.ts`, `test/access-routes.test.ts`, `test/invite-link.test.ts`.
 
-## The Users tab
+## The Users page
 
 - Data: `GET /api/_pluto/supabase/access/users` and `GET /api/_pluto/supabase/access/roles`. Both need `users:read`. The page shows
   `USkeleton` rows while it loads, a `UAlert` with "Try again" on an error, and a `UEmpty` with an
@@ -67,7 +68,7 @@ the admin's language). It posts to `/api/_pluto/supabase/access/users/invite` wi
 - Revoke removes all roles (`DELETE /api/_pluto/supabase/access/users/:id/roles`). The account stays. The text says
   so. The last admin cannot be revoked: the server answers 409 `lastAdmin`.
 
-## The Roles tab
+## The Roles page
 
 A `UTable` with the role (label, key in mono, a "Built-in" badge), the number of permissions (or
 "Full access" for `*`), the number of users, and a row menu. `RoleSlideover` creates and edits a
@@ -94,6 +95,7 @@ limit after custom SMTP is set. The panel never shows or stores a key.
   code for them and fails on a key that no code uses.
 - The `pluto.*` keys used here must exist in the published `@plutocms/core` of the dev
   dependency. Use `pluto.common.*` for shared words.
-- A page file must exist for each `settingsPages` entry. Core renders the tabs and the no-permission
-  alert. The page does not repeat the title.
+- Each page draws its own title (`<main><AdminView>` and an `h1`, like core Settings). Without
+  access, it shows the no-permission alert of core (`pluto.settings.noPermission.*`) and loads
+  nothing: it loads only when `allowed` turns true.
 - The UI hides what a user cannot do. The routes check again.
