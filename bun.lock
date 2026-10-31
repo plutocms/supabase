@@ -419,7 +419,7 @@
 
     "@pkgr/core": ["@pkgr/core@0.3.6", "", {}, "sha512-SEeaJLb3qBNF/OaXnaR1NmmBbFYk1zC0ZH/52fATcRPLFg/p791YrcyFFy44Bo9sLaGuSuLp5Q6axbb/O+v/RA=="],
 
-    "@plutocms/core": ["@plutocms/core@0.41.0", "", { "dependencies": { "@codemirror/commands": "^6.11.1", "@codemirror/lang-markdown": "^6.5.2", "@codemirror/language": "^6.13.1", "@codemirror/search": "^6.7.2", "@codemirror/state": "^6.7.6", "@codemirror/view": "^6.43.15", "@iconify-json/lucide": "^1.2.144", "@internationalized/date": "^3.12.4", "@lezer/highlight": "^1.2.5", "@nuxt/image": "^2.1.0", "@nuxt/ui": "^4.12.0", "@tanstack/charts": "^1.1.0", "@vueuse/nuxt": "^15.0.0", "image-meta": "^0.3.0", "marked": "^18.1.1", "reka-ui": "^2.11.0", "tailwind-merge": "^3.7.0", "ultrahtml": "^1.7.0", "yaml": "^2.9.1" } }, "sha512-OF/MVBK7nqrhlbaz1BIhXVzZ+/nSCxC63URHsQ2Sryr8QHQDD+PyVlwGYm+OkBKKH9aPoR9yqY7hNSRQttsorQ=="],
+    "@plutocms/core": ["@plutocms/core@0.42.0", "", { "dependencies": { "@codemirror/commands": "^6.11.1", "@codemirror/lang-markdown": "^6.5.2", "@codemirror/language": "^6.13.1", "@codemirror/search": "^6.7.2", "@codemirror/state": "^6.7.6", "@codemirror/view": "^6.43.15", "@iconify-json/lucide": "^1.2.144", "@internationalized/date": "^3.12.4", "@lezer/highlight": "^1.2.5", "@nuxt/image": "^2.1.0", "@nuxt/ui": "^4.12.0", "@tanstack/charts": "^1.1.0", "@vueuse/nuxt": "^15.0.0", "image-meta": "^0.3.0", "marked": "^18.1.1", "reka-ui": "^2.11.0", "tailwind-merge": "^3.7.0", "ultrahtml": "^1.7.0", "yaml": "^2.9.1" } }, "sha512-/3cG1M8y2RctV9fWERgrWbsJhr3gPcc+pT9wAvDgyO6ToWrFGZrjLKncvmJN1QKQjNZM7irt36TIJcdJRAqbyg=="],
 
     "@polka/url": ["@polka/url@1.0.0-next.29", "", {}, "sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww=="],
 
