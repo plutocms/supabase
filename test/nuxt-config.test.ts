@@ -16,32 +16,25 @@ beforeEach(() => {
 afterEach(() => {
   vi.unstubAllGlobals()
   delete process.env.PLUTO_CORE_PATH
-  delete process.env.PLUTO_UTILS_PATH
   vi.resetModules()
 })
 
-describe('core and utils layer resolution', () => {
-  it('defaults both layers to their published npm packages when unset', async () => {
+describe('core layer resolution', () => {
+  it('defaults the core layer to its published npm package when unset', async () => {
     delete process.env.PLUTO_CORE_PATH
-    delete process.env.PLUTO_UTILS_PATH
 
     const { default: config } = await import('../nuxt.config')
 
-    expect(config.extends).toEqual([
-      ['@plutocms/core', { install: true }],
-      '@plutocms/utils',
-    ])
+    expect(config.extends).toEqual([['@plutocms/core', { install: true }]])
   })
 
-  it('honors PLUTO_CORE_PATH and PLUTO_UTILS_PATH when set', async () => {
+  it('honors PLUTO_CORE_PATH when set', async () => {
     process.env.PLUTO_CORE_PATH = '../pluto/packages/core'
-    process.env.PLUTO_UTILS_PATH = '../utils'
 
     const { default: config } = await import('../nuxt.config')
 
     expect(config.extends).toEqual([
       ['../pluto/packages/core', { install: true }],
-      '../utils',
     ])
   })
 })

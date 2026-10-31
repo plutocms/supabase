@@ -1,9 +1,8 @@
 import type { PlutoMigrationFile } from './shared/types/migrations'
 
-// Point these at a local checkout (e.g. `../pluto/packages/core`, `../utils`) to test
-// unpublished changes; unset, they resolve to the published npm packages.
+// Point this at a local checkout (e.g. `../pluto/packages/core`) to test
+// unpublished changes; unset, it resolves to the published npm package.
 const coreLayer = process.env.PLUTO_CORE_PATH || '@plutocms/core'
-const utilsLayer = process.env.PLUTO_UTILS_PATH || '@plutocms/utils'
 
 // The host of the Supabase project, at build time. `@nuxt/image` may only read
 // remote images of the hosts in `image.domains` (the media files are in Storage).
@@ -16,7 +15,7 @@ function supabaseHost(): string {
 }
 
 export default defineNuxtConfig({
-  extends: [[coreLayer, { install: true }], utilsLayer],
+  extends: [[coreLayer, { install: true }]],
 
   // No @nuxt/eslint: a module of a layer runs in every app that extends it. The repo
   // lints with @nuxt/eslint-config (eslint.config.mjs).
