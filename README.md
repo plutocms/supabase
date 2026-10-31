@@ -14,7 +14,7 @@ SUPABASE_URL=your-supabase-url
 SUPABASE_KEY=your-publishable-supabase-key
 ```
 
-2. Install the layer. It brings `@nuxtjs/supabase`, `@plutocms/core` and `@plutocms/utils`, so you do not add them:
+2. Install the layer. It brings `@nuxtjs/supabase` and `@plutocms/core`, so you do not add them:
 
 ```bash
 npm i @plutocms/supabase
