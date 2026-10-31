@@ -1,0 +1,96 @@
+{
+  "supabase-blog": {
+    "nav": {
+      "posts": "Posts",
+      "createPost": "Criar post",
+      "allPosts": "Ver posts"
+    },
+    "pages": {
+      "newPost": "Novo post"
+    },
+    "capabilities": {
+      "readDrafts": "Ler rascunhos de posts",
+      "publish": "Criar e publicar posts",
+      "delete": "Excluir posts"
+    },
+    "navbar": {
+      "createPost": "Criar post",
+      "editPost": "Editar post"
+    },
+    "editor": {
+      "placeholder": "Escreva ou digite '/' para ver os comandos...",
+      "fieldPlaceholder": "Escreva {label}...",
+      "undo": "Desfazer",
+      "redo": "Refazer",
+      "headings": "Títulos",
+      "heading1": "Título 1",
+      "heading2": "Título 2",
+      "heading3": "Título 3",
+      "heading4": "Título 4",
+      "lists": "Listas",
+      "bulletList": "Lista com marcadores",
+      "orderedList": "Lista numerada",
+      "numberedList": "Lista numerada",
+      "blockquote": "Citação",
+      "codeBlock": "Bloco de código",
+      "bold": "Negrito",
+      "italic": "Itálico",
+      "underline": "Sublinhado",
+      "strikethrough": "Tachado",
+      "code": "Código",
+      "link": "Link",
+      "image": "Imagem",
+      "turnInto": "Transformar em",
+      "paragraph": "Parágrafo",
+      "style": "Estilo",
+      "insert": "Inserir",
+      "resetFormatting": "Limpar formatação",
+      "duplicate": "Duplicar",
+      "copyToClipboard": "Copiar para a área de transferência",
+      "moveUp": "Mover para cima",
+      "moveDown": "Mover para baixo",
+      "download": "Baixar",
+      "replace": "Substituir",
+      "nodes": {
+        "paragraph": "Parágrafo",
+        "heading": "Título",
+        "bulletList": "Lista com marcadores",
+        "orderedList": "Lista numerada",
+        "listItem": "Item da lista",
+        "blockquote": "Citação",
+        "codeBlock": "Bloco de código",
+        "image": "Imagem"
+      },
+      "linkPopover": {
+        "placeholder": "Cole um link...",
+        "apply": "Aplicar link",
+        "open": "Abrir em uma nova janela",
+        "remove": "Remover link"
+      }
+    }
+  },
+  "content": {
+    "post": {
+      "label": "Post",
+      "labelPlural": "Posts",
+      "fields": {
+        "title": {
+          "label": "Título"
+        },
+        "slug": {
+          "label": "Slug"
+        },
+        "cover": {
+          "label": "Imagem de capa"
+        },
+        "content": {
+          "label": "Conteúdo"
+        }
+      },
+      "status": {
+        "draft": "Rascunho",
+        "published": "Publicado"
+      }
+    }
+  }
+}

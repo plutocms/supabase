@@ -1,0 +1,40 @@
+# .gitignore
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist
+
+node_modules
+.yalc
+yalc.lock
+
+logs
+*.log
+
+.DS_Store
+.fleet
+.idea
+
+.env
+.env.*
+!.env.example
+
+# Repo tooling — never needed by consumers of the layer
+.agents
+.claude
+.github
+.vscode
+.editorconfig
+.prettierrc
+eslint.config.mjs
+bun.lock
+skills-lock.json
+release-please-config.json
+.release-please-manifest.json
+test
+
+# Generated locally (or seeded as a placeholder by pluto-migrations at
+# postinstall) — never a real snapshot worth shipping to consumers.
+shared/types/supabase.ts

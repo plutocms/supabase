@@ -1,0 +1,96 @@
+{
+  "supabase-blog": {
+    "nav": {
+      "posts": "Posts",
+      "createPost": "Create new post",
+      "allPosts": "All posts"
+    },
+    "pages": {
+      "newPost": "New post"
+    },
+    "capabilities": {
+      "readDrafts": "Read draft posts",
+      "publish": "Create and publish posts",
+      "delete": "Delete posts"
+    },
+    "navbar": {
+      "createPost": "Create post",
+      "editPost": "Edit post"
+    },
+    "editor": {
+      "placeholder": "Write, type '/' for commands...",
+      "fieldPlaceholder": "Write {label}...",
+      "undo": "Undo",
+      "redo": "Redo",
+      "headings": "Headings",
+      "heading1": "Heading 1",
+      "heading2": "Heading 2",
+      "heading3": "Heading 3",
+      "heading4": "Heading 4",
+      "lists": "Lists",
+      "bulletList": "Bullet List",
+      "orderedList": "Ordered List",
+      "numberedList": "Numbered List",
+      "blockquote": "Blockquote",
+      "codeBlock": "Code Block",
+      "bold": "Bold",
+      "italic": "Italic",
+      "underline": "Underline",
+      "strikethrough": "Strikethrough",
+      "code": "Code",
+      "link": "Link",
+      "image": "Image",
+      "turnInto": "Turn into",
+      "paragraph": "Paragraph",
+      "style": "Style",
+      "insert": "Insert",
+      "resetFormatting": "Reset formatting",
+      "duplicate": "Duplicate",
+      "copyToClipboard": "Copy to clipboard",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "download": "Download",
+      "replace": "Replace",
+      "nodes": {
+        "paragraph": "Paragraph",
+        "heading": "Heading",
+        "bulletList": "BulletList",
+        "orderedList": "OrderedList",
+        "listItem": "ListItem",
+        "blockquote": "Blockquote",
+        "codeBlock": "CodeBlock",
+        "image": "Image"
+      },
+      "linkPopover": {
+        "placeholder": "Paste a link...",
+        "apply": "Apply link",
+        "open": "Open in new window",
+        "remove": "Remove link"
+      }
+    }
+  },
+  "content": {
+    "post": {
+      "label": "Post",
+      "labelPlural": "Posts",
+      "fields": {
+        "title": {
+          "label": "Title"
+        },
+        "slug": {
+          "label": "Slug"
+        },
+        "cover": {
+          "label": "Cover image"
+        },
+        "content": {
+          "label": "Content"
+        }
+      },
+      "status": {
+        "draft": "Draft",
+        "published": "Published"
+      }
+    }
+  }
+}

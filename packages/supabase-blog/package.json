@@ -1,0 +1,61 @@
+{
+  "name": "@plutocms/supabase-blog",
+  "type": "module",
+  "version": "0.17.0",
+  "description": "Blog dashboard layer for Pluto",
+  "author": "Victor Ribeiro",
+  "license": "MIT",
+  "homepage": "https://github.com/plutocms/supabase-blog#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/plutocms/supabase-blog.git"
+  },
+  "bugs": {
+    "url": "https://github.com/plutocms/supabase-blog/issues"
+  },
+  "main": "./nuxt.config.ts",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "prepare": "nuxt prepare",
+    "prettier": "prettier --write .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "nuxi typecheck",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@plutocms/supabase": ">=0.18.0 <1.0.0",
+    "@tiptap/core": "^3.32.0",
+    "@tiptap/extension-code": "^3.32.0",
+    "@tiptap/extension-image": "^3.32.0",
+    "@tiptap/extension-placeholder": "^3.32.0",
+    "@tiptap/markdown": "^3.32.0",
+    "@tiptap/pm": "^3.32.0",
+    "@tiptap/starter-kit": "^3.32.0",
+    "@tiptap/vue-3": "^3.32.0",
+    "marked": "^18.1.1",
+    "ultrahtml": "^1.7.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^9.5.1",
+    "@nuxt/eslint-config": "^1.17.0",
+    "@plutocms/core": ">=0.38.0 <1.0.0",
+    "@types/bun": "^1.4.3",
+    "eslint": "^10.13.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-better-tailwindcss": "^4.10.0",
+    "nuxt": "^4.6.2",
+    "prettier": "^3.9.10",
+    "typescript": "6.0.3",
+    "vitest": "^5.0.5",
+    "vue": "^3.5.44",
+    "vue-router": "^5.4.0",
+    "vue-tsc": "^3.3.13"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
