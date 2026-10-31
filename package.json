@@ -2,15 +2,6 @@
   "name": "@plutocms/supabase",
   "type": "module",
   "version": "0.18.0",
-  "trustedDependencies": [
-    "@parcel/watcher",
-    "@plutocms/core",
-    "@plutocms/utils",
-    "esbuild",
-    "supabase",
-    "unrs-resolver",
-    "vue-demi"
-  ],
   "description": "Supabase backend layer for Pluto",
   "author": "Victor Ribeiro",
   "homepage": "https://github.com/plutocms/supabase#readme",
@@ -27,7 +18,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
+    "prepare": "nuxt prepare",
     "prettier": "prettier --write .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -36,7 +27,6 @@
     "supabase-types": "bun ./scripts/supabase-typegen.ts"
   },
   "dependencies": {
-    "@nuxt/eslint": "^1.17.0",
     "@nuxt/ui": "^4.12.0",
     "@nuxtjs/supabase": "^2.1.0",
     "@plutocms/core": ">=0.38.0 <1.0.0",
@@ -48,6 +38,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.5.1",
+    "@nuxt/eslint-config": "^1.17.0",
     "@types/bun": "^1.4.3",
     "@vueuse/nuxt": "^14.4.0",
     "eslint": "^10.13.0",

@@ -18,7 +18,9 @@ function supabaseHost(): string {
 export default defineNuxtConfig({
   extends: [[coreLayer, { install: true }], utilsLayer],
 
-  modules: ['@nuxt/eslint', '@nuxtjs/supabase'],
+  // No @nuxt/eslint: a module of a layer runs in every app that extends it. The repo
+  // lints with @nuxt/eslint-config (eslint.config.mjs).
+  modules: ['@nuxtjs/supabase'],
 
   $meta: {
     name: 'supabase',
@@ -47,15 +49,6 @@ export default defineNuxtConfig({
   nitro: {
     alias: {
       cookie: 'cookie-es',
-    },
-  },
-
-  eslint: {
-    config: {
-      nuxt: {
-        sortConfigKeys: true,
-      },
-      standalone: false,
     },
   },
 

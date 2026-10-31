@@ -1,12 +1,19 @@
-// @ts-check
 import antfu from '@antfu/eslint-config'
+// @ts-check
+import { createConfigForNuxt } from '@nuxt/eslint-config/flat'
 import prettier from 'eslint-config-prettier'
 import betterTailwindcss from 'eslint-plugin-better-tailwindcss'
 import { getDefaultSelectors } from 'eslint-plugin-better-tailwindcss/defaults'
-import withNuxt from './.nuxt/eslint.config.mjs'
 
 // See: https://eslint.vuejs.org/rules
-export default withNuxt(
+// The Nuxt rules come from @nuxt/eslint-config, not from the @nuxt/eslint module. A module in a
+// layer runs in every app that extends the layer.
+export default createConfigForNuxt({
+  features: {
+    standalone: false,
+    nuxt: { sortConfigKeys: true },
+  },
+}).append(
   // @ts-ignore - Antfu's config is ESM only, but Nuxt's ESLint config is CJS --- IGNORE ---
   antfu({
     // Prettier formats the code (format on save, `bun run prettier`). ESLint checks the code,
