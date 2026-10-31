@@ -1,0 +1,52 @@
+{
+  "name": "@plutocms/supabase",
+  "type": "module",
+  "version": "0.20.0",
+  "description": "Supabase backend layer for Pluto",
+  "author": "Victor Ribeiro",
+  "homepage": "https://github.com/plutocms/supabase/tree/main/packages/supabase#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/plutocms/supabase.git",
+    "directory": "packages/supabase"
+  },
+  "bugs": {
+    "url": "https://github.com/plutocms/supabase/issues"
+  },
+  "main": "./nuxt.config.ts",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "dev:prepare": "nuxt prepare",
+    "prettier": "prettier --write .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "nuxi typecheck",
+    "test": "vitest run",
+    "supabase-types": "bun ./scripts/supabase-typegen.ts"
+  },
+  "dependencies": {
+    "@nuxt/ui": "^4.12.0",
+    "@nuxtjs/supabase": "^2.1.0",
+    "@plutocms/core": ">=0.41.0 <1.0.0",
+    "@supabase/supabase-js": "^2.117.3",
+    "postgres": "^3.4.9",
+    "supabase": "^2.121.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.3",
+    "@vueuse/nuxt": "^14.4.0",
+    "nuxt": "^4.6.2",
+    "tailwindcss": "^4.3.3",
+    "vitest": "^5.0.5",
+    "vue": "^3.5.44",
+    "vue-router": "^5.4.0",
+    "vue-tsc": "^3.3.13"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

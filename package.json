@@ -1,60 +1,30 @@
 {
-  "name": "@plutocms/supabase",
+  "name": "plutocms-supabase",
   "type": "module",
-  "version": "0.20.0",
-  "description": "Supabase backend layer for Pluto",
-  "author": "Victor Ribeiro",
-  "homepage": "https://github.com/plutocms/supabase#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/plutocms/supabase.git"
-  },
-  "bugs": {
-    "url": "https://github.com/plutocms/supabase/issues"
-  },
-  "main": "./nuxt.config.ts",
+  "private": true,
+  "description": "The Supabase integration of Pluto: the Supabase layer and its shop and blog layers",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "prepare": "nuxt prepare",
+    "postinstall": "bun run --cwd packages/supabase dev:prepare && bun run --cwd packages/supabase-shop dev:prepare && bun run --cwd packages/supabase-blog dev:prepare",
+    "build": "bun run --cwd packages/supabase build && bun run --cwd packages/supabase-shop build && bun run --cwd packages/supabase-blog build",
     "prettier": "prettier --write .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "typecheck": "nuxi typecheck",
-    "test": "vitest run",
-    "supabase-types": "bun ./scripts/supabase-typegen.ts"
-  },
-  "dependencies": {
-    "@nuxt/ui": "^4.12.0",
-    "@nuxtjs/supabase": "^2.1.0",
-    "@plutocms/core": ">=0.41.0 <1.0.0",
-    "@supabase/supabase-js": "^2.117.3",
-    "postgres": "^3.4.9",
-    "supabase": "^2.121.0",
-    "zod": "^4.6.7"
+    "typecheck": "bun run --cwd packages/supabase typecheck && bun run --cwd packages/supabase-shop typecheck && bun run --cwd packages/supabase-blog typecheck",
+    "test": "bun run --cwd packages/supabase test && bun run --cwd packages/supabase-shop test && bun run --cwd packages/supabase-blog test"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.5.1",
     "@nuxt/eslint-config": "^1.17.0",
-    "@types/bun": "^1.4.3",
-    "@vueuse/nuxt": "^14.4.0",
     "eslint": "^10.13.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-better-tailwindcss": "^4.10.0",
-    "nuxt": "^4.6.2",
     "prettier": "^3.9.10",
-    "tailwindcss": "^4.3.3",
-    "vitest": "^5.0.5",
-    "vue": "^3.5.44",
-    "vue-router": "^5.4.0",
-    "vue-tsc": "^3.3.13"
+    "vue-tsc": "3.3.13"
   },
   "overrides": {
     "typescript": "^5.9.3"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }

@@ -1,0 +1,1300 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`usePostEditorItems in English > gives the block menu > blockquote 1`] = `
+[
+  [
+    {
+      "label": "Blockquote",
+      "type": "label",
+    },
+    {
+      "children": [
+        {
+          "icon": "i-lucide-type",
+          "kind": "paragraph",
+          "label": "Paragraph",
+        },
+        {
+          "icon": "i-lucide-heading-1",
+          "kind": "heading",
+          "label": "Heading 1",
+          "level": 1,
+        },
+        {
+          "icon": "i-lucide-heading-2",
+          "kind": "heading",
+          "label": "Heading 2",
+          "level": 2,
+        },
+        {
+          "icon": "i-lucide-heading-3",
+          "kind": "heading",
+          "label": "Heading 3",
+          "level": 3,
+        },
+        {
+          "icon": "i-lucide-heading-4",
+          "kind": "heading",
+          "label": "Heading 4",
+          "level": 4,
+        },
+        {
+          "icon": "i-lucide-list",
+          "kind": "bulletList",
+          "label": "Bullet List",
+        },
+        {
+          "icon": "i-lucide-list-ordered",
+          "kind": "orderedList",
+          "label": "Ordered List",
+        },
+        {
+          "icon": "i-lucide-text-quote",
+          "kind": "blockquote",
+          "label": "Blockquote",
+        },
+        {
+          "icon": "i-lucide-square-code",
+          "kind": "codeBlock",
+          "label": "Code Block",
+        },
+      ],
+      "icon": "i-lucide-repeat-2",
+      "label": "Turn into",
+    },
+    {
+      "icon": "i-lucide-rotate-ccw",
+      "kind": "clearFormatting",
+      "label": "Reset formatting",
+      "pos": 3,
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-copy",
+      "kind": "duplicate",
+      "label": "Duplicate",
+      "pos": 3,
+    },
+    {
+      "icon": "i-lucide-clipboard",
+      "label": "Copy to clipboard",
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-arrow-up",
+      "kind": "moveUp",
+      "label": "Move up",
+      "pos": 3,
+    },
+    {
+      "icon": "i-lucide-arrow-down",
+      "kind": "moveDown",
+      "label": "Move down",
+      "pos": 3,
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-trash",
+      "kind": "delete",
+      "label": "Delete",
+      "pos": 3,
+    },
+  ],
+]
+`;
+
+exports[`usePostEditorItems in English > gives the block menu > bulletList 1`] = `
+[
+  [
+    {
+      "label": "BulletList",
+      "type": "label",
+    },
+    {
+      "children": [
+        {
+          "icon": "i-lucide-type",
+          "kind": "paragraph",
+          "label": "Paragraph",
+        },
+        {
+          "icon": "i-lucide-heading-1",
+          "kind": "heading",
+          "label": "Heading 1",
+          "level": 1,
+        },
+        {
+          "icon": "i-lucide-heading-2",
+          "kind": "heading",
+          "label": "Heading 2",
+          "level": 2,
+        },
+        {
+          "icon": "i-lucide-heading-3",
+          "kind": "heading",
+          "label": "Heading 3",
+          "level": 3,
+        },
+        {
+          "icon": "i-lucide-heading-4",
+          "kind": "heading",
+          "label": "Heading 4",
+          "level": 4,
+        },
+        {
+          "icon": "i-lucide-list",
+          "kind": "bulletList",
+          "label": "Bullet List",
+        },
+        {
+          "icon": "i-lucide-list-ordered",
+          "kind": "orderedList",
+          "label": "Ordered List",
+        },
+        {
+          "icon": "i-lucide-text-quote",
+          "kind": "blockquote",
+          "label": "Blockquote",
+        },
+        {
+          "icon": "i-lucide-square-code",
+          "kind": "codeBlock",
+          "label": "Code Block",
+        },
+      ],
+      "icon": "i-lucide-repeat-2",
+      "label": "Turn into",
+    },
+    {
+      "icon": "i-lucide-rotate-ccw",
+      "kind": "clearFormatting",
+      "label": "Reset formatting",
+      "pos": 3,
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-copy",
+      "kind": "duplicate",
+      "label": "Duplicate",
+      "pos": 3,
+    },
+    {
+      "icon": "i-lucide-clipboard",
+      "label": "Copy to clipboard",
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-arrow-up",
+      "kind": "moveUp",
+      "label": "Move up",
+      "pos": 3,
+    },
+    {
+      "icon": "i-lucide-arrow-down",
+      "kind": "moveDown",
+      "label": "Move down",
+      "pos": 3,
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-trash",
+      "kind": "delete",
+      "label": "Delete",
+      "pos": 3,
+    },
+  ],
+]
+`;
+
+exports[`usePostEditorItems in English > gives the block menu > codeBlock 1`] = `
+[
+  [
+    {
+      "label": "CodeBlock",
+      "type": "label",
+    },
+    {
+      "children": [
+        {
+          "icon": "i-lucide-type",
+          "kind": "paragraph",
+          "label": "Paragraph",
+        },
+        {
+          "icon": "i-lucide-heading-1",
+          "kind": "heading",
+          "label": "Heading 1",
+          "level": 1,
+        },
+        {
+          "icon": "i-lucide-heading-2",
+          "kind": "heading",
+          "label": "Heading 2",
+          "level": 2,
+        },
+        {
+          "icon": "i-lucide-heading-3",
+          "kind": "heading",
+          "label": "Heading 3",
+          "level": 3,
+        },
+        {
+          "icon": "i-lucide-heading-4",
+          "kind": "heading",
+          "label": "Heading 4",
+          "level": 4,
+        },
+        {
+          "icon": "i-lucide-list",
+          "kind": "bulletList",
+          "label": "Bullet List",
+        },
+        {
+          "icon": "i-lucide-list-ordered",
+          "kind": "orderedList",
+          "label": "Ordered List",
+        },
+        {
+          "icon": "i-lucide-text-quote",
+          "kind": "blockquote",
+          "label": "Blockquote",
+        },
+        {
+          "icon": "i-lucide-square-code",
+          "kind": "codeBlock",
+          "label": "Code Block",
+        },
+      ],
+      "icon": "i-lucide-repeat-2",
+      "label": "Turn into",
+    },
+    {
+      "icon": "i-lucide-rotate-ccw",
+      "kind": "clearFormatting",
+      "label": "Reset formatting",
+      "pos": 3,
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-copy",
+      "kind": "duplicate",
+      "label": "Duplicate",
+      "pos": 3,
+    },
+    {
+      "icon": "i-lucide-clipboard",
+      "label": "Copy to clipboard",
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-arrow-up",
+      "kind": "moveUp",
+      "label": "Move up",
+      "pos": 3,
+    },
+    {
+      "icon": "i-lucide-arrow-down",
+      "kind": "moveDown",
+      "label": "Move down",
+      "pos": 3,
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-trash",
+      "kind": "delete",
+      "label": "Delete",
+      "pos": 3,
+    },
+  ],
+]
+`;
+
+exports[`usePostEditorItems in English > gives the block menu > heading 1`] = `
+[
+  [
+    {
+      "label": "Heading",
+      "type": "label",
+    },
+    {
+      "children": [
+        {
+          "icon": "i-lucide-type",
+          "kind": "paragraph",
+          "label": "Paragraph",
+        },
+        {
+          "icon": "i-lucide-heading-1",
+          "kind": "heading",
+          "label": "Heading 1",
+          "level": 1,
+        },
+        {
+          "icon": "i-lucide-heading-2",
+          "kind": "heading",
+          "label": "Heading 2",
+          "level": 2,
+        },
+        {
+          "icon": "i-lucide-heading-3",
+          "kind": "heading",
+          "label": "Heading 3",
+          "level": 3,
+        },
+        {
+          "icon": "i-lucide-heading-4",
+          "kind": "heading",
+          "label": "Heading 4",
+          "level": 4,
+        },
+        {
+          "icon": "i-lucide-list",
+          "kind": "bulletList",
+          "label": "Bullet List",
+        },
+        {
+          "icon": "i-lucide-list-ordered",
+          "kind": "orderedList",
+          "label": "Ordered List",
+        },
+        {
+          "icon": "i-lucide-text-quote",
+          "kind": "blockquote",
+          "label": "Blockquote",
+        },
+        {
+          "icon": "i-lucide-square-code",
+          "kind": "codeBlock",
+          "label": "Code Block",
+        },
+      ],
+      "icon": "i-lucide-repeat-2",
+      "label": "Turn into",
+    },
+    {
+      "icon": "i-lucide-rotate-ccw",
+      "kind": "clearFormatting",
+      "label": "Reset formatting",
+      "pos": 3,
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-copy",
+      "kind": "duplicate",
+      "label": "Duplicate",
+      "pos": 3,
+    },
+    {
+      "icon": "i-lucide-clipboard",
+      "label": "Copy to clipboard",
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-arrow-up",
+      "kind": "moveUp",
+      "label": "Move up",
+      "pos": 3,
+    },
+    {
+      "icon": "i-lucide-arrow-down",
+      "kind": "moveDown",
+      "label": "Move down",
+      "pos": 3,
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-trash",
+      "kind": "delete",
+      "label": "Delete",
+      "pos": 3,
+    },
+  ],
+]
+`;
+
+exports[`usePostEditorItems in English > gives the block menu > image 1`] = `
+[
+  [
+    {
+      "label": "Image",
+      "type": "label",
+    },
+    {
+      "children": [
+        {
+          "icon": "i-lucide-type",
+          "kind": "paragraph",
+          "label": "Paragraph",
+        },
+        {
+          "icon": "i-lucide-heading-1",
+          "kind": "heading",
+          "label": "Heading 1",
+          "level": 1,
+        },
+        {
+          "icon": "i-lucide-heading-2",
+          "kind": "heading",
+          "label": "Heading 2",
+          "level": 2,
+        },
+        {
+          "icon": "i-lucide-heading-3",
+          "kind": "heading",
+          "label": "Heading 3",
+          "level": 3,
+        },
+        {
+          "icon": "i-lucide-heading-4",
+          "kind": "heading",
+          "label": "Heading 4",
+          "level": 4,
+        },
+        {
+          "icon": "i-lucide-list",
+          "kind": "bulletList",
+          "label": "Bullet List",
+        },
+        {
+          "icon": "i-lucide-list-ordered",
+          "kind": "orderedList",
+          "label": "Ordered List",
+        },
+        {
+          "icon": "i-lucide-text-quote",
+          "kind": "blockquote",
+          "label": "Blockquote",
+        },
+        {
+          "icon": "i-lucide-square-code",
+          "kind": "codeBlock",
+          "label": "Code Block",
+        },
+      ],
+      "icon": "i-lucide-repeat-2",
+      "label": "Turn into",
+    },
+    {
+      "icon": "i-lucide-rotate-ccw",
+      "kind": "clearFormatting",
+      "label": "Reset formatting",
+      "pos": 3,
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-copy",
+      "kind": "duplicate",
+      "label": "Duplicate",
+      "pos": 3,
+    },
+    {
+      "icon": "i-lucide-clipboard",
+      "label": "Copy to clipboard",
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-arrow-up",
+      "kind": "moveUp",
+      "label": "Move up",
+      "pos": 3,
+    },
+    {
+      "icon": "i-lucide-arrow-down",
+      "kind": "moveDown",
+      "label": "Move down",
+      "pos": 3,
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-trash",
+      "kind": "delete",
+      "label": "Delete",
+      "pos": 3,
+    },
+  ],
+]
+`;
+
+exports[`usePostEditorItems in English > gives the block menu > listItem 1`] = `
+[
+  [
+    {
+      "label": "ListItem",
+      "type": "label",
+    },
+    {
+      "children": [
+        {
+          "icon": "i-lucide-type",
+          "kind": "paragraph",
+          "label": "Paragraph",
+        },
+        {
+          "icon": "i-lucide-heading-1",
+          "kind": "heading",
+          "label": "Heading 1",
+          "level": 1,
+        },
+        {
+          "icon": "i-lucide-heading-2",
+          "kind": "heading",
+          "label": "Heading 2",
+          "level": 2,
+        },
+        {
+          "icon": "i-lucide-heading-3",
+          "kind": "heading",
+          "label": "Heading 3",
+          "level": 3,
+        },
+        {
+          "icon": "i-lucide-heading-4",
+          "kind": "heading",
+          "label": "Heading 4",
+          "level": 4,
+        },
+        {
+          "icon": "i-lucide-list",
+          "kind": "bulletList",
+          "label": "Bullet List",
+        },
+        {
+          "icon": "i-lucide-list-ordered",
+          "kind": "orderedList",
+          "label": "Ordered List",
+        },
+        {
+          "icon": "i-lucide-text-quote",
+          "kind": "blockquote",
+          "label": "Blockquote",
+        },
+        {
+          "icon": "i-lucide-square-code",
+          "kind": "codeBlock",
+          "label": "Code Block",
+        },
+      ],
+      "icon": "i-lucide-repeat-2",
+      "label": "Turn into",
+    },
+    {
+      "icon": "i-lucide-rotate-ccw",
+      "kind": "clearFormatting",
+      "label": "Reset formatting",
+      "pos": 3,
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-copy",
+      "kind": "duplicate",
+      "label": "Duplicate",
+      "pos": 3,
+    },
+    {
+      "icon": "i-lucide-clipboard",
+      "label": "Copy to clipboard",
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-arrow-up",
+      "kind": "moveUp",
+      "label": "Move up",
+      "pos": 3,
+    },
+    {
+      "icon": "i-lucide-arrow-down",
+      "kind": "moveDown",
+      "label": "Move down",
+      "pos": 3,
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-trash",
+      "kind": "delete",
+      "label": "Delete",
+      "pos": 3,
+    },
+  ],
+]
+`;
+
+exports[`usePostEditorItems in English > gives the block menu > orderedList 1`] = `
+[
+  [
+    {
+      "label": "OrderedList",
+      "type": "label",
+    },
+    {
+      "children": [
+        {
+          "icon": "i-lucide-type",
+          "kind": "paragraph",
+          "label": "Paragraph",
+        },
+        {
+          "icon": "i-lucide-heading-1",
+          "kind": "heading",
+          "label": "Heading 1",
+          "level": 1,
+        },
+        {
+          "icon": "i-lucide-heading-2",
+          "kind": "heading",
+          "label": "Heading 2",
+          "level": 2,
+        },
+        {
+          "icon": "i-lucide-heading-3",
+          "kind": "heading",
+          "label": "Heading 3",
+          "level": 3,
+        },
+        {
+          "icon": "i-lucide-heading-4",
+          "kind": "heading",
+          "label": "Heading 4",
+          "level": 4,
+        },
+        {
+          "icon": "i-lucide-list",
+          "kind": "bulletList",
+          "label": "Bullet List",
+        },
+        {
+          "icon": "i-lucide-list-ordered",
+          "kind": "orderedList",
+          "label": "Ordered List",
+        },
+        {
+          "icon": "i-lucide-text-quote",
+          "kind": "blockquote",
+          "label": "Blockquote",
+        },
+        {
+          "icon": "i-lucide-square-code",
+          "kind": "codeBlock",
+          "label": "Code Block",
+        },
+      ],
+      "icon": "i-lucide-repeat-2",
+      "label": "Turn into",
+    },
+    {
+      "icon": "i-lucide-rotate-ccw",
+      "kind": "clearFormatting",
+      "label": "Reset formatting",
+      "pos": 3,
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-copy",
+      "kind": "duplicate",
+      "label": "Duplicate",
+      "pos": 3,
+    },
+    {
+      "icon": "i-lucide-clipboard",
+      "label": "Copy to clipboard",
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-arrow-up",
+      "kind": "moveUp",
+      "label": "Move up",
+      "pos": 3,
+    },
+    {
+      "icon": "i-lucide-arrow-down",
+      "kind": "moveDown",
+      "label": "Move down",
+      "pos": 3,
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-trash",
+      "kind": "delete",
+      "label": "Delete",
+      "pos": 3,
+    },
+  ],
+]
+`;
+
+exports[`usePostEditorItems in English > gives the block menu > paragraph 1`] = `
+[
+  [
+    {
+      "label": "Paragraph",
+      "type": "label",
+    },
+    {
+      "children": [
+        {
+          "icon": "i-lucide-type",
+          "kind": "paragraph",
+          "label": "Paragraph",
+        },
+        {
+          "icon": "i-lucide-heading-1",
+          "kind": "heading",
+          "label": "Heading 1",
+          "level": 1,
+        },
+        {
+          "icon": "i-lucide-heading-2",
+          "kind": "heading",
+          "label": "Heading 2",
+          "level": 2,
+        },
+        {
+          "icon": "i-lucide-heading-3",
+          "kind": "heading",
+          "label": "Heading 3",
+          "level": 3,
+        },
+        {
+          "icon": "i-lucide-heading-4",
+          "kind": "heading",
+          "label": "Heading 4",
+          "level": 4,
+        },
+        {
+          "icon": "i-lucide-list",
+          "kind": "bulletList",
+          "label": "Bullet List",
+        },
+        {
+          "icon": "i-lucide-list-ordered",
+          "kind": "orderedList",
+          "label": "Ordered List",
+        },
+        {
+          "icon": "i-lucide-text-quote",
+          "kind": "blockquote",
+          "label": "Blockquote",
+        },
+        {
+          "icon": "i-lucide-square-code",
+          "kind": "codeBlock",
+          "label": "Code Block",
+        },
+      ],
+      "icon": "i-lucide-repeat-2",
+      "label": "Turn into",
+    },
+    {
+      "icon": "i-lucide-rotate-ccw",
+      "kind": "clearFormatting",
+      "label": "Reset formatting",
+      "pos": 3,
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-copy",
+      "kind": "duplicate",
+      "label": "Duplicate",
+      "pos": 3,
+    },
+    {
+      "icon": "i-lucide-clipboard",
+      "label": "Copy to clipboard",
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-arrow-up",
+      "kind": "moveUp",
+      "label": "Move up",
+      "pos": 3,
+    },
+    {
+      "icon": "i-lucide-arrow-down",
+      "kind": "moveDown",
+      "label": "Move down",
+      "pos": 3,
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-trash",
+      "kind": "delete",
+      "label": "Delete",
+      "pos": 3,
+    },
+  ],
+]
+`;
+
+exports[`usePostEditorItems in English > gives the block menu > taskList 1`] = `
+[
+  [
+    {
+      "label": "TaskList",
+      "type": "label",
+    },
+    {
+      "children": [
+        {
+          "icon": "i-lucide-type",
+          "kind": "paragraph",
+          "label": "Paragraph",
+        },
+        {
+          "icon": "i-lucide-heading-1",
+          "kind": "heading",
+          "label": "Heading 1",
+          "level": 1,
+        },
+        {
+          "icon": "i-lucide-heading-2",
+          "kind": "heading",
+          "label": "Heading 2",
+          "level": 2,
+        },
+        {
+          "icon": "i-lucide-heading-3",
+          "kind": "heading",
+          "label": "Heading 3",
+          "level": 3,
+        },
+        {
+          "icon": "i-lucide-heading-4",
+          "kind": "heading",
+          "label": "Heading 4",
+          "level": 4,
+        },
+        {
+          "icon": "i-lucide-list",
+          "kind": "bulletList",
+          "label": "Bullet List",
+        },
+        {
+          "icon": "i-lucide-list-ordered",
+          "kind": "orderedList",
+          "label": "Ordered List",
+        },
+        {
+          "icon": "i-lucide-text-quote",
+          "kind": "blockquote",
+          "label": "Blockquote",
+        },
+        {
+          "icon": "i-lucide-square-code",
+          "kind": "codeBlock",
+          "label": "Code Block",
+        },
+      ],
+      "icon": "i-lucide-repeat-2",
+      "label": "Turn into",
+    },
+    {
+      "icon": "i-lucide-rotate-ccw",
+      "kind": "clearFormatting",
+      "label": "Reset formatting",
+      "pos": 3,
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-copy",
+      "kind": "duplicate",
+      "label": "Duplicate",
+      "pos": 3,
+    },
+    {
+      "icon": "i-lucide-clipboard",
+      "label": "Copy to clipboard",
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-arrow-up",
+      "kind": "moveUp",
+      "label": "Move up",
+      "pos": 3,
+    },
+    {
+      "icon": "i-lucide-arrow-down",
+      "kind": "moveDown",
+      "label": "Move down",
+      "pos": 3,
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-trash",
+      "kind": "delete",
+      "label": "Delete",
+      "pos": 3,
+    },
+  ],
+]
+`;
+
+exports[`usePostEditorItems in English > gives the bubble toolbar 1`] = `
+[
+  [
+    {
+      "activeColor": "neutral",
+      "activeVariant": "ghost",
+      "content": {
+        "align": "start",
+      },
+      "items": [
+        {
+          "label": "Turn into",
+          "type": "label",
+        },
+        {
+          "icon": "i-lucide-type",
+          "kind": "paragraph",
+          "label": "Paragraph",
+        },
+        {
+          "icon": "i-lucide-heading-1",
+          "kind": "heading",
+          "label": "Heading 1",
+          "level": 1,
+        },
+        {
+          "icon": "i-lucide-heading-2",
+          "kind": "heading",
+          "label": "Heading 2",
+          "level": 2,
+        },
+        {
+          "icon": "i-lucide-heading-3",
+          "kind": "heading",
+          "label": "Heading 3",
+          "level": 3,
+        },
+        {
+          "icon": "i-lucide-heading-4",
+          "kind": "heading",
+          "label": "Heading 4",
+          "level": 4,
+        },
+        {
+          "icon": "i-lucide-list",
+          "kind": "bulletList",
+          "label": "Bullet List",
+        },
+        {
+          "icon": "i-lucide-list-ordered",
+          "kind": "orderedList",
+          "label": "Ordered List",
+        },
+        {
+          "icon": "i-lucide-text-quote",
+          "kind": "blockquote",
+          "label": "Blockquote",
+        },
+        {
+          "icon": "i-lucide-square-code",
+          "kind": "codeBlock",
+          "label": "Code Block",
+        },
+      ],
+      "label": "Turn into",
+      "tooltip": {
+        "text": "Turn into",
+      },
+      "trailingIcon": "i-lucide-chevron-down",
+      "ui": {
+        "label": "text-xs",
+      },
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-bold",
+      "kind": "mark",
+      "mark": "bold",
+      "tooltip": {
+        "text": "Bold",
+      },
+    },
+    {
+      "icon": "i-lucide-italic",
+      "kind": "mark",
+      "mark": "italic",
+      "tooltip": {
+        "text": "Italic",
+      },
+    },
+    {
+      "icon": "i-lucide-underline",
+      "kind": "mark",
+      "mark": "underline",
+      "tooltip": {
+        "text": "Underline",
+      },
+    },
+    {
+      "icon": "i-lucide-strikethrough",
+      "kind": "mark",
+      "mark": "strike",
+      "tooltip": {
+        "text": "Strikethrough",
+      },
+    },
+    {
+      "icon": "i-lucide-code",
+      "kind": "mark",
+      "mark": "code",
+      "tooltip": {
+        "text": "Code",
+      },
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-link",
+      "slot": "link",
+    },
+    {
+      "icon": "i-lucide-image",
+      "kind": "imageUpload",
+      "tooltip": {
+        "text": "Image",
+      },
+    },
+  ],
+]
+`;
+
+exports[`usePostEditorItems in English > gives the fixed toolbar 1`] = `
+[
+  [
+    {
+      "icon": "i-lucide-undo",
+      "kind": "undo",
+      "tooltip": {
+        "text": "Undo",
+      },
+    },
+    {
+      "icon": "i-lucide-redo",
+      "kind": "redo",
+      "tooltip": {
+        "text": "Redo",
+      },
+    },
+  ],
+  [
+    {
+      "content": {
+        "align": "start",
+      },
+      "icon": "i-lucide-heading",
+      "items": [
+        {
+          "icon": "i-lucide-heading-1",
+          "kind": "heading",
+          "label": "Heading 1",
+          "level": 1,
+        },
+        {
+          "icon": "i-lucide-heading-2",
+          "kind": "heading",
+          "label": "Heading 2",
+          "level": 2,
+        },
+        {
+          "icon": "i-lucide-heading-3",
+          "kind": "heading",
+          "label": "Heading 3",
+          "level": 3,
+        },
+        {
+          "icon": "i-lucide-heading-4",
+          "kind": "heading",
+          "label": "Heading 4",
+          "level": 4,
+        },
+      ],
+      "tooltip": {
+        "text": "Headings",
+      },
+    },
+    {
+      "content": {
+        "align": "start",
+      },
+      "icon": "i-lucide-list",
+      "items": [
+        {
+          "icon": "i-lucide-list",
+          "kind": "bulletList",
+          "label": "Bullet List",
+        },
+        {
+          "icon": "i-lucide-list-ordered",
+          "kind": "orderedList",
+          "label": "Ordered List",
+        },
+      ],
+      "tooltip": {
+        "text": "Lists",
+      },
+    },
+    {
+      "icon": "i-lucide-text-quote",
+      "kind": "blockquote",
+      "tooltip": {
+        "text": "Blockquote",
+      },
+    },
+    {
+      "icon": "i-lucide-square-code",
+      "kind": "codeBlock",
+      "tooltip": {
+        "text": "Code Block",
+      },
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-bold",
+      "kind": "mark",
+      "mark": "bold",
+      "tooltip": {
+        "text": "Bold",
+      },
+    },
+    {
+      "icon": "i-lucide-italic",
+      "kind": "mark",
+      "mark": "italic",
+      "tooltip": {
+        "text": "Italic",
+      },
+    },
+    {
+      "icon": "i-lucide-underline",
+      "kind": "mark",
+      "mark": "underline",
+      "tooltip": {
+        "text": "Underline",
+      },
+    },
+    {
+      "icon": "i-lucide-strikethrough",
+      "kind": "mark",
+      "mark": "strike",
+      "tooltip": {
+        "text": "Strikethrough",
+      },
+    },
+    {
+      "icon": "i-lucide-code",
+      "kind": "mark",
+      "mark": "code",
+      "tooltip": {
+        "text": "Code",
+      },
+    },
+  ],
+  [
+    {
+      "icon": "i-lucide-link",
+      "slot": "link",
+    },
+    {
+      "icon": "i-lucide-image",
+      "kind": "imageUpload",
+      "tooltip": {
+        "text": "Image",
+      },
+    },
+  ],
+]
+`;
+
+exports[`usePostEditorItems in English > gives the suggestion menu 1`] = `
+[
+  [
+    {
+      "label": "Style",
+      "type": "label",
+    },
+    {
+      "icon": "i-lucide-type",
+      "kind": "paragraph",
+      "label": "Paragraph",
+    },
+    {
+      "icon": "i-lucide-heading-1",
+      "kind": "heading",
+      "label": "Heading 1",
+      "level": 1,
+    },
+    {
+      "icon": "i-lucide-heading-2",
+      "kind": "heading",
+      "label": "Heading 2",
+      "level": 2,
+    },
+    {
+      "icon": "i-lucide-heading-3",
+      "kind": "heading",
+      "label": "Heading 3",
+      "level": 3,
+    },
+    {
+      "icon": "i-lucide-list",
+      "kind": "bulletList",
+      "label": "Bullet List",
+    },
+    {
+      "icon": "i-lucide-list-ordered",
+      "kind": "orderedList",
+      "label": "Numbered List",
+    },
+    {
+      "icon": "i-lucide-text-quote",
+      "kind": "blockquote",
+      "label": "Blockquote",
+    },
+    {
+      "icon": "i-lucide-square-code",
+      "kind": "codeBlock",
+      "label": "Code Block",
+    },
+  ],
+  [
+    {
+      "label": "Insert",
+      "type": "label",
+    },
+    {
+      "icon": "i-lucide-image",
+      "kind": "imageUpload",
+      "label": "Image",
+    },
+  ],
+]
+`;
