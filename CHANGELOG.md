@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.0](https://github.com/plutocms/supabase/compare/v0.19.0...v0.20.0) (2026-10-31)
+
+
+### Features
+
+* section tabs on the Users and Roles pages ([#163](https://github.com/plutocms/supabase/issues/163)) ([876abf6](https://github.com/plutocms/supabase/commit/876abf637520f0059a29216a3cb6629980ad02e7))
+
 ## [0.19.0](https://github.com/plutocms/supabase/compare/v0.18.1...v0.19.0) (2026-10-31)
 
 
