@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.19.0](https://github.com/plutocms/supabase/compare/v0.18.1...v0.19.0) (2026-10-31)
+
+
+### Features
+
+* a top-level Users menu with Users and Roles ([#158](https://github.com/plutocms/supabase/issues/158)) ([1fc3cdf](https://github.com/plutocms/supabase/commit/1fc3cdfa1859b8e0a512c71ec54bd64cc6cab79b))
+
 ## [0.18.1](https://github.com/plutocms/supabase/compare/v0.18.0...v0.18.1) (2026-10-31)
 
 
