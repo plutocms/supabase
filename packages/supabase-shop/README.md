@@ -91,3 +91,7 @@ Do not divide by 100 in your app. Use the auto-imported helpers instead:
 3. In your storefront, replace `formatCurrency(product.price)` with
    `formatProductPrice(product.price)`. Replace any price sum or sort so it works on cents.
 4. Clear old carts that your app stored in the browser. They hold prices in reais.
+
+## Development
+
+This package lives in the [`plutocms/supabase`](https://github.com/plutocms/supabase) monorepo, in `packages/supabase-shop`. Run `bun install` at the root of the repo, then the scripts of the package (`bun run --cwd packages/supabase-shop dev`). Bun links `@plutocms/supabase` from the workspace, so you do not need `PLUTO_SUPABASE_PATH`. Each package reads its own `.env` file.

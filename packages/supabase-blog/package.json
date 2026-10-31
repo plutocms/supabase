@@ -5,13 +5,14 @@
   "description": "Blog dashboard layer for Pluto",
   "author": "Victor Ribeiro",
   "license": "MIT",
-  "homepage": "https://github.com/plutocms/supabase-blog#readme",
+  "homepage": "https://github.com/plutocms/supabase/tree/main/packages/supabase-blog#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/plutocms/supabase-blog.git"
+    "url": "git+https://github.com/plutocms/supabase.git",
+    "directory": "packages/supabase-blog"
   },
   "bugs": {
-    "url": "https://github.com/plutocms/supabase-blog/issues"
+    "url": "https://github.com/plutocms/supabase/issues"
   },
   "main": "./nuxt.config.ts",
   "scripts": {
@@ -19,7 +20,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "prepare": "nuxt prepare",
+    "dev:prepare": "nuxt prepare",
     "prettier": "prettier --write .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -40,16 +41,9 @@
     "ultrahtml": "^1.7.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^9.5.1",
-    "@nuxt/eslint-config": "^1.17.0",
     "@plutocms/core": ">=0.38.0 <1.0.0",
     "@types/bun": "^1.4.3",
-    "eslint": "^10.13.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-better-tailwindcss": "^4.10.0",
     "nuxt": "^4.6.2",
-    "prettier": "^3.9.10",
-    "typescript": "6.0.3",
     "vitest": "^5.0.5",
     "vue": "^3.5.44",
     "vue-router": "^5.4.0",

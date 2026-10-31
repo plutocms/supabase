@@ -15,9 +15,9 @@ through one adapter, with no per-content-type server code. It also answers the p
 - `test/content-adapter-reads.test.ts` — unit tests for filters, timestamps and the anonymous client,
   with a fake query builder.
 
-No content type is declared in this repo. `supabase` is the backend layer only — a layer that
+No content type is declared in this package. `supabase` is the backend layer only — a layer that
 owns a content type (`supabase-blog`'s `post`, `supabase-shop`'s `product`) declares it, in that
-layer's own repo, against a table this repo's migrations already created by hand.
+layer's own package, against a table this package's migrations already created by hand.
 
 ## What this adapter does not do
 
@@ -125,11 +125,11 @@ even when the client only sees a generic one.
 ## The type-safety trade-off: an untyped client, on purpose
 
 `ctx.type.source` (a content type's table name) is a plain runtime string — it is not known
-until a layer declares a content type, in a different repo, at that repo's build time. This
-repo's own `serverSupabaseClient<Database>(event)` pattern (used everywhere else in this repo,
-see `server/utils/admin-guard.ts`) only accepts one of this repo's own known table names as a
+until a layer declares a content type, in a different package, at that package's build time. This
+package's own `serverSupabaseClient<Database>(event)` pattern (used everywhere else in this package,
+see `server/utils/admin-guard.ts`) only accepts one of this package's own known table names as a
 `.from()` argument, because `Database` (`shared/types/supabase.ts`) is a fixed, hand-maintained
-union of this repo's own tables. A dynamic content type's table can never be one of those
+union of this package's own tables. A dynamic content type's table can never be one of those
 literals at compile time.
 
 `server/utils/content-adapter.ts` calls `serverSupabaseClient(event)` with no generic parameter,
@@ -144,7 +144,7 @@ async function getClient(event: H3Event): Promise<SupabaseClient> {
 
 This is the one, deliberate place this file loses compile-time table/column safety. It is
 correct and unavoidable, not a bug to fix later — `Database` can never know about a table a
-different repo declares. Every other file in this repo keeps the strongly-typed
+different package declares. Every other file in this package keeps the strongly-typed
 `serverSupabaseClient<Database>(event)` pattern; this trade-off is scoped to this one file.
 
 One related, narrower issue: `update()`'s published-at check selects the whole row
@@ -160,7 +160,7 @@ with no cast needed.
 `resolveStatusColumn`, `toContentError`). `test/content-adapter-reads.test.ts` checks the read path
 (filters, timestamps, sort, which client is used) against a small fake builder that records the
 calls. It checks that the adapter makes the right calls. It does not check the SQL.
-`create`, `update` and `remove` are verified against a live database, outside this repo's
+`create`, `update` and `remove` are verified against a live database, outside this package's
 automated test suite.
 
 The helper test file mocks the module-level `#supabase/server` import (a virtual module Nitro

@@ -31,7 +31,7 @@ interface ResolvedItem {
 }
 
 // A single toolbar item, before it is resolved against the live editor. The
-// vendor `UEditorToolbar` types this union in `../types/editor` — this repo
+// vendor `UEditorToolbar` types this union in `../types/editor` — this package
 // only needs the loose shape below to read the fields every handler below
 // touches, so it stays a plain record instead of importing that private
 // union.

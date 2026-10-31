@@ -68,7 +68,7 @@ Note: `settings.setting_key` uses dots (`blog.posts_per_page`). A capability key
 ## `is_admin()` and `has_capability()`
 
 `public.is_admin()` already existed before this feature, and keeps its exact name and signature
-forever. Thirty RLS policies across four repos call it by name. Renaming or removing it would
+forever. Thirty RLS policies across the Pluto packages call it by name. Renaming or removing it would
 break RLS on already-deployed sites this migration cannot reach.
 
 Instead, `is_admin()` was reimplemented (`create or replace`, same signature) to also return
@@ -116,7 +116,7 @@ on conflict do nothing;
 
 `editor` and `posts:publish`/`posts:read_drafts` above are only an example. No layer defines
 those capabilities as of this feature — a blog layer defining its own `posts:*` capabilities is
-`supabase-blog`'s own future work, not part of this repo.
+`supabase-blog`'s own future work, not part of this package.
 
 ## Guarding a server route
 

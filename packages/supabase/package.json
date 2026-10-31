@@ -4,10 +4,11 @@
   "version": "0.20.0",
   "description": "Supabase backend layer for Pluto",
   "author": "Victor Ribeiro",
-  "homepage": "https://github.com/plutocms/supabase#readme",
+  "homepage": "https://github.com/plutocms/supabase/tree/main/packages/supabase#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/plutocms/supabase.git"
+    "url": "git+https://github.com/plutocms/supabase.git",
+    "directory": "packages/supabase"
   },
   "bugs": {
     "url": "https://github.com/plutocms/supabase/issues"
@@ -18,7 +19,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "prepare": "nuxt prepare",
+    "dev:prepare": "nuxt prepare",
     "prettier": "prettier --write .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -36,23 +37,14 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^9.5.1",
-    "@nuxt/eslint-config": "^1.17.0",
     "@types/bun": "^1.4.3",
     "@vueuse/nuxt": "^14.4.0",
-    "eslint": "^10.13.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-better-tailwindcss": "^4.10.0",
     "nuxt": "^4.6.2",
-    "prettier": "^3.9.10",
     "tailwindcss": "^4.3.3",
     "vitest": "^5.0.5",
     "vue": "^3.5.44",
     "vue-router": "^5.4.0",
     "vue-tsc": "^3.3.13"
-  },
-  "overrides": {
-    "typescript": "^5.9.3"
   },
   "publishConfig": {
     "access": "public"

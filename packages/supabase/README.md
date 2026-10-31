@@ -141,3 +141,7 @@ sort by date.
 ### Types
 
 - `Database`: Auto-imported type definitions for Supabase database interactions.
+
+## Development
+
+This package lives in the [`plutocms/supabase`](https://github.com/plutocms/supabase) monorepo, in `packages/supabase`. Run `bun install` at the root of the repo, then the scripts of the package (`bun run --cwd packages/supabase dev`). This package is the base of the other two. Its changes reach `supabase-shop` and `supabase-blog` through the workspace link. Each package reads its own `.env` file.

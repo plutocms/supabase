@@ -1,0 +1,30 @@
+{
+  "name": "plutocms-supabase",
+  "type": "module",
+  "private": true,
+  "description": "The Supabase integration of Pluto: the Supabase layer and its shop and blog layers",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "postinstall": "bun run --cwd packages/supabase dev:prepare && bun run --cwd packages/supabase-shop dev:prepare && bun run --cwd packages/supabase-blog dev:prepare",
+    "build": "bun run --cwd packages/supabase build && bun run --cwd packages/supabase-shop build && bun run --cwd packages/supabase-blog build",
+    "prettier": "prettier --write .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "bun run --cwd packages/supabase typecheck && bun run --cwd packages/supabase-shop typecheck && bun run --cwd packages/supabase-blog typecheck",
+    "test": "bun run --cwd packages/supabase test && bun run --cwd packages/supabase-shop test && bun run --cwd packages/supabase-blog test"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^9.5.1",
+    "@nuxt/eslint-config": "^1.17.0",
+    "eslint": "^10.13.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-better-tailwindcss": "^4.10.0",
+    "prettier": "^3.9.10",
+    "vue-tsc": "3.3.13"
+  },
+  "overrides": {
+    "typescript": "^5.9.3"
+  }
+}

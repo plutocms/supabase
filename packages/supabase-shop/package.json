@@ -4,13 +4,14 @@
   "version": "0.17.1",
   "description": "Shop dashboard layer for Pluto",
   "author": "Victor Ribeiro",
-  "homepage": "https://github.com/plutocms/supabase-shop#readme",
+  "homepage": "https://github.com/plutocms/supabase/tree/main/packages/supabase-shop#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/plutocms/supabase-shop.git"
+    "url": "git+https://github.com/plutocms/supabase.git",
+    "directory": "packages/supabase-shop"
   },
   "bugs": {
-    "url": "https://github.com/plutocms/supabase-shop/issues"
+    "url": "https://github.com/plutocms/supabase/issues"
   },
   "main": "./nuxt.config.ts",
   "scripts": {
@@ -18,7 +19,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "prepare": "nuxt prepare",
+    "dev:prepare": "nuxt prepare",
     "prettier": "prettier --write .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -32,18 +33,11 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^9.5.1",
-    "@nuxt/eslint-config": "^1.17.0",
     "@nuxt/ui": "^4.12.0",
     "@plutocms/core": ">=0.38.0 <1.0.0",
     "@types/node": "^26.6.5",
     "@vueuse/nuxt": "^14.4.0",
-    "eslint": "^10.13.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-better-tailwindcss": "^4.10.0",
     "nuxt": "^4.6.2",
-    "prettier": "^3.9.10",
-    "typescript": "6.0.3",
     "vitest": "^5.0.5",
     "vue": "3.5.44",
     "vue-router": "5.4.0",

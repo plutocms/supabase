@@ -1,5 +1,6 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs'
-import { join } from 'node:path'
+import { createRequire } from 'node:module'
+import { dirname, join } from 'node:path'
 import { defineContentType } from '@plutocms/core/shared/utils/content'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -217,20 +218,15 @@ describe('translation keys used in the code', () => {
   })
 
   it('has every pluto.* key in the en.json of @plutocms/core', () => {
+    // Bun can hoist core to the root of a workspace, so resolve it, do not guess the path.
+    const corePath = dirname(
+      createRequire(join(root, 'package.json')).resolve(
+        '@plutocms/core/package.json'
+      )
+    )
     const plutoEn = flatten(
       JSON.parse(
-        readFileSync(
-          join(
-            root,
-            'node_modules',
-            '@plutocms',
-            'core',
-            'i18n',
-            'locales',
-            'en.json'
-          ),
-          'utf8'
-        )
+        readFileSync(join(corePath, 'i18n', 'locales', 'en.json'), 'utf8')
       )
     )
     const missing = [...usedKeys('pluto')]

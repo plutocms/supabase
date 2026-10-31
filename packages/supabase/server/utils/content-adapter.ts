@@ -9,9 +9,9 @@ import { requireCapability } from './capability-guard'
  *
  * A content type's table name (`type.source`) is a plain runtime string —
  * it is not known until a layer declares a content type, in a different
- * repo, at that repo's build time. `serverSupabaseClient` defaults to
+ * package, at that package's build time. `serverSupabaseClient` defaults to
  * this app's own `Database` type (see `shared/types/supabase.ts`), whose
- * `.from()` only accepts this repo's own table names as literals. Casting
+ * `.from()` only accepts this package's own table names as literals. Casting
  * to the bare `SupabaseClient` type (whose own generic defaults to `any`)
  * is the one, deliberate place this file loses compile-time table/column
  * safety. See `.claude/skills/content-adapter/SKILL.md` for the full
@@ -19,7 +19,7 @@ import { requireCapability } from './capability-guard'
  *
  * Goes through `unknown` first: `serverSupabaseClient`'s inferred
  * `Database` type is whichever layer's own generated types are in scope
- * at the *call site* — this repo's own `shared/types/supabase.ts` when
+ * at the *call site* — this package's own `shared/types/supabase.ts` when
  * typechecked standalone, but a different consumer's own generated types
  * when this file is typechecked as part of a deeper extends chain (a
  * layer that extends this one, extending it in turn). A direct `as

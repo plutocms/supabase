@@ -47,3 +47,7 @@ The `package.json` of the app lists only `@plutocms/supabase-blog`, besides `nux
 
 - Starter: the blog template, [`pluto-blog-template`](https://github.com/plutocms/pluto-blog-template), with the Supabase backend: `npm create pluto@latest my-blog -t blog --backend supabase`. The same template works with the GitHub CMS.
 - Skills: `.claude/skills/blog-posts/SKILL.md` and `.claude/skills/prose/SKILL.md`.
+
+## Development
+
+This package lives in the [`plutocms/supabase`](https://github.com/plutocms/supabase) monorepo, in `packages/supabase-blog`. Run `bun install` at the root of the repo, then the scripts of the package (`bun run --cwd packages/supabase-blog dev`). Bun links `@plutocms/supabase` from the workspace, so you do not need `PLUTO_SUPABASE_PATH`. Each package reads its own `.env` file.

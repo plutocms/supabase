@@ -1,5 +1,5 @@
-// Point this at a local checkout (e.g. `../supabase`) to test
-// unpublished changes; unset, it resolves to the published npm package.
+// Unset: the workspace link gives @plutocms/supabase (outside this repo, the npm package).
+// Set it to the path of another checkout to test unpublished changes.
 const supabaseLayer = process.env.PLUTO_SUPABASE_PATH || '@plutocms/supabase'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
