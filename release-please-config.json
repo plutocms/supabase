@@ -11,14 +11,12 @@
     "packages/supabase-shop": {
       "package-name": "@plutocms/supabase-shop",
       "component": "supabase-shop",
-      "include-component-in-tag": true,
-      "release-as": "0.18.0"
+      "include-component-in-tag": true
     },
     "packages/supabase-blog": {
       "package-name": "@plutocms/supabase-blog",
       "component": "supabase-blog",
-      "include-component-in-tag": true,
-      "release-as": "0.18.0"
+      "include-component-in-tag": true
     }
   }
 }
