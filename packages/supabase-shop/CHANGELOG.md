@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.18.0](https://github.com/plutocms/supabase/compare/supabase-shop-v0.17.1...supabase-shop-v0.18.0) (2026-11-01)
+
+
+### Features
+
+* the supabase repo holds the Supabase integration (supabase, supabase-shop, supabase-blog) ([0da28ef](https://github.com/plutocms/supabase/commit/0da28ef93d4882076a3750822f011de9714156d7))
+* the supabase repo holds the Supabase integration (supabase, supabase-shop, supabase-blog) ([ab50f47](https://github.com/plutocms/supabase/commit/ab50f4779a8fb77f61a43f4db9efcd4314ae59ec))
+
+
+### Bug Fixes
+
+* apps that extend the layer no longer get the ESLint module or an install script ([#151](https://github.com/plutocms/supabase/issues/151)) ([818bf93](https://github.com/plutocms/supabase/commit/818bf93a44cea01e6a1b237ace33a325f45de590))
+* **deps:** ensure @plutocms/pluto ^0.10.0 range is published ([#67](https://github.com/plutocms/supabase/issues/67)) ([ed45ad3](https://github.com/plutocms/supabase/commit/ed45ad3a5b1ed4c4990a2272c48571c5e8eb5a92))
+
 ## [0.17.1](https://github.com/plutocms/supabase-shop/compare/v0.17.0...v0.17.1) (2026-10-31)
 
 
