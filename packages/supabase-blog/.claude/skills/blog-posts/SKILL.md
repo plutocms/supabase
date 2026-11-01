@@ -152,7 +152,7 @@ label: 'pluto.post.outline', … } }`, and the `content` field sets `widget: 'po
 - The form's toolbar shows the post status (Draft or Published), Save draft or Update, Publish,
   and an overflow menu with Unpublish and Delete. Publish uses the `posts:publish` capability.
 
-`@plutocms/core`'s `admin-view-chrome` and `github-cms` skills describe the canvas layout and
+`@plutocms/core`'s `admin-view-chrome` and `git-cms` skills describe the canvas layout and
 the post editor. This layer only sets the config and gives the `canvas` prop to its widget.
 
 The editor's sticky toolbar uses `z-10`, not `z-50`. The admin navbar uses `z-50`. The editor

@@ -26,7 +26,7 @@ npm i @plutocms/supabase
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
-  extends: [['@plutocms/supabase', { install: true }]],
+  extends: ['@plutocms/supabase'],
 })
 ```
 
