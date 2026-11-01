@@ -20,7 +20,7 @@ bun add @plutocms/supabase-shop
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
-  extends: [['@plutocms/supabase-shop', { install: true }]],
+  extends: ['@plutocms/supabase-shop'],
 })
 ```
 
