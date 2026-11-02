@@ -7,8 +7,8 @@ description: PlutoProse, the component that displays a stored richtext value (ma
 
 `PlutoProse` (`app/components/PlutoProse.vue`) displays a stored richtext value on a public
 page. It is the read side of `PostEditor.vue`: the editor writes markdown (see the
-`blog-posts` skill), and `PlutoProse` renders that markdown back as real HTML, with the same
-typography the editor itself uses.
+`blog-posts` skill), and `PlutoProse` renders that markdown back as real HTML, with the typography of
+the editor.
 
 Use it in app code that holds the raw stored value. A page that reads the public API
 (`usePlutoPublicItem`) gets the body as sanitized `html` already, and renders it with
@@ -113,19 +113,11 @@ them). This is intentional, not a gap to close.
 
 ## Styling
 
-`PlutoProse` needs no CSS of its own. It reuses the same theme the editor already ships:
-
-```ts
-import theme from '#build/ui/editor'
-import { tv } from '@nuxt/ui/utils/tv'
-
-const ui = computed(() => tv({ extend: theme })())
-```
-
-`ui.base(...)` returns the same class list `PostEditor.vue`'s `EditorContent` uses for its
-content area — headings, links, code, lists, and images all already have rules for it. Any
-consuming app already compiles this CSS in, through its own `@source` lines, so nothing new
-needs to ship.
+`PlutoProse` has only the class `pluto-prose`, and no Tailwind class, so it works on a site
+with no Tailwind. The look is `.pluto-prose` of core (`app/assets/css/pluto-base.css`): plain
+CSS that follows the base of the Nuxt UI editor theme, the look of `PostEditor.vue`. A site
+imports it with `@import '@plutocms/css/base'`. Without that import, the prose has the
+browser defaults. See the public-components skill of core.
 
 ## Props and slots
 
@@ -134,7 +126,7 @@ needs to ship.
 - `format?: 'auto' | 'markdown' | 'html' | 'json'` — default `'auto'` (calls
   `detectRichtextFormat()`). Set it explicitly to skip detection.
 - `tag?: string` — the wrapper element, default `'div'`.
-- `class?: any` — merged onto the wrapper alongside the theme's own classes.
+- `class?: any` — merged onto the wrapper next to `pluto-prose`.
 - Slots: `empty` only, rendered in place of the wrapper when the resolved HTML is empty.
 - No emits.
 

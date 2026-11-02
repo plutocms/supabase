@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { tv } from '@nuxt/ui/utils/tv'
-import theme from '#build/ui/editor'
 import { renderRichtext } from '../utils/richtext'
 
+// The prose look is `.pluto-prose` of core (app/assets/css/pluto-base.css): plain
+// CSS that a site imports with `@plutocms/css/base`. No Tailwind class here, so
+// the component works on a site with no Tailwind. See the public-components
+// skill of core.
 const props = defineProps<{
   content?: unknown
   format?: 'auto' | 'markdown' | 'html' | 'json'
   tag?: string
   class?: any
 }>()
-
-const ui = computed(() => tv({ extend: theme })())
 
 // `renderRichtext` always finishes with `sanitizeRichtextHtml` (see
 // `app/utils/richtext-sanitize.ts`), which strips the value down to a
@@ -45,8 +45,9 @@ const html = computed(() =>
   <component
     :is="tag ?? 'div'"
     v-if="html"
-    :class="ui.base({ class: props.class })"
+    :class="props.class"
     :innerHTML="html"
+    class="pluto-prose"
   />
   <!-- eslint-enable vue/attribute-hyphenation -->
   <slot v-else name="empty" />
