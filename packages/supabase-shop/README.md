@@ -49,7 +49,7 @@ The layer has no composable for a storefront read. A storefront uses the composa
 
 #### The public API
 
-The storefront reads the public API of `@plutocms/core` (see https://pluto.vulmix.dev/docs/core/public-api):
+The storefront reads the public API of `@plutocms/core` (see https://pluto.vulmix.dev/docs/build/public-api):
 
 - GET `/api/pluto/v1/content/product` and GET `/api/pluto/v1/content/product/<id or slug>`
 - GET `/api/pluto/v1/content/product-category`
