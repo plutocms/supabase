@@ -386,6 +386,12 @@
         "noProject": "O Pluto não conseguiu ler a referência do projeto na sua URL do Supabase. Abra o painel do Supabase manualmente.",
         "rateLimitHint": "Depois de configurar o SMTP próprio, abra Authentication, depois Rate Limits, e aumente o número de e-mails por hora. O padrão é baixo."
       }
+    },
+    "backend": {
+      "description": "Cada salvamento grava no banco Postgres deste projeto do Supabase.",
+      "project": "Projeto",
+      "host": "Servidor",
+      "openDashboard": "Abrir o painel do Supabase"
     }
   }
 }

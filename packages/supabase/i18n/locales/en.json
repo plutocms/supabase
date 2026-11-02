@@ -386,6 +386,12 @@
         "noProject": "Pluto could not read the project ref from your Supabase URL. Open the Supabase dashboard by hand.",
         "rateLimitHint": "After you set custom SMTP, open Authentication, then Rate Limits, and raise the number of emails each hour. The default is low."
       }
+    },
+    "backend": {
+      "description": "Each save writes to the Postgres database of this Supabase project.",
+      "project": "Project",
+      "host": "Server",
+      "openDashboard": "Open the Supabase dashboard"
     }
   }
 }
