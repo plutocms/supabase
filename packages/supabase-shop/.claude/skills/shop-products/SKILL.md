@@ -141,7 +141,7 @@ sharing one piece of state:
 ### The public API (the storefront)
 
 A storefront reads this layer through the public API of `@plutocms/core`
-(https://pluto.vulmix.dev/docs/core/public-api). It needs no hand-written route:
+(https://pluto.vulmix.dev/docs/build/public-api). It needs no hand-written route:
 
 - `GET /api/pluto/v1/content/product` and `GET /api/pluto/v1/content/product/<id or slug>`.
 - `GET /api/pluto/v1/content/product-category` and `.../product-availability`.
