@@ -72,6 +72,14 @@ pages are in the `users-and-roles` skill.
 development, `url()` is empty, so "View site" opens `/`, which is the dev server. The settings load
 in the browser after sign-in, and again after the Settings page saves.
 
+## Backend badge
+
+The plugin registers the `backend` entry of the navbar badge of core (`@plutocms/core` 0.48 or later):
+`kind: 'database'`, label "Supabase". The popover is `app/components/backend/SupabaseBackendDetails.vue`:
+the project ref (from `public.supabase.url`, with `supabaseProjectRef`) and a link to the project
+dashboard. A local Supabase or a custom domain has no ref, so the popover shows the host and no
+link. The text is `supabase.backend.*`.
+
 ## Banner
 
 `MigrationsBanner` is in `adminBanners`. Core's admin layout renders it. It hides on

@@ -19,7 +19,8 @@ policies shared by every project here.
   filters, puts the timestamps on items, and reads the public API of core with an anonymous client.
   @.claude/skills/content-adapter/SKILL.md
 - Auth driver: plugs Supabase sign-in into the admin shell that pluto core owns (navbar, sign-in
-  page, route guard), and keeps the setup guard in the driver.
+  page, route guard), keeps the setup guard in the driver, and registers the backend badge
+  ("Database · Supabase", with the project and a dashboard link).
   @.claude/skills/auth-driver/SKILL.md
 - Profile language: stores each user's admin language in `profiles.locale`, written through a
   security-definer function, and plugs it into pluto's i18n as a locale driver.

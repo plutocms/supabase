@@ -11,6 +11,10 @@ const MigrationsBanner = defineAsyncComponent(
 const SettingsGeneralPanel = defineAsyncComponent(
   () => import('../components/settings/SettingsGeneralPanel.vue')
 )
+// The popover of the backend badge of the navbar.
+const SupabaseBackendDetails = defineAsyncComponent(
+  () => import('../components/backend/SupabaseBackendDetails.vue')
+)
 // The guide for the Supabase sign-in emails, a section of the Email tab.
 const AuthEmailsPanel = defineAsyncComponent(
   () => import('../components/mail/AuthEmailsPanel.vue')
@@ -151,6 +155,14 @@ export default defineNuxtPlugin(() => {
       name: () => siteSettings.value.website_title,
       // In development, "View site" opens this dev server, like the old navbar.
       url: () => (import.meta.dev ? null : siteSettings.value.website_url),
+    },
+    // The backend badge of the navbar: the content is in a Supabase database.
+    backend: {
+      id: 'supabase',
+      kind: 'database',
+      label: 'Supabase',
+      icon: 'i-lucide-database',
+      details: SupabaseBackendDetails,
     },
     // The pending-migrations notice, shown at the top of the admin pages.
     adminBanners: [{ id: 'migrations', component: MigrationsBanner }],
