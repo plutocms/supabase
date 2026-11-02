@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.22.0](https://github.com/plutocms/supabase/compare/v0.21.0...v0.22.0) (2026-11-02)
+
+
+### Features
+
+* the admin navbar shows the Supabase backend, with the project and a dashboard link ([#190](https://github.com/plutocms/supabase/issues/190)) ([2b8de9f](https://github.com/plutocms/supabase/commit/2b8de9f500a71a2afeb65fe97d66be41dac2eed2))
+
 ## [0.21.0](https://github.com/plutocms/supabase/compare/v0.20.0...v0.21.0) (2026-10-31)
 
 
