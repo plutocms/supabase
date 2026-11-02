@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.19.0](https://github.com/plutocms/supabase/compare/supabase-blog-v0.18.0...supabase-blog-v0.19.0) (2026-11-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* **supabase-blog:** a site imports @plutocms/css/base for the prose look of PlutoProse.
+
+### Features
+
+* **supabase-blog:** PlutoProse uses the plain pluto-prose CSS of core ([#182](https://github.com/plutocms/supabase/issues/182)) ([a084c5d](https://github.com/plutocms/supabase/commit/a084c5dcb4079306aca1e14ee4a44409d2ce515d))
+
 ## [0.18.0](https://github.com/plutocms/supabase/compare/supabase-blog-v0.17.0...supabase-blog-v0.18.0) (2026-11-01)
 
 
