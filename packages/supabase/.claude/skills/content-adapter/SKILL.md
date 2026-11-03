@@ -67,6 +67,36 @@ to anything other than `publishedValue` leaves `publishedAtColumn` alone — thi
 clears it back to null the way the blog precedent's ternary does for a non-published status. A
 layer that wants "unpublishing clears published-at" implements that itself, for now.
 
+The adapter reads the stored row whenever the payload has a `status`: this rule needs it, and so
+does the revision action (see "Revisions").
+
+## Revisions
+
+The adapter implements core's optional `listRevisions` and `getRevision` (the content-model skill
+of core, "Revisions"), so the edit form of every type shows History. The code is in
+`server/utils/content-revisions.ts`. The table is `public.pluto_content_revisions` (migration 011).
+
+- **One table for every type of every layer**, not a trigger per content table: `type`, `item_id`
+  (the primary key as text), `action`, `data` (the item after the save, by field name, as
+  `toItem` gives it), `author_id` (default `auth.uid()`), `author_name` (the profile name, else the
+  email, at save time) and `capability` (the write capability of the type at save time).
+- **Written after each create and update** (`recordRevision`), with the client of the signed-in
+  user. The action is `create`. On update it is `publish` or `unpublish` when the status crosses the
+  published value (`updateAction`, from the stored row), else `update`. A failed write only warns:
+  the save already worked (for example before 011 is applied). No user: no row.
+- **At most 100 per item** (`MAX_REVISIONS_PER_ITEM`): the older ones are deleted after an insert.
+- **A delete** removes the revisions of the item (`deleteRevisions`, best effort).
+- **Reads**: newest first by id, with a keyset cursor (the last id). `getRevision` returns the
+  stored `data`, and refuses a revision id that is not a number.
+- **RLS**: select, insert and delete need the stored capability (`public.has_capability`, which
+  folds in admins), or any staff capability for a type with none. Insert also needs
+  `author_id = auth.uid()`. No update. Grants: select, insert, delete to authenticated, and CRUD to
+  service_role.
+- An item saved before 011 has no revision until its next save, so History stays hidden until then.
+
+Tests: `test/content-revisions.test.ts` (a fake client), `test/migrations-011.test.ts` and
+`test/data-api-grants.test.ts`. The RLS rules were checked once in PGlite, with stub auth functions.
+
 ## Timestamps: always stamped, never client-controlled
 
 `resolveTimestampColumn(type, 'created' | 'updated')` resolves the storage column, or

@@ -3,6 +3,13 @@ import type { H3Event } from 'h3'
 import { createClient } from '@supabase/supabase-js'
 import { serverSupabaseClient } from '#supabase/server'
 import { requireCapability } from './capability-guard'
+import {
+  deleteRevisions,
+  getItemRevision,
+  listItemRevisions,
+  recordRevision,
+  updateAction,
+} from './content-revisions'
 
 /**
  * A Supabase client for one request, deliberately untyped.
@@ -408,7 +415,9 @@ async function create(
     throw toContentError(error)
   }
 
-  return toItem(ctx.type, data)
+  const item = toItem(ctx.type, data)
+  await recordRevision(ctx, client, item, 'create')
+  return item
 }
 
 async function update(
@@ -435,21 +444,15 @@ async function update(
     row[updatedColumn] = new Date().toISOString()
   }
 
-  // Published-at preservation, generalizing supabase-blog's hand-written
-  // edit route: stamp published-at the first time a row is published, but
-  // never overwrite an already-set value on a later edit.
-  if (
-    statusColumn &&
-    ctx.type.status &&
-    ctx.type.status.publishedAtColumn &&
-    row[statusColumn] === ctx.type.status.publishedValue
-  ) {
-    const publishedAtColumn = ctx.type.status.publishedAtColumn
-    // Selects the whole row rather than the one dynamic column name:
-    // postgrest-js parses a `select()` argument at the type level, and a
-    // non-literal (runtime) column name resolves to its own
-    // `GenericStringError` type instead of a usable row shape.
-    const { data: existing, error: fetchError } = await client
+  // A payload with a status reads the stored row first: the published-at
+  // rule and the revision action need the old status. Selects the whole row
+  // rather than the one dynamic column name: postgrest-js parses a
+  // `select()` argument at the type level, and a non-literal (runtime)
+  // column name resolves to its own `GenericStringError` type instead of a
+  // usable row shape.
+  let existing: Record<string, unknown> | null = null
+  if (statusColumn && Object.hasOwn(values, 'status')) {
+    const { data: stored, error: fetchError } = await client
       .from(ctx.type.source)
       .select('*')
       .eq(pkColumn, id)
@@ -459,12 +462,21 @@ async function update(
       throw toContentError(fetchError)
     }
 
-    if (
-      existing &&
-      (existing as Record<string, unknown>)[publishedAtColumn] == null
-    ) {
-      row[publishedAtColumn] = new Date().toISOString()
-    }
+    existing = stored as Record<string, unknown> | null
+  }
+
+  // Published-at preservation, generalizing supabase-blog's hand-written
+  // edit route: stamp published-at the first time a row is published, but
+  // never overwrite an already-set value on a later edit.
+  if (
+    statusColumn &&
+    ctx.type.status &&
+    ctx.type.status.publishedAtColumn &&
+    row[statusColumn] === ctx.type.status.publishedValue &&
+    existing &&
+    existing[ctx.type.status.publishedAtColumn] == null
+  ) {
+    row[ctx.type.status.publishedAtColumn] = new Date().toISOString()
   }
 
   const { data, error } = await client
@@ -478,7 +490,18 @@ async function update(
     throw toContentError(error)
   }
 
-  return toItem(ctx.type, data)
+  const item = toItem(ctx.type, data)
+  await recordRevision(
+    ctx,
+    client,
+    item,
+    updateAction(
+      ctx.type,
+      existing && statusColumn ? existing[statusColumn] : undefined,
+      statusColumn && Object.hasOwn(values, 'status') ? values.status : undefined
+    )
+  )
+  return item
 }
 
 async function remove(
@@ -492,6 +515,36 @@ async function remove(
 
   if (error) {
     throw toContentError(error)
+  }
+
+  await deleteRevisions(ctx, client, id)
+}
+
+/** The saved versions of one item, newest first. See `content-revisions.ts`. */
+async function listRevisions(
+  ctx: PlutoContentContext,
+  id: string | number,
+  query: { limit: number; cursor?: string }
+): Promise<PlutoContentRevisionPage> {
+  const client = await getClient(ctx.event)
+  try {
+    return await listItemRevisions(ctx, client, id, query)
+  } catch (error) {
+    throw toContentError(error as PostgrestError)
+  }
+}
+
+/** One item as it was at a revision. See `content-revisions.ts`. */
+async function getRevision(
+  ctx: PlutoContentContext,
+  id: string | number,
+  revisionId: string
+): Promise<PlutoContentItem | null> {
+  const client = await getClient(ctx.event)
+  try {
+    return await getItemRevision(ctx, client, id, revisionId)
+  } catch (error) {
+    throw toContentError(error as PostgrestError)
   }
 }
 
@@ -541,5 +594,7 @@ export function createSupabaseContentAdapter(): PlutoContentAdapter {
     authorize,
     countCreated,
     timestampKeys,
+    listRevisions,
+    getRevision,
   }
 }
