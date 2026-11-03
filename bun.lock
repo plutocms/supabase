@@ -65,7 +65,7 @@
     },
     "packages/supabase-shop": {
       "name": "@plutocms/supabase-shop",
-      "version": "0.18.0",
+      "version": "0.19.0",
       "dependencies": {
         "@nuxtjs/supabase": "^2.1.0",
         "@plutocms/supabase": ">=0.18.0 <1.0.0",
