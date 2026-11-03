@@ -11,6 +11,8 @@ policies shared by every project here.
   a conversion helper. The media upload checks
   the type and size, and explains each rejected or failed upload.
   @.claude/skills/shop-products/SKILL.md
+- Storefront composables: `useProducts`, `useProduct` and `useProductCategories`, on
+  `definePlutoContent` of core. @.claude/skills/shop-products/SKILL.md
 - Headless storefront API: the `product`, `product-category` and `product-availability` types
   are on the public API of `@plutocms/core`. A `toPublic` hook adds media, category and
   availability to a product with a fixed number of queries. The admin routes are under

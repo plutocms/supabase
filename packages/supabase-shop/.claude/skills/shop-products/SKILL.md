@@ -187,6 +187,20 @@ Errors use `createPlutoError` with `supabase-shop.errors.*` keys.
 The files go through the core routes (`/api/_pluto/media`). The layer has no composable for a
 storefront read: the old `useProduct` and `useProductCategory` are gone.
 
+## Composables
+
+`app/composables/shop-content.ts` gives a storefront the composables of the public types, on
+`definePlutoContent` of core (the content-model skill of `@plutocms/core`, "Site composables"):
+
+- `useProducts(options)`: the published products, with pages from `?page=` of the URL.
+  `products`, `total`, `page`, `pages`, and the `useFetch` refs. `filter` and `search` pass on.
+- `useProduct(slug, options)`: one product. A missing one shows the error page (404). It sets the
+  SEO tags (name, `description`, the first `media` record for `og:image`) and "Edit Product".
+- `useProductCategories(options)`: every category, one page of up to 100.
+
+The keys are named with `extendPlutoAsyncData` of core. The low-level `usePlutoPublicList` and
+`usePlutoPublicItem` stay for other cases.
+
 ## Price in cents
 
 `products.price` holds integer cents. `4990` means R$ 49,90. The column is `bigint`. The field
