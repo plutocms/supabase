@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.23.0](https://github.com/plutocms/supabase/compare/v0.22.0...v0.23.0) (2026-11-03)
+
+
+### Features
+
+* keep the revisions of every content item, for the History of core (migration 011) ([#198](https://github.com/plutocms/supabase/issues/198)) ([9c1f3f4](https://github.com/plutocms/supabase/commit/9c1f3f43569afba62a959668d600afb09c82f855))
+
 ## [0.22.0](https://github.com/plutocms/supabase/compare/v0.21.0...v0.22.0) (2026-11-02)
 
 
