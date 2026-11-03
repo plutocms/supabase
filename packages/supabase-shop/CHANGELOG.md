@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.19.0](https://github.com/plutocms/supabase/compare/supabase-shop-v0.18.0...supabase-shop-v0.19.0) (2026-11-03)
+
+
+### Features
+
+* storefront composables: useProducts, useProduct and useProductCategories ([#202](https://github.com/plutocms/supabase/issues/202)) ([5ba2b8e](https://github.com/plutocms/supabase/commit/5ba2b8e885b579df0618b081b282b0c264e961a6))
+
 ## [0.18.0](https://github.com/plutocms/supabase/compare/supabase-shop-v0.17.1...supabase-shop-v0.18.0) (2026-11-01)
 
 
