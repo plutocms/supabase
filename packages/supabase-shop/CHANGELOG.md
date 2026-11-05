@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.0](https://github.com/plutocms/supabase/compare/supabase-shop-v0.19.0...supabase-shop-v0.20.0) (2026-11-05)
+
+
+### Features
+
+* **supabase-shop:** extend @plutocms/shop for the cart and the price helpers ([#214](https://github.com/plutocms/supabase/issues/214)) ([2146572](https://github.com/plutocms/supabase/commit/214657238e868b734f625808943338e618e8fe3c))
+
 ## [0.19.0](https://github.com/plutocms/supabase/compare/supabase-shop-v0.18.0...supabase-shop-v0.19.0) (2026-11-03)
 
 
