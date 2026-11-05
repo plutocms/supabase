@@ -12,8 +12,8 @@ the editor.
 
 Use it in app code that holds the raw stored value. A page that reads the public API
 (`usePlutoPublicItem`) gets the body as sanitized `html` already, and renders it with
-`PlutoHtml` from `@plutocms/core`, not `PlutoProse`. `pluto-blog-template` does that, for both
-backends.
+`PlutoHtml` from `@plutocms/core`, not `PlutoProse`. The `blog` template of `plutocms/templates`
+does that, for both backends.
 
 ## The pipeline
 
