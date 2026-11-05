@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.0](https://github.com/plutocms/supabase/compare/supabase-blog-v0.19.0...supabase-blog-v0.20.0) (2026-11-05)
+
+
+### Features
+
+* **supabase-blog:** the SEO columns of a post, for @plutocms/seo ([#219](https://github.com/plutocms/supabase/issues/219)) ([03bbb36](https://github.com/plutocms/supabase/commit/03bbb365e71e91bc29f62c5729b39720b8afbcf0))
+
 ## [0.19.0](https://github.com/plutocms/supabase/compare/supabase-blog-v0.18.0...supabase-blog-v0.19.0) (2026-11-02)
 
 
