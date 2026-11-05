@@ -210,8 +210,8 @@ keeps `integer: true` and `min: 0`.
   It is not safe to run twice. The migration ledger records it, so the admin UI applies it once.
   The user applies it from `/admin/migrations`. An older app that is not updated shows prices
   100 times too big until it divides by 100.
-- `shared/utils/product-price.ts` is the one place for the conversion. Nuxt auto-imports it in
-  `app/`, `server/` and `shared/`:
+- The conversion helpers are in `@plutocms/shop` (its `shared/utils/product-price.ts`), which
+  this layer extends. Nuxt auto-imports them in `app/`, `server/` and `shared/`:
   - `centsToAmount(cents)` gives the amount in reais. A missing value gives 0.
   - `amountToCents(amount)` gives exact integer cents. It rounds, so `0.1 + 0.2` gives `30` and
     `1.005` gives `101`. A missing value gives `null`.
@@ -220,7 +220,9 @@ keeps `integer: true` and `min: 0`.
 - `PlutoProductPriceField.vue` shows `centsToAmount(modelValue)` and emits `amountToCents(input)`.
 - No code in this layer reads the price today. A storefront must call `formatProductPrice`, not
   `formatCurrency(product.price)`, and must not write `/ 100` by hand.
-- Tests: `test/product-price.test.ts`.
+- Tests: `test/product-price.test.ts` of `@plutocms/shop`.
+- The cart of `@plutocms/shop` (`useCart`) reads `stock_quantity` as the stock and `is_custom`
+  as made to order (no stock limit): `app/app.config.ts` sets `plutoShop.cart`.
 
 ## Translation
 

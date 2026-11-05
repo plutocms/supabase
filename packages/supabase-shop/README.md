@@ -77,11 +77,19 @@ The admin creates, edits and deletes products through the generic content routes
 `products.price` holds integer cents. `4990` means R$ 49,90. The price field in the admin takes
 an amount with 2 decimals and stores cents.
 
-Do not divide by 100 in your app. Use the auto-imported helpers instead:
+Do not divide by 100 in your app. Use the auto-imported helpers of
+[`@plutocms/shop`](https://github.com/plutocms/pluto/tree/main/packages/layers/addons/shop), which
+this layer extends:
 
 - `formatProductPrice(cents, options?)`: formats cents as a currency string. The currency is BRL by default. It takes the same options as `formatCurrency`.
 - `centsToAmount(cents)`: converts cents to an amount (`4990` to `49.9`).
 - `amountToCents(amount)`: converts an amount to cents, with rounding (`49.9` to `4990`).
+
+### Cart
+
+This layer brings the cart of `@plutocms/shop`: `useCart()`, saved in the browser. It reads
+`stock_quantity` as the stock, and a product with `is_custom` has no stock limit. See the README
+of `@plutocms/shop`.
 
 #### Migrate from a version before cents
 

@@ -8,7 +8,7 @@ policies shared by every project here.
 
 - Product admin (list, create, edit, delete) built on `@plutocms/core`'s content model, with a
   media gallery and the is-custom/availability/stock cross-field rule. Prices are integer cents, with
-  a conversion helper. The media upload checks
+  the conversion helpers of `@plutocms/shop`, which also brings the cart. The media upload checks
   the type and size, and explains each rejected or failed upload.
   @.claude/skills/shop-products/SKILL.md
 - Storefront composables: `useProducts`, `useProduct` and `useProductCategories`, on

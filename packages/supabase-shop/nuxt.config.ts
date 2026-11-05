@@ -4,7 +4,9 @@ const supabaseLayer = process.env.PLUTO_SUPABASE_PATH || '@plutocms/supabase'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  extends: [[supabaseLayer, { install: true }]],
+  // @plutocms/shop: the cart (`useCart`) and the price helpers (`formatProductPrice`), for
+  // every backend. The settings of the cart are in app/app.config.ts.
+  extends: [[supabaseLayer, { install: true }], '@plutocms/shop'],
 
   $meta: {
     name: 'supabase-shop',
