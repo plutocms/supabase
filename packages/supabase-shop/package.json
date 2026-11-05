@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@nuxtjs/supabase": "^2.1.0",
+    "@plutocms/shop": ">=0.1.1 <1.0.0",
     "@plutocms/supabase": ">=0.18.0 <1.0.0",
     "@vueuse/integrations": "14.1.0",
     "zod": "^4.6.7"

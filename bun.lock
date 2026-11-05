@@ -68,6 +68,7 @@
       "version": "0.19.0",
       "dependencies": {
         "@nuxtjs/supabase": "^2.1.0",
+        "@plutocms/shop": ">=0.1.1 <1.0.0",
         "@plutocms/supabase": ">=0.18.0 <1.0.0",
         "@vueuse/integrations": "14.1.0",
         "zod": "^4.6.7",
@@ -468,6 +469,8 @@
     "@pkgr/core": ["@pkgr/core@0.3.6", "", {}, "sha512-SEeaJLb3qBNF/OaXnaR1NmmBbFYk1zC0ZH/52fATcRPLFg/p791YrcyFFy44Bo9sLaGuSuLp5Q6axbb/O+v/RA=="],
 
     "@plutocms/core": ["@plutocms/core@0.56.0", "", { "dependencies": { "@codemirror/commands": "^6.11.1", "@codemirror/lang-markdown": "^6.5.2", "@codemirror/language": "^6.13.1", "@codemirror/search": "^6.7.2", "@codemirror/state": "^6.7.6", "@codemirror/view": "^6.43.15", "@iconify-json/lucide": "^1.2.144", "@internationalized/date": "^3.12.4", "@lezer/highlight": "^1.2.5", "@nuxt/image": "^2.1.0", "@nuxt/ui": "^4.12.0", "@tanstack/charts": "^1.1.0", "@vueuse/nuxt": "^15.0.0", "image-meta": "^0.3.0", "marked": "^18.1.1", "postcss": "^8.5.30", "postcss-selector-parser": "^7.1.4", "reka-ui": "^2.11.0", "tailwind-merge": "^3.7.0", "ultrahtml": "^1.7.0", "yaml": "^2.9.1" } }, "sha512-UQAQQliacVQFly9lDCf3mnKk1yL+P5AfGoP4HzkzX27Ensftg5Sm65Px3Y5wBEOe5TLFhY8jOR0LJQO+ull8IA=="],
+
+    "@plutocms/shop": ["@plutocms/shop@0.1.1", "", { "peerDependencies": { "@plutocms/core": ">=0.55.0 <1.0.0" }, "optionalPeers": ["@plutocms/core"] }, "sha512-F8C8xAcVuhPeWoGMeFVhmFwSIYGCkPx9pKgT3TxX1ykamDF/YMeH7Co6Cfw4kCbDHleEDOu7Mu4WZs1Fiu10VA=="],
 
     "@plutocms/supabase": ["@plutocms/supabase@workspace:packages/supabase"],
 

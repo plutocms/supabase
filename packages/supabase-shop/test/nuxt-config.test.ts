@@ -25,7 +25,10 @@ describe('supabase layer resolution', () => {
 
     const { default: config } = await import('../nuxt.config')
 
-    expect(config.extends).toEqual([['@plutocms/supabase', { install: true }]])
+    expect(config.extends).toEqual([
+      ['@plutocms/supabase', { install: true }],
+      '@plutocms/shop',
+    ])
   })
 
   it('honors PLUTO_SUPABASE_PATH when set', async () => {
@@ -33,6 +36,9 @@ describe('supabase layer resolution', () => {
 
     const { default: config } = await import('../nuxt.config')
 
-    expect(config.extends).toEqual([['../supabase', { install: true }]])
+    expect(config.extends).toEqual([
+      ['../supabase', { install: true }],
+      '@plutocms/shop',
+    ])
   })
 })
