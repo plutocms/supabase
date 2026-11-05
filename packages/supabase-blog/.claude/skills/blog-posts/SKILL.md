@@ -48,6 +48,13 @@ engine discovers, applies, and records migrations. This layer's migration files,
   draft, and every insert, update, and delete, requires `public.is_admin()`.
 - `db/migrations/003_capability_policies.sql` — rewrites the same four `posts` RLS policies to
   the three named capabilities above, instead of `public.is_admin()`.
+- `db/migrations/004_data_api_grants.sql` — the table grants of the Data API.
+- `db/migrations/005_post_cover.sql` — the `cover` column (see "Media").
+- `db/migrations/006_post_seo.sql` — the SEO columns for the `@plutocms/seo` add-on layer:
+  `seo_title`, `seo_description`, `seo_image` (a media id, like `cover`) and `seo_noindex`
+  (default false). This layer does not depend on `@plutocms/seo` and defines no field for them:
+  the add-on adds the fields to the `post` type and names the columns (`PLUTO_SEO_FIELDS`). Without
+  the add-on, the columns stay empty.
 
 ## The public API
 

@@ -14,6 +14,7 @@ policies shared by every project here.
   editor uses the canvas layout of the core post editor (Visual or Markdown with a site preview)
   and draft/publish controls. Posts are public on the public API of
   Pluto (`/api/pluto/v1/content/post`): a list item has `excerpt`, one post has sanitized `html`.
+  The `posts` table has the SEO columns that the `@plutocms/seo` add-on layer uses.
   @.claude/skills/blog-posts/SKILL.md
 - `PlutoProse`: displays a stored richtext value (markdown, HTML, or Tiptap JSON) as sanitized,
   styled HTML on a public page, with no Tiptap editor instance involved. Plain CSS (`.pluto-prose`
