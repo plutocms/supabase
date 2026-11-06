@@ -10,4 +10,8 @@ export default defineNitroPlugin(() => {
     ...postType,
     hooks: { ...postType.hooks, toPublic: postToPublic },
   })
+  // The terms of the post: the post fields `categories` and `tags` point to them.
+  for (const type of blogTermTypes) {
+    registerContentType(type)
+  }
 })

@@ -68,6 +68,30 @@ export const postType = defineContentType({
       accept: ['image/*'],
       region: 'side',
     },
+    // The terms of the post: the ids of the rows of `categories` and `tags`
+    // (`db/migrations/007_post_terms.sql`). The public API gives `{ id, label, slug }` and
+    // `?filter[tags]=<slug>` filters. The inline create needs `terms:manage`.
+    {
+      name: 'categories',
+      type: 'reference',
+      label: 'Categories',
+      target: 'category',
+      multiple: true,
+      create: true,
+      column: 'category_ids',
+      inList: true,
+      region: 'side',
+    },
+    {
+      name: 'tags',
+      type: 'reference',
+      label: 'Tags',
+      target: 'tag',
+      multiple: true,
+      create: true,
+      column: 'tag_ids',
+      region: 'side',
+    },
     {
       name: 'content',
       type: 'richtext',

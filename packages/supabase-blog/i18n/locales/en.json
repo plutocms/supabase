@@ -11,10 +11,10 @@
     "capabilities": {
       "readDrafts": "Read draft posts",
       "publish": "Create and publish posts",
-      "delete": "Delete posts"
+      "delete": "Delete posts",
+      "manageTerms": "Create, edit and delete tags and categories"
     },
     "navbar": {
-      "createPost": "Create post",
       "editPost": "Edit post"
     },
     "editor": {
@@ -83,6 +83,12 @@
         "cover": {
           "label": "Cover image"
         },
+        "categories": {
+          "label": "Categories"
+        },
+        "tags": {
+          "label": "Tags"
+        },
         "content": {
           "label": "Content"
         }
@@ -90,6 +96,36 @@
       "status": {
         "draft": "Draft",
         "published": "Published"
+      }
+    },
+    "tag": {
+      "label": "Tag",
+      "labelPlural": "Tags",
+      "fields": {
+        "title": {
+          "label": "Name"
+        },
+        "slug": {
+          "label": "Slug"
+        },
+        "description": {
+          "label": "Description"
+        }
+      }
+    },
+    "category": {
+      "label": "Category",
+      "labelPlural": "Categories",
+      "fields": {
+        "title": {
+          "label": "Name"
+        },
+        "slug": {
+          "label": "Slug"
+        },
+        "description": {
+          "label": "Description"
+        }
       }
     }
   }

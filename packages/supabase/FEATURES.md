@@ -16,7 +16,7 @@ policies shared by every project here.
   @.claude/skills/users-and-roles/SKILL.md
 - Content adapter: a Supabase/PostgREST-backed `PlutoContentAdapter`, plugging any layer's
   declared content type into `@plutocms/core`'s generic content routes. It supports query
-  filters, puts the timestamps on items, and reads the public API of core with an anonymous client.
+  filters (a filter on a `multiple` reference matches a list column) and `ids`, puts the timestamps on items, and reads the public API of core with an anonymous client.
   It keeps the revisions of every item (`pluto_content_revisions`, migration 011) for the History of core.
   @.claude/skills/content-adapter/SKILL.md
 - Auth driver: plugs Supabase sign-in into the admin shell that pluto core owns (navbar, sign-in

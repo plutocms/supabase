@@ -253,14 +253,30 @@ function resolveFieldColumn(
   return fieldName
 }
 
+/** Whether a field stores a list in one column: a `multiple` reference. */
+function isListField(type: PlutoContentType, fieldName: string): boolean {
+  const field = type.fields.find((candidate) => candidate.name === fieldName)
+
+  return field?.type === 'reference' && field.multiple === true
+}
+
 async function list(
   ctx: PlutoContentContext,
   query: PlutoContentQuery
 ): Promise<PlutoContentListResult> {
+  // An empty id list matches no item: no query.
+  if (query.ids && query.ids.length === 0) {
+    return { data: [], total: 0 }
+  }
+
   const client = await getClient(ctx.event)
   const pkColumn = ctx.type.primaryKey ?? 'id'
 
   let builder = client.from(ctx.type.source).select('*', { count: 'exact' })
+
+  if (query.ids) {
+    builder = builder.in(pkColumn, query.ids)
+  }
 
   const statusColumn = resolveStatusColumn(ctx.type)
   if (statusColumn && query.includeUnpublished !== true) {
@@ -270,7 +286,12 @@ async function list(
   }
 
   for (const [field, value] of Object.entries(query.filters ?? {})) {
-    builder = builder.eq(resolveFieldColumn(ctx.type, field, 'filter'), value)
+    const column = resolveFieldColumn(ctx.type, field, 'filter')
+
+    // A list column (a `multiple` reference) matches when it holds the value.
+    builder = isListField(ctx.type, field)
+      ? builder.contains(column, [value])
+      : builder.eq(column, value)
   }
 
   if (query.search) {
@@ -498,7 +519,9 @@ async function update(
     updateAction(
       ctx.type,
       existing && statusColumn ? existing[statusColumn] : undefined,
-      statusColumn && Object.hasOwn(values, 'status') ? values.status : undefined
+      statusColumn && Object.hasOwn(values, 'status')
+        ? values.status
+        : undefined
     )
   )
   return item

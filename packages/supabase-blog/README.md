@@ -7,7 +7,8 @@ This layer adds a blog to Pluto. It stores posts in Supabase. Editors write them
 - **Post admin:** list, create, edit and delete posts at `/admin/posts`, `/admin/post/new` and `/admin/post/edit/:id`. The pages run on the generic content UI of `@plutocms/core`, against the `post` content type.
 - **Rich text editor:** a Tiptap editor that stores Markdown. It runs in the core post editor: a Visual mode, a Markdown mode with a preview of the site, an outline of the headings, and draft/publish controls.
 - **Images:** a cover image, and inline images in the body. The editor picks a file or uploads one, through the media library of `@plutocms/core` (stored in Supabase Storage).
-- **Capabilities:** `posts:read_drafts`, `posts:publish` and `posts:delete` gate the actions. An admin holds all three.
+- **Tags and categories:** the `tag` and `category` content types, and the post fields `categories` and `tags` with an inline create. The public API gives them on each post and filters by them (`?filter[tags]=<slug>`).
+- **Capabilities:** `posts:read_drafts`, `posts:publish` and `posts:delete` gate the actions. `terms:manage` gates creating, editing and deleting a tag or a category. An admin holds all four.
 - **Public data:** the published posts on the public API of Pluto, for a site in any stack: `GET /api/pluto/v1/content/post` and `GET /api/pluto/v1/content/post/<id or slug>`. A list item has an `excerpt`, and one post has its body as sanitized `html`. In Nuxt, use `usePlutoPublicList` and `usePlutoPublicItem`. See https://pluto.vulmix.dev/docs/build/public-api.
 - **`PlutoProse`:** a component that shows a stored richtext value (Markdown, HTML or Tiptap JSON) as sanitized, styled HTML. Use it on a public post page.
 - **Migrations:** the `posts` table and its policies ship as layer migrations. An admin applies them from `/admin/migrations`.

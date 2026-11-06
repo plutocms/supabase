@@ -24,16 +24,17 @@ columns:
   sets it on the first publish only. It does not clear it when a post goes back to draft. A
   post that is unpublished and then published again keeps its original date.
 
-Row Level Security rules use three named capabilities, checked through
+Row Level Security rules use named capabilities, checked through
 `public.has_capability(cap)` (from `@plutocms/supabase` 0.7.0+):
 
 - `posts:read_drafts` — read a row where `status = 'draft'`. An anonymous visitor (`anon`)
   always reads only rows where `status = 'published'`, capability or not.
 - `posts:publish` — insert a row, or update any row.
 - `posts:delete` — delete any row.
+- `terms:manage` — insert, update or delete a row of `tags` or `categories` (see "Tags and categories").
 
-`public.has_capability()` folds in `public.is_admin()`, so an admin holds all three
-capabilities with no extra setup. There is no ownership-scoped capability yet — a holder of
+`public.has_capability()` folds in `public.is_admin()`, so an admin holds every
+capability with no extra setup. There is no ownership-scoped capability yet — a holder of
 `posts:publish` can edit every post, not only their own.
 
 ### How the migration applies
@@ -55,6 +56,30 @@ engine discovers, applies, and records migrations. This layer's migration files,
   (default false). This layer does not depend on `@plutocms/seo` and defines no field for them:
   the add-on adds the fields to the `post` type and names the columns (`PLUTO_SEO_FIELDS`). Without
   the add-on, the columns stay empty.
+
+- `db/migrations/007_post_terms.sql` — the tables `tags` and `categories`, the columns
+  `posts.tag_ids` and `posts.category_ids`, their RLS, grants, the `terms:manage` capability and the
+  delete triggers (see "Tags and categories").
+
+## Tags and categories
+
+A term is a content type (`shared/utils/content-terms.ts`: `blogTagType`, `blogCategoryType`, `blogTermTypes`).
+Both are public on the public API, have no status, sort by `title`, and take `created_at` and
+`updated_at`. Their nav order is 210 and 220. Writing and deleting need `terms:manage`. The
+server plugin and the client plugin register them with `post`. The tables have `id` (identity),
+`created_at`, `updated_at`, `title`, `slug` (unique) and `description`.
+
+A post stores the ids of its terms in `category_ids` and `tag_ids` (`bigint[] not null default '{}'`,
+GIN indexes). There is no join table and no foreign key per element. The post fields `categories`
+and `tags` are `multiple` `reference` fields with `create: true`, mapped to those columns. Core
+expands them in the public API to `{ id, label, slug }` and resolves `?filter[tags]=<slug>` to the
+id. The adapter then filters with `contains` (see the content-adapter skill of `@plutocms/supabase`).
+
+Migration 007 gives `terms:manage` to every role that holds `posts:publish`. The built-in admin role
+holds `*`. Two `security definer` functions (`search_path = ''`, execute revoked from public, anon
+and authenticated) run in `after delete` triggers on `tags` and `categories`. They remove the
+deleted id from the posts with `array_remove`, so a post never keeps a dangling id. A post save
+fails until the migration runs. `test/post-terms-migration.test.ts` checks the text of the SQL.
 
 ## The public API
 

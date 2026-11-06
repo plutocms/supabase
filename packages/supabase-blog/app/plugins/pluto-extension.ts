@@ -1,9 +1,7 @@
 import { defineAsyncComponent } from 'vue'
-import NavbarAdminActions from '../components/NavbarAdminActions.vue'
 
 // The editor widget loads on demand. Tiptap and ProseMirror stay out of the
-// entry chunk. Core shows a skeleton while the chunk loads. The navbar action
-// stays eager, because it is in the bar.
+// entry chunk. Core shows a skeleton while the chunk loads.
 const PlutoRichtextField = defineAsyncComponent(
   () => import('../components/PlutoRichtextField.vue')
 )
@@ -11,7 +9,6 @@ const PlutoRichtextField = defineAsyncComponent(
 export default defineNuxtPlugin(() => {
   definePlutoExtension({
     id: 'supabase-blog',
-    navbarActions: [{ id: 'post-actions', component: NavbarAdminActions }],
     nav: [
       {
         id: 'posts',
@@ -56,8 +53,16 @@ export default defineNuxtPlugin(() => {
         key: 'posts:delete',
         label: 'supabase-blog.capabilities.delete',
       },
+      {
+        id: 'terms-manage',
+        key: 'terms:manage',
+        label: 'supabase-blog.capabilities.manageTerms',
+      },
     ],
-    contentTypes: [{ id: 'post', type: postType }],
+    contentTypes: [
+      { id: 'post', type: postType },
+      ...blogTermTypes.map((type) => ({ id: type.name, type })),
+    ],
     contentFieldWidgets: [
       { id: 'richtext', fieldType: 'richtext', component: PlutoRichtextField },
     ],

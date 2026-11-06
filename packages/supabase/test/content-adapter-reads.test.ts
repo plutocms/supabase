@@ -37,7 +37,16 @@ function makeBuilder(result: {
     then: (resolve: (value: unknown) => unknown) => resolve(result),
   }
 
-  for (const name of ['select', 'eq', 'ilike', 'order', 'range', 'limit']) {
+  for (const name of [
+    'select',
+    'eq',
+    'in',
+    'contains',
+    'ilike',
+    'order',
+    'range',
+    'limit',
+  ]) {
     builder[name] = (...args: unknown[]) => {
       calls.push([name, args])
 
@@ -114,6 +123,61 @@ describe('list filters', () => {
 
     expect(calls).toContainEqual(['eq', ['title', 'Hello']])
     expect(calls).toContainEqual(['eq', ['rank_num', '3']])
+  })
+})
+
+describe('list ids and list filters', () => {
+  it('reads only the given ids with one in()', async () => {
+    const { builder, calls } = makeBuilder({
+      data: [row],
+      error: null,
+      count: 1,
+    })
+    sessionFrom.mockReturnValue(builder)
+
+    const result = await createSupabaseContentAdapter().list(
+      ctxFor(makeType()),
+      { ids: [1, 2] }
+    )
+
+    expect(calls).toContainEqual(['in', ['id', [1, 2]]])
+    expect(result.data).toHaveLength(1)
+  })
+
+  it('makes no query for an empty id list', async () => {
+    const result = await createSupabaseContentAdapter().list(
+      ctxFor(makeType()),
+      { ids: [] }
+    )
+
+    expect(sessionFrom).not.toHaveBeenCalled()
+    expect(result).toEqual({ data: [], total: 0 })
+  })
+
+  it('filters a multiple reference with contains() on its column', async () => {
+    const { builder, calls } = makeBuilder({ data: [], error: null, count: 0 })
+    sessionFrom.mockReturnValue(builder)
+    const type = makeType({
+      fields: [
+        { name: 'title', type: 'text' },
+        {
+          name: 'tags',
+          type: 'reference',
+          target: 'tag',
+          multiple: true,
+          column: 'tag_ids',
+        },
+        { name: 'author', type: 'reference', target: 'user' },
+      ],
+    } as never)
+
+    await createSupabaseContentAdapter().list(ctxFor(type), {
+      filters: { tags: '7', author: '2' },
+    })
+
+    expect(calls).toContainEqual(['contains', ['tag_ids', ['7']]])
+    expect(calls).toContainEqual(['eq', ['author', '2']])
+    expect(calls).not.toContainEqual(['eq', ['tag_ids', '7']])
   })
 })
 
