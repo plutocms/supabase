@@ -3,6 +3,7 @@ import type { H3Event } from 'h3'
 import { createClient } from '@supabase/supabase-js'
 import { serverSupabaseClient } from '#supabase/server'
 import { requireCapability } from './capability-guard'
+import { getBackup, putBackup, removeBackup } from './content-backups'
 import {
   deleteRevisions,
   getItemRevision,
@@ -571,6 +572,22 @@ async function getRevision(
   }
 }
 
+/** The server copy of the unsaved changes of the caller. See `content-backups.ts`. */
+const backups = {
+  async get(ctx: PlutoContentContext, key: string) {
+    const client = await getClient(ctx.event)
+    return await getBackup(ctx, client, key)
+  },
+  async put(ctx: PlutoContentContext, key: string, record: PlutoContentBackup) {
+    const client = await getClient(ctx.event)
+    return await putBackup(ctx, client, key, record)
+  },
+  async remove(ctx: PlutoContentContext, key: string) {
+    const client = await getClient(ctx.event)
+    await removeBackup(ctx, client, key)
+  },
+}
+
 /**
  * Counts the rows created in `[range.from, range.to)` with one exact-count
  * HEAD query: no rows come back, so it is not capped by the PostgREST row
@@ -619,5 +636,6 @@ export function createSupabaseContentAdapter(): PlutoContentAdapter {
     timestampKeys,
     listRevisions,
     getRevision,
+    backups,
   }
 }

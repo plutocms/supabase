@@ -97,6 +97,33 @@ of core, "Revisions"), so the edit form of every type shows History. The code is
 Tests: `test/content-revisions.test.ts` (a fake client), `test/migrations-011.test.ts` and
 `test/data-api-grants.test.ts`. The RLS rules were checked once in PGlite, with stub auth functions.
 
+## Backups
+
+The adapter implements core's optional `backups` (`get`, `put`, `remove`; the content-backup skill of
+core), so the edit form of every type keeps a server copy of the unsaved changes and offers it on
+another device. The code is in `server/utils/content-backups.ts`. The table is
+`public.pluto_content_backups` (migration 012).
+
+- **One row for each user, type and item** (`user_id`, `type`, `item_key`, unique). `item_key` is
+  the item id as text, or `+new` for a new item. `record` is the jsonb record of core, `device` and
+  `saved_at` come from it, and `updated_at` is the server time.
+- **`get`** deletes the expired rows of the user (14 days, `BACKUP_TTL_DAYS`), then reads the row.
+- **`put`** reads the current row, upserts with `onConflict: 'user_id,type,item_key'`, then deletes
+  the expired rows and the rows after the newest 20 (`MAX_BACKUPS_PER_USER`, by `updated_at`). It
+  answers `otherDevice` when the replaced row had another `device` and an `updated_at` within 10
+  minutes. The cleanup is best effort.
+- **`remove`** deletes the row. Core calls it after a create, update and delete.
+- **No user**: `get` answers `null`, `put` and `remove` do nothing.
+- **Before 012 is applied** (`isMissingTable`: code `42P01` or `PGRST205`): `get` answers `null`,
+  `put` and `remove` do nothing, with one warning for each process. A save never fails because of a
+  backup.
+- **RLS**: owner only, on all four commands. Grants: CRUD to authenticated and service_role.
+  Server copies are readable by `service_role`, by the database owner and in the database backups.
+  Sign-out keeps them.
+
+Tests: `test/content-backups.test.ts` (a fake client), `test/migrations-012.test.ts` and
+`test/data-api-grants.test.ts`. The RLS rules were checked in PGlite with stub auth functions.
+
 ## Timestamps: always stamped, never client-controlled
 
 `resolveTimestampColumn(type, 'created' | 'updated')` resolves the storage column, or
