@@ -1,5 +1,5 @@
 {
   "packages/supabase": "0.25.0",
   "packages/supabase-shop": "0.21.0",
-  "packages/supabase-blog": "0.21.0"
+  "packages/supabase-blog": "0.21.1"
 }
