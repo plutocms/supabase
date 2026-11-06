@@ -39,7 +39,7 @@
     },
     "packages/supabase-blog": {
       "name": "@plutocms/supabase-blog",
-      "version": "0.21.0",
+      "version": "0.21.1",
       "dependencies": {
         "@plutocms/supabase": ">=0.18.0 <1.0.0",
         "@tiptap/core": "^3.32.0",
