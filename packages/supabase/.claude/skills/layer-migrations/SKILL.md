@@ -173,6 +173,16 @@ the column. The migration adds no RLS policy. See the `profile-language` skill.
 The routes `/api/_pluto/supabase/me/locale` do not fail when this migration is pending. The GET route
 returns no locale. The POST route answers 409 with the key `supabase.profile.migrationPending`.
 
+## Migration 012: the content backups
+
+`db/migrations/012_content_backups.sql` creates `public.pluto_content_backups`, the server copy of the
+unsaved changes of an editor (one row for each user, type and item). Every statement is guarded, so
+a second run is safe. RLS is on, with four policies (select, insert, update, delete) that allow
+only `user_id = (select auth.uid())`. There is no capability in a policy: the core route checks
+the write capability. Grants: CRUD to `authenticated` and `service_role`, nothing to `anon`. A
+user delete cascades to the rows. The adapter code is in `server/utils/content-backups.ts`. See
+the `content-adapter` skill ("Backups"). The adapter does not fail when 012 is pending.
+
 ## `.env` persistence caveat
 
 `persistDatabaseUrl` writes to `resolve(process.cwd(), '.env')`. `process.cwd()` may not be

@@ -18,6 +18,8 @@ policies shared by every project here.
   declared content type into `@plutocms/core`'s generic content routes. It supports query
   filters (a filter on a `multiple` reference matches a list column) and `ids`, puts the timestamps on items, and reads the public API of core with an anonymous client.
   It keeps the revisions of every item (`pluto_content_revisions`, migration 011) for the History of core.
+  It keeps a server copy of the unsaved changes of each editor (`pluto_content_backups`, migration
+  012), so the edit form can offer them on another device.
   @.claude/skills/content-adapter/SKILL.md
 - Auth driver: plugs Supabase sign-in into the admin shell that pluto core owns (navbar, sign-in
   page, route guard), keeps the setup guard in the driver, and registers the backend badge
