@@ -22,7 +22,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-better-tailwindcss": "^4.10.0",
     "prettier": "^3.9.10",
-    "vue-tsc": "3.3.13"
+    "vue-tsc": "3.3.14"
   },
   "overrides": {
     "typescript": "^5.9.3"
