@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.21.0](https://github.com/plutocms/supabase/compare/supabase-blog-v0.20.0...supabase-blog-v0.21.0) (2026-11-06)
+
+
+### Features
+
+* **supabase-blog:** tags and categories for posts ([#225](https://github.com/plutocms/supabase/issues/225)) ([36263de](https://github.com/plutocms/supabase/commit/36263def50c4f1e1a4226be5cd14b270d27bb097))
+
 ## [0.20.0](https://github.com/plutocms/supabase/compare/supabase-blog-v0.19.0...supabase-blog-v0.20.0) (2026-11-05)
 
 
