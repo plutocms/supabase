@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.21.1](https://github.com/plutocms/supabase/compare/supabase-blog-v0.21.0...supabase-blog-v0.21.1) (2026-11-06)
+
+
+### Bug Fixes
+
+* **supabase-blog:** flush the post editor before a save and a backup ([#235](https://github.com/plutocms/supabase/issues/235)) ([75c5bc9](https://github.com/plutocms/supabase/commit/75c5bc94db638b53d8c9825b433d974e58aaa872))
+
 ## [0.21.0](https://github.com/plutocms/supabase/compare/supabase-blog-v0.20.0...supabase-blog-v0.21.0) (2026-11-06)
 
 
