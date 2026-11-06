@@ -207,6 +207,16 @@ function scheduleFlush() {
 }
 /* eslint-enable ts/no-use-before-define -- see note above flush() */
 
+// The form calls this before a save and before a backup write (the `onFlush` hook of
+// PlutoRichtextField.vue), so the last keystrokes are in the v-model. It cancels the pending
+// debounce timer, then runs the same flush as a blur.
+function flushNow() {
+  clearTimeout(flushTimer)
+  flush()
+}
+
+defineExpose({ flush: flushNow })
+
 // Register before useEditor() so this unmount hook runs before the one
 // useEditor() registers internally to destroy the editor (Vue runs
 // onBeforeUnmount hooks in registration order).

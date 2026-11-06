@@ -22,6 +22,13 @@ const emit = defineEmits<{
 
 const { t } = usePlutoI18n()
 
+// PostEditor.vue holds the document as ProseMirror state and serializes it to Markdown on a
+// 400 ms debounce. The form calls this before a save and before a backup write, so a Ctrl+S right
+// after typing, or a backup, does not miss the last keystrokes. Outside the content form, the
+// context is missing and nothing registers.
+const editor = ref<{ flush: () => void } | null>(null)
+usePlutoContentForm()?.onFlush(() => editor.value?.flush())
+
 const value = computed(() => (props.modelValue as string | undefined) ?? '')
 
 const UFormField = resolveComponent('UFormField')
@@ -50,6 +57,7 @@ const frame = computed(() =>
       ]"
     >
       <PostEditor
+        ref="editor"
         :model-value="value"
         :placeholder="
           t('supabase-blog.editor.fieldPlaceholder', {
