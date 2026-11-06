@@ -157,6 +157,12 @@ Instead:
   incoming change is the component's own echo, and it is ignored — no re-serialization needed to
   detect that.
 
+- `PostEditor.vue` exposes `flush()` (`defineExpose`): it clears the timer and runs the same flush
+  as a blur. `PlutoRichtextField.vue` registers it with `usePlutoContentForm()?.onFlush(...)`, so
+  the content form of core flushes the editor before it builds the payload of a save and before it
+  writes a backup (browser and server copy). Without this, a Ctrl+S right after typing could miss
+  up to 400 ms of text.
+
 This keeps every keystroke cheap. The only place a full-document serialization ever runs is the
 debounced flush, at most once per 400ms of active typing, plus once on blur.
 
