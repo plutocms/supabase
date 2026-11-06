@@ -15,7 +15,6 @@
       "manageTerms": "Criar, editar e excluir tags e categorias"
     },
     "navbar": {
-      "createPost": "Criar post",
       "editPost": "Editar post"
     },
     "editor": {

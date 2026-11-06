@@ -15,7 +15,6 @@
       "manageTerms": "Create, edit and delete tags and categories"
     },
     "navbar": {
-      "createPost": "Create post",
       "editPost": "Edit post"
     },
     "editor": {
