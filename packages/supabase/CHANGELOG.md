@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.25.0](https://github.com/plutocms/supabase/compare/v0.24.0...v0.25.0) (2026-11-06)
+
+
+### Features
+
+* **supabase:** keep a server copy of the unsaved changes of an editor ([#234](https://github.com/plutocms/supabase/issues/234)) ([bd7d06f](https://github.com/plutocms/supabase/commit/bd7d06f5094d43e98e406d05b2af99bd4a5962ce))
+
 ## [0.24.0](https://github.com/plutocms/supabase/compare/v0.23.0...v0.24.0) (2026-11-06)
 
 
