@@ -95,14 +95,14 @@ describe('supabase-blog locale files', () => {
       expect([...namespaces].toSorted()).toEqual(['content', 'supabase-blog'])
     })
 
-    it(`${code} has only the post type under content`, () => {
+    it(`${code} has only the post and term types under content`, () => {
       const types = new Set(
         Object.keys(locales[code]!)
           .filter((key) => key.startsWith('content.'))
           .map((key) => key.split('.')[1]!)
       )
 
-      expect([...types]).toEqual(['post'])
+      expect([...types].toSorted()).toEqual(['category', 'post', 'tag'])
     })
   }
 })
@@ -142,7 +142,43 @@ describe('content.post keys', () => {
     }
   })
 
+  it('give the English label of each term type and field, byte for byte', async () => {
+    const { blogTagType, blogCategoryType } =
+      await import('../shared/utils/content-terms')
+    const en = locales.en!
+
+    for (const type of [blogTagType, blogCategoryType]) {
+      expect(en[`content.${type.name}.label`]).toBe(type.label)
+      expect(en[`content.${type.name}.labelPlural`]).toBe(type.labelPlural)
+
+      for (const field of type.fields) {
+        expect(
+          en[`content.${type.name}.fields.${field.name}.label`],
+          `${type.name} ${field.name}`
+        ).toBe(field.label)
+      }
+    }
+  })
+
   it('have a label key for every field in each locale', async () => {
+    const { blogTagType, blogCategoryType } =
+      await import('../shared/utils/content-terms')
+
+    for (const code of codes) {
+      for (const type of [blogTagType, blogCategoryType]) {
+        expect(locales[code]![`content.${type.name}.label`]).toBeTruthy()
+
+        for (const field of type.fields) {
+          expect(
+            locales[code]![`content.${type.name}.fields.${field.name}.label`],
+            `${code} ${type.name} ${field.name}`
+          ).toBeTruthy()
+        }
+      }
+    }
+  })
+
+  it('have a label key for every post field in each locale', async () => {
     const { postType } = await import('../shared/utils/content-post')
 
     for (const code of codes) {

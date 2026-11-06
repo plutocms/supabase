@@ -119,6 +119,13 @@ declared default.
 boolean matches by its text (`'3'`, `'true'`). Core checks that each name is a public field before it
 calls the adapter.
 
+A filter on a `reference` field with `multiple: true` (a list column, such as `posts.tag_ids`
+`bigint[]`) applies `.contains(column, [value])`: the row matches when its list holds the value. A
+GIN index on the column serves it. `isListField()` decides.
+
+`query.ids` applies `.in(pkColumn, ids)`. An empty list makes no query and gives an empty result with a
+total of 0. Core uses it to expand references with one read per target.
+
 ## Timestamps on items
 
 `mapColumnsToFields` drops every column that no field declares, and a timestamp is not a field.

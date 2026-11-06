@@ -56,8 +56,16 @@ export default defineNuxtPlugin(() => {
         key: 'posts:delete',
         label: 'supabase-blog.capabilities.delete',
       },
+      {
+        id: 'terms-manage',
+        key: 'terms:manage',
+        label: 'supabase-blog.capabilities.manageTerms',
+      },
     ],
-    contentTypes: [{ id: 'post', type: postType }],
+    contentTypes: [
+      { id: 'post', type: postType },
+      ...blogTermTypes.map((type) => ({ id: type.name, type })),
+    ],
     contentFieldWidgets: [
       { id: 'richtext', fieldType: 'richtext', component: PlutoRichtextField },
     ],
