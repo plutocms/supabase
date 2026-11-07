@@ -58,6 +58,23 @@ export const postType = defineContentType({
       inList: true,
       region: 'side',
     },
+    // The authors of the post: the ids of the rows of `authors`, in byline order
+    // (`db/migrations/008_post_authors.sql`). The public API gives
+    // `[{ id, label, slug, avatar, bio }]` and `?filter[authors]=<slug>` filters. A new post gets
+    // the authors that the user saved last time. The inline create needs `authors:manage`.
+    {
+      name: 'authors',
+      type: 'reference',
+      label: 'Authors',
+      target: 'author',
+      multiple: true,
+      create: true,
+      remember: true,
+      publicFields: ['avatar', 'bio'],
+      column: 'author_ids',
+      inList: true,
+      region: 'side',
+    },
     // The cover: the id of a file of the core media library (the `posts.cover`
     // column). The public API gives the record. See the media skill of
     // `@plutocms/core`.

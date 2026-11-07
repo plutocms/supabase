@@ -24,6 +24,12 @@ policies shared by every project here.
   `?filter[tags]=<slug>` filters. The `terms:manage` capability gates writing a term, including
   the inline create in the post form. Deleting a term removes it from the posts (a trigger).
   @.claude/skills/blog-posts/SKILL.md
+- Authors: the `author` content type (table `authors`, migration 008: name, slug, bio, avatar; no link to
+  sign-in users), public on the public API. A post has the field `authors` (the array column
+  `author_ids`, in byline order); the public API gives `[{ id, label, slug, avatar, bio }]` and
+  `?filter[authors]=<slug>` filters. A new post gets the authors that the user saved last time. The
+  `authors:manage` capability gates writing an author. Deleting an author removes it from the posts (a
+  trigger). @.claude/skills/blog-posts/SKILL.md
 - `PlutoProse`: displays a stored richtext value (markdown, HTML, or Tiptap JSON) as sanitized,
   styled HTML on a public page, with no Tiptap editor instance involved. Plain CSS (`.pluto-prose`
   of core, from `@plutocms/css/base`), so it works with no Tailwind.

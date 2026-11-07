@@ -12,7 +12,8 @@
       "readDrafts": "Ler rascunhos de posts",
       "publish": "Criar e publicar posts",
       "delete": "Excluir posts",
-      "manageTerms": "Criar, editar e excluir tags e categorias"
+      "manageTerms": "Criar, editar e excluir tags e categorias",
+      "manageAuthors": "Criar, editar e excluir autores"
     },
     "navbar": {
       "editPost": "Editar post"
@@ -80,6 +81,9 @@
         "slug": {
           "label": "Slug"
         },
+        "authors": {
+          "label": "Autores"
+        },
         "cover": {
           "label": "Imagem de capa"
         },
@@ -125,6 +129,24 @@
         },
         "description": {
           "label": "Descrição"
+        }
+      }
+    },
+    "author": {
+      "label": "Autor",
+      "labelPlural": "Autores",
+      "fields": {
+        "name": {
+          "label": "Nome"
+        },
+        "slug": {
+          "label": "Slug"
+        },
+        "bio": {
+          "label": "Biografia"
+        },
+        "avatar": {
+          "label": "Avatar"
         }
       }
     }

@@ -53,7 +53,12 @@ describe('data API grants (supabase-blog)', () => {
   const grants = parseGrants(allSql)
 
   it('finds the tables of the layer', () => {
-    expect([...new Set(tables)].sort()).toEqual(['categories', 'posts', 'tags'])
+    expect([...new Set(tables)].sort()).toEqual([
+      'authors',
+      'categories',
+      'posts',
+      'tags',
+    ])
   })
 
   it('grants every created table to authenticated', () => {
@@ -111,6 +116,14 @@ describe('data API grants (supabase-blog)', () => {
     }
 
     expect(matrix(read('007_post_terms.sql'))).toEqual(expected)
+  })
+
+  it('008_post_authors.sql grants the exact matrix for the authors table', () => {
+    const crud = 'delete,insert,select,update'
+
+    expect(matrix(read('008_post_authors.sql'))).toEqual({
+      authors: { anon: 'select', authenticated: crud, service_role: crud },
+    })
   })
 
   it('004_data_api_grants.sql only grants, so it is safe to run twice', () => {
