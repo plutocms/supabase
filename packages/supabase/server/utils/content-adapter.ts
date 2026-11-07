@@ -286,6 +286,11 @@ async function list(
     builder = builder.eq(statusColumn, publishedValue)
   }
 
+  // Only one status. The status column has a default and no null, so an equality is enough.
+  if (statusColumn && query.status !== undefined) {
+    builder = builder.eq(statusColumn, query.status)
+  }
+
   for (const [field, value] of Object.entries(query.filters ?? {})) {
     const column = resolveFieldColumn(ctx.type, field, 'filter')
 

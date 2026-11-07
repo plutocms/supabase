@@ -126,6 +126,43 @@ describe('list filters', () => {
   })
 })
 
+describe('list status', () => {
+  const workflow = {
+    status: {
+      values: [
+        { value: 'draft', label: 'Draft' },
+        { value: 'published', label: 'Published' },
+      ],
+      default: 'draft',
+      column: 'state',
+    },
+  } as never
+
+  it('keeps one status on the status column', async () => {
+    const { builder, calls } = makeBuilder({ data: [], error: null, count: 0 })
+    sessionFrom.mockReturnValue(builder)
+
+    await createSupabaseContentAdapter().list(ctxFor(makeType(workflow)), {
+      includeUnpublished: true,
+      status: 'draft',
+    })
+
+    expect(calls).toContainEqual(['eq', ['state', 'draft']])
+    expect(calls).not.toContainEqual(['eq', ['state', 'published']])
+  })
+
+  it('ignores the status of a type with no workflow', async () => {
+    const { builder, calls } = makeBuilder({ data: [], error: null, count: 0 })
+    sessionFrom.mockReturnValue(builder)
+
+    await createSupabaseContentAdapter().list(ctxFor(makeType()), {
+      status: 'draft',
+    })
+
+    expect(calls.filter(([name]) => name === 'eq')).toEqual([])
+  })
+})
+
 describe('list ids and list filters', () => {
   it('reads only the given ids with one in()', async () => {
     const { builder, calls } = makeBuilder({

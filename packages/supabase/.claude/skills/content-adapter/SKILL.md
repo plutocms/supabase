@@ -150,6 +150,11 @@ A filter on a `reference` field with `multiple: true` (a list column, such as `p
 `bigint[]`) applies `.contains(column, [value])`: the row matches when its list holds the value. A
 GIN index on the column serves it. `isListField()` decides.
 
+`query.status` (the Status filter of the admin list) applies `.eq(statusColumn, status)` on the
+column of `resolveStatusColumn`. A type with no workflow ignores it. The status columns are
+`NOT NULL` with a default, so no row has a missing status and an equality is enough. It does not
+add drafts: `includeUnpublished` decides that, as before.
+
 `query.ids` applies `.in(pkColumn, ids)`. An empty list makes no query and gives an empty result with a
 total of 0. Core uses it to expand references with one read per target.
 
