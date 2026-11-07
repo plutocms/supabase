@@ -42,6 +42,10 @@ function makeClient(
           call.filters.push([column, value])
           return query
         },
+        is(column: string, value: unknown) {
+          call.filters.push([`${column} is`, value])
+          return query
+        },
         maybeSingle: async () => ({
           data: answer.data ?? null,
           error: answer.error ?? null,

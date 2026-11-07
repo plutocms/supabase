@@ -41,6 +41,10 @@ function makeClient(tables: Record<string, unknown[]>, failTable?: string) {
       const query = {
         select: () => query,
         order: () => query,
+        is(column: string, value: unknown) {
+          calls.push({ table, column: `${column} is`, ids: [value] })
+          return query
+        },
         in(column: string, ids: unknown[]) {
           calls.push({ table, column, ids })
           return query
@@ -144,7 +148,14 @@ describe('productToPublic', () => {
       )
     )
 
-    expect(client.calls).toHaveLength(2)
+    const lookups = client.calls.filter((call) => call.column === 'id')
+    expect(lookups).toHaveLength(2)
+    // A trashed category or availability gives no label.
+    expect(client.calls).toContainEqual({
+      table: 'product_category',
+      column: 'deleted_at is',
+      ids: [null],
+    })
     expect(
       client.calls.find((call) => call.table === 'product_category')?.ids
     ).toEqual([10])

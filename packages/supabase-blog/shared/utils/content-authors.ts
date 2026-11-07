@@ -63,4 +63,5 @@ export const blogAuthorType: PlutoContentType = defineContentType({
   navOrder: 230,
   // An author is public once saved: the public API gives it, and the post field expands to it.
   api: { public: true },
+  trash: true,
 })

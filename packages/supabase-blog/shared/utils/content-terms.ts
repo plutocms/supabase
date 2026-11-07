@@ -67,6 +67,7 @@ function termType(options: TermTypeOptions): PlutoContentType {
     navOrder: options.navOrder,
     // The terms are public: the public API gives them and the post fields expand to them.
     api: { public: true },
+    trash: true,
   })
 }
 

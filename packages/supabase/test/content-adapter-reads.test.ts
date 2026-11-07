@@ -94,6 +94,7 @@ beforeEach(() => {
   vi.stubGlobal('fieldColumn', fieldColumn)
   vi.stubGlobal('mapColumnsToFields', mapColumnsToFields)
   vi.stubGlobal('isPublicRead', () => publicRead)
+  vi.stubGlobal('isPlutoSystemEvent', () => false)
   vi.stubGlobal('useRuntimeConfig', () => ({
     public: {
       supabase: { url: 'https://example.supabase.co', key: 'anon-key' },

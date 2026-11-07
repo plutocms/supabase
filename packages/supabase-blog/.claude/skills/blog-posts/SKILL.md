@@ -63,6 +63,14 @@ engine discovers, applies, and records migrations. This layer's migration files,
   delete triggers (see "Tags and categories").
 - `db/migrations/008_post_authors.sql` — the table `authors`, the column `posts.author_ids`, its RLS,
   grants, the `authors:manage` capability and the delete trigger (see "Authors").
+- `db/migrations/009_trash.sql` — the trash: `deleted_at` and a partial index on `posts`, `tags`,
+  `categories` and `authors`. The public reads hide a trashed row (anon and a signed-in user with no
+  capability); staff with the delete capability of the type (`posts:delete`, `terms:manage`,
+  `authors:manage`) reads it. A role with `posts:delete` may update a post
+  (`"Allow posts:delete trash on posts"`), and the trigger `posts_trash_only_guard` keeps a signed-in
+  user without `posts:publish` to `deleted_at` (and `updated_at`). The guard checks `current_user =
+  'authenticated'`, so the delete triggers (security definer) and the service role pass. The post,
+  term and author types have `trash: true`. The delete triggers run at the purge, not at the trash.
 
 ## Tags and categories
 

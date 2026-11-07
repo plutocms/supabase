@@ -48,6 +48,7 @@ export const productCategoryType = defineContentType({
   ],
   slug: { field: 'slug' },
   status: false,
+  trash: true,
   timestamps: false,
   capabilities: {
     write: 'shop:manage_taxonomy',
@@ -83,6 +84,7 @@ export const productAvailabilityType = defineContentType({
   ],
   slug: { field: 'slug' },
   status: false,
+  trash: true,
   timestamps: false,
   capabilities: {
     write: 'shop:manage_availability',

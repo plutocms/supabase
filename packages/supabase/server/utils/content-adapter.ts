@@ -11,6 +11,7 @@ import {
   recordRevision,
   updateAction,
 } from './content-revisions'
+import { optionalServiceClient } from './service-client'
 
 /**
  * A Supabase client for one request, deliberately untyped.
@@ -40,6 +41,19 @@ import {
  * type, not to assert against one.
  */
 async function getClient(event: H3Event): Promise<SupabaseClient> {
+  // A system request (a scheduled task of core, such as the purge of the trash) has no user: it
+  // needs the service role key. Without the key it answers 401, and the task skips the type.
+  if (isPlutoSystemEvent(event)) {
+    const service = optionalServiceClient(event)
+    if (!service) {
+      throw createPlutoError({
+        statusCode: 401,
+        message: 'A system request needs the Supabase service role key.',
+        key: 'pluto.errors.unauthorized',
+      })
+    }
+    return service as unknown as SupabaseClient
+  }
   if (isPublicRead(event)) {
     return getAnonymousClient(event)
   }
@@ -254,6 +268,26 @@ function resolveFieldColumn(
   return fieldName
 }
 
+/**
+ * The column that marks a trashed row: `type.trash.column`, else `deleted_at`. `undefined` for a
+ * type with no trash. See the "Trash" of the content-model skill of core.
+ */
+export function resolveTrashColumn(type: PlutoContentType): string | undefined {
+  if (!type.trash) {
+    return undefined
+  }
+  return (typeof type.trash === 'object' && type.trash.column) || 'deleted_at'
+}
+
+/** Keeps the rows that are not in the trash, for a type with a trash. */
+function liveOnly<B extends { is: (column: string, value: null) => B }>(
+  builder: B,
+  type: PlutoContentType
+): B {
+  const column = resolveTrashColumn(type)
+  return column ? builder.is(column, null) : builder
+}
+
 /** Whether a field stores a list in one column: a `multiple` reference. */
 function isListField(type: PlutoContentType, fieldName: string): boolean {
   const field = type.fields.find((candidate) => candidate.name === fieldName)
@@ -273,7 +307,10 @@ async function list(
   const client = await getClient(ctx.event)
   const pkColumn = ctx.type.primaryKey ?? 'id'
 
-  let builder = client.from(ctx.type.source).select('*', { count: 'exact' })
+  let builder = liveOnly(
+    client.from(ctx.type.source).select('*', { count: 'exact' }),
+    ctx.type
+  )
 
   if (query.ids) {
     builder = builder.in(pkColumn, query.ids)
@@ -362,11 +399,10 @@ async function get(
   const client = await getClient(ctx.event)
   const pkColumn = ctx.type.primaryKey ?? 'id'
 
-  const { data, error } = await client
-    .from(ctx.type.source)
-    .select('*')
-    .eq(pkColumn, idOrSlug)
-    .maybeSingle()
+  const { data, error } = await liveOnly(
+    client.from(ctx.type.source).select('*').eq(pkColumn, idOrSlug),
+    ctx.type
+  ).maybeSingle()
 
   if (error && !isInvalidIdShape(error)) {
     throw toContentError(error)
@@ -383,11 +419,10 @@ async function get(
       'slug.field'
     )
 
-    const bySlug = await client
-      .from(ctx.type.source)
-      .select('*')
-      .eq(slugColumn, idOrSlug)
-      .maybeSingle()
+    const bySlug = await liveOnly(
+      client.from(ctx.type.source).select('*').eq(slugColumn, idOrSlug),
+      ctx.type
+    ).maybeSingle()
 
     if (bySlug.error) {
       throw toContentError(bySlug.error)
@@ -609,17 +644,184 @@ async function countCreated(
   }
 
   const client = await getClient(ctx.event)
-  const { count, error } = await client
-    .from(ctx.type.source)
-    .select('*', { count: 'exact', head: true })
-    .gte(createdColumn, range.from)
-    .lt(createdColumn, range.to)
+  const { count, error } = await liveOnly(
+    client
+      .from(ctx.type.source)
+      .select('*', { count: 'exact', head: true })
+      .gte(createdColumn, range.from)
+      .lt(createdColumn, range.to),
+    ctx.type
+  )
 
   if (error) {
     throw toContentError(error)
   }
 
   return count ?? 0
+}
+
+// --- Trash ------------------------------------------------------------------
+//
+// A trashed row has its trash column set (`resolveTrashColumn`). Moving it to the trash and back
+// is an update of that column; the purge is the real delete, so the delete triggers of the layers
+// (the references to a term or an author) run then. The migrations of the layers give the column
+// and the policies: visitors never read a trashed row, and staff with the delete capability does.
+
+function requireTrashColumn(type: PlutoContentType): string {
+  const column = resolveTrashColumn(type)
+  if (!column) {
+    throw createPlutoError({
+      statusCode: 404,
+      message: 'This content type has no trash.',
+      key: 'pluto.errors.noTrash',
+    })
+  }
+  return column
+}
+
+function notFound() {
+  return createPlutoError({
+    statusCode: 404,
+    message: 'Not found.',
+    key: 'pluto.errors.notFound',
+  })
+}
+
+async function moveToTrash(
+  ctx: PlutoContentContext,
+  id: string | number
+): Promise<void> {
+  const column = requireTrashColumn(ctx.type)
+  const client = await getClient(ctx.event)
+  const pkColumn = ctx.type.primaryKey ?? 'id'
+
+  const { data, error } = await client
+    .from(ctx.type.source)
+    .update({ [column]: new Date().toISOString() })
+    .eq(pkColumn, id)
+    .is(column, null)
+    .select('*')
+
+  if (error) {
+    throw toContentError(error)
+  }
+  if (!data || data.length === 0) {
+    throw notFound()
+  }
+}
+
+async function listTrash(
+  ctx: PlutoContentContext,
+  query: { limit?: number; offset?: number; search?: string }
+): Promise<PlutoContentListResult> {
+  const column = requireTrashColumn(ctx.type)
+  const client = await getClient(ctx.event)
+
+  let builder = client
+    .from(ctx.type.source)
+    .select('*', { count: 'exact' })
+    .not(column, 'is', null)
+
+  if (query.search) {
+    const titleColumn = resolveFieldColumn(
+      ctx.type,
+      ctx.type.titleField,
+      'titleField'
+    )
+    builder = builder.ilike(titleColumn, `%${query.search}%`)
+  }
+
+  builder = builder.order(column, { ascending: false })
+
+  const offset = query.offset ?? 0
+  const limit = query.limit ?? 50
+  builder = builder.range(offset, offset + limit - 1)
+
+  const { data, error, count } = await builder
+  if (error) {
+    throw toContentError(error)
+  }
+
+  return {
+    data: (data ?? []).map((row: Record<string, unknown>) => ({
+      ...toItem(ctx.type, row),
+      _deletedAt: row[column] ?? null,
+    })),
+    total: count ?? undefined,
+  }
+}
+
+async function restoreFromTrash(
+  ctx: PlutoContentContext,
+  id: string | number
+): Promise<PlutoContentItem> {
+  const column = requireTrashColumn(ctx.type)
+  const client = await getClient(ctx.event)
+  const pkColumn = ctx.type.primaryKey ?? 'id'
+
+  const { data, error } = await client
+    .from(ctx.type.source)
+    .update({ [column]: null })
+    .eq(pkColumn, id)
+    .not(column, 'is', null)
+    .select('*')
+
+  if (error) {
+    throw toContentError(error)
+  }
+  const row = data?.[0]
+  if (!row) {
+    throw notFound()
+  }
+  return toItem(ctx.type, row)
+}
+
+async function purge(
+  ctx: PlutoContentContext,
+  id: string | number
+): Promise<void> {
+  const column = requireTrashColumn(ctx.type)
+  const client = await getClient(ctx.event)
+  const pkColumn = ctx.type.primaryKey ?? 'id'
+
+  const { data, error } = await client
+    .from(ctx.type.source)
+    .delete()
+    .eq(pkColumn, id)
+    .not(column, 'is', null)
+    .select('*')
+
+  if (error) {
+    throw toContentError(error)
+  }
+  if (!data || data.length === 0) {
+    throw notFound()
+  }
+  await deleteRevisions(ctx, client, id)
+}
+
+async function purgeBefore(
+  ctx: PlutoContentContext,
+  before: string
+): Promise<number> {
+  const column = requireTrashColumn(ctx.type)
+  const client = await getClient(ctx.event)
+  const pkColumn = ctx.type.primaryKey ?? 'id'
+
+  const { data, error } = await client
+    .from(ctx.type.source)
+    .delete()
+    .lt(column, before)
+    .select('*')
+
+  if (error) {
+    throw toContentError(error)
+  }
+  const rows = (data ?? []) as Record<string, unknown>[]
+  for (const row of rows) {
+    await deleteRevisions(ctx, client, row[pkColumn] as string | number)
+  }
+  return rows.length
 }
 
 /** Delegates straight to `requireCapability`, unchanged. */
@@ -636,6 +838,13 @@ export function createSupabaseContentAdapter(): PlutoContentAdapter {
     create,
     update,
     remove,
+    trash: {
+      move: moveToTrash,
+      list: listTrash,
+      restore: restoreFromTrash,
+      purge,
+      purgeBefore,
+    },
     authorize,
     countCreated,
     timestampKeys,

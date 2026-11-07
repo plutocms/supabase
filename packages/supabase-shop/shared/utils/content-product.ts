@@ -152,6 +152,8 @@ export const productType = defineContentType({
   ],
   slug: { field: 'slug' },
   status: false,
+  // Remove moves a product to the trash (`deleted_at`, migration 007). See the "Trash" of core.
+  trash: true,
   timestamps: { created: 'created_at', updated: false },
   capabilities: { write: 'products:manage', delete: 'products:delete' },
   autoRoutes: false,

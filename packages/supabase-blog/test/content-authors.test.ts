@@ -22,6 +22,7 @@ describe('the author type', () => {
       titleField: 'name',
       slug: { field: 'slug' },
       api: { public: true },
+      trash: true,
       timestamps: { created: 'created_at', updated: 'updated_at' },
       defaultSort: { field: 'name', direction: 'asc' },
       capabilities: { write: 'authors:manage', delete: 'authors:manage' },

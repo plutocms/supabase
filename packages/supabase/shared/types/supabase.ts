@@ -89,18 +89,21 @@ export type Database = {
       product_availability: {
         Row: {
           created_at: string
+          deleted_at: string | null
           id: number
           label: string
           slug: string
         }
         Insert: {
           created_at?: string
+          deleted_at?: string | null
           id?: never
           label: string
           slug: string
         }
         Update: {
           created_at?: string
+          deleted_at?: string | null
           id?: never
           label?: string
           slug?: string
@@ -109,18 +112,21 @@ export type Database = {
       }
       product_category: {
         Row: {
+          deleted_at: string | null
           description: string | null
           id: number
           label: string
           slug: string
         }
         Insert: {
+          deleted_at?: string | null
           description?: string | null
           id?: never
           label: string
           slug: string
         }
         Update: {
+          deleted_at?: string | null
           description?: string | null
           id?: never
           label?: string
@@ -177,6 +183,7 @@ export type Database = {
           availability: number | null
           category: number | null
           created_at: string
+          deleted_at: string | null
           description: string | null
           id: number
           is_custom: boolean
@@ -189,6 +196,7 @@ export type Database = {
           availability?: number | null
           category?: number | null
           created_at?: string
+          deleted_at?: string | null
           description?: string | null
           id?: never
           is_custom?: boolean
@@ -201,6 +209,7 @@ export type Database = {
           availability?: number | null
           category?: number | null
           created_at?: string
+          deleted_at?: string | null
           description?: string | null
           id?: never
           is_custom?: boolean
