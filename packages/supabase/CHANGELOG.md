@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.26.0](https://github.com/plutocms/supabase/compare/v0.25.0...v0.26.0) (2026-11-07)
+
+
+### Features
+
+* **supabase:** the status filter of the admin list ([#248](https://github.com/plutocms/supabase/issues/248)) ([b9f0d4e](https://github.com/plutocms/supabase/commit/b9f0d4e47b951b31061aa31400a152d51abe3850))
+
 ## [0.25.0](https://github.com/plutocms/supabase/compare/v0.24.0...v0.25.0) (2026-11-06)
 
 
