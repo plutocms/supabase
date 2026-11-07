@@ -3,7 +3,6 @@ import type { H3Event } from 'h3'
 import { createClient } from '@supabase/supabase-js'
 import { serverSupabaseClient } from '#supabase/server'
 import { requireCapability } from './capability-guard'
-import { optionalServiceClient } from './service-client'
 import { getBackup, putBackup, removeBackup } from './content-backups'
 import {
   deleteRevisions,
@@ -12,6 +11,7 @@ import {
   recordRevision,
   updateAction,
 } from './content-revisions'
+import { optionalServiceClient } from './service-client'
 
 /**
  * A Supabase client for one request, deliberately untyped.
