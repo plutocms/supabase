@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.27.0](https://github.com/plutocms/supabase/compare/v0.26.0...v0.27.0) (2026-11-07)
+
+
+### Features
+
+* the trash on Supabase (blog migration 009, shop migration 007) ([#252](https://github.com/plutocms/supabase/issues/252)) ([4821321](https://github.com/plutocms/supabase/commit/48213213721f58b1022a0a98e9c3c32f98c6a873))
+
 ## [0.26.0](https://github.com/plutocms/supabase/compare/v0.25.0...v0.26.0) (2026-11-07)
 
 
