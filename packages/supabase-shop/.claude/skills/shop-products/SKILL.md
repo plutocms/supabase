@@ -269,6 +269,24 @@ a full literal. `test/fixtures/i18n-stub.ts` builds a translator over the Englis
 - The price widget's hardcoded `currency: 'BRL'` is preserved as-is, not fixed, in this pass —
   the same known, separate issue `Post.vue` already had.
 
+## Trash
+
+`db/migrations/007_trash.sql` (the "Trash" of the content-model skill of core): `deleted_at` and a partial
+index on `products`, `product_category` and `product_availability`. The `product`, category and
+availability types have `trash: true`, so Remove moves an item to the trash of the admin.
+
+- "Allow public read access" of each table hides a trashed row (anon and a signed-in shopper). The
+  managers read it: `products:delete`, `shop:manage_taxonomy`, `shop:manage_availability`.
+- A role with `products:delete` may update a product ("Allow products:delete trash on products"), and
+  the trigger `products_trash_only_guard` keeps a signed-in user without `products:manage` to
+  `deleted_at` (and `updated_at`). It checks `current_user = 'authenticated'`: the foreign keys
+  (`on delete set null` at the purge of a category or an availability) and the service role pass.
+- The admin routes `/api/_pluto/shop/categories` and `availability` and the relations of the public
+  answer (`product-public.ts`) add `.is('deleted_at', null)`: a form never offers a trashed
+  category, and a product shows no label for one. `product_media` has no trash: the images of a
+  trashed product stay until the purge.
+- `shared/types/supabase.ts` of `@plutocms/supabase` has the column for the three tables.
+
 ## Data API grants
 
 `db/migrations/005_data_api_grants.sql` grants the shop tables for the Data API (anon `select` only, authenticated and service_role `select, insert, update, delete`). A new table in this layer needs a grant in the same migration file. See the `layer-migrations` skill in `@plutocms/supabase`.

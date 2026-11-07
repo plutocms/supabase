@@ -11,6 +11,9 @@ policies shared by every project here.
   the conversion helpers of `@plutocms/shop`, which also brings the cart. The media upload checks
   the type and size, and explains each rejected or failed upload.
   @.claude/skills/shop-products/SKILL.md
+- Trash: products, categories and availability go to the trash (migration 007, `deleted_at`), with
+  restore and a purge after 30 days. Shoppers never read a trashed row. A role with
+  `products:delete` moves a product to the trash without `products:manage`.
 - Storefront composables: `useProducts`, `useProduct` and `useProductCategories`, on
   `definePlutoContent` of core. @.claude/skills/shop-products/SKILL.md
 - Headless storefront API: the `product`, `product-category` and `product-availability` types

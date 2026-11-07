@@ -67,12 +67,14 @@ async function fetchRelations(
           .from('product_category')
           .select('id, label, slug')
           .in('id', categoryIds)
+          .is('deleted_at', null)
       : { data: [], error: null },
     availabilityIds.length > 0
       ? client
           .from('product_availability')
           .select('id, label, slug')
           .in('id', availabilityIds)
+          .is('deleted_at', null)
       : { data: [], error: null },
   ])
 
