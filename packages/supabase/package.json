@@ -32,7 +32,7 @@
     "@nuxtjs/supabase": "^2.1.0",
     "@plutocms/core": ">=0.61.1 <1.0.0",
     "@supabase/supabase-js": "^2.117.3",
-    "postgres": "^3.4.9",
+    "postgres": "^4.0.0",
     "supabase": "^2.121.0",
     "zod": "^4.6.7"
   },
