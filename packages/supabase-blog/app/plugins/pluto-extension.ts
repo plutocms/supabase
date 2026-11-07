@@ -58,10 +58,16 @@ export default defineNuxtPlugin(() => {
         key: 'terms:manage',
         label: 'supabase-blog.capabilities.manageTerms',
       },
+      {
+        id: 'authors-manage',
+        key: 'authors:manage',
+        label: 'supabase-blog.capabilities.manageAuthors',
+      },
     ],
     contentTypes: [
       { id: 'post', type: postType },
       ...blogTermTypes.map((type) => ({ id: type.name, type })),
+      { id: 'author', type: blogAuthorType },
     ],
     contentFieldWidgets: [
       { id: 'richtext', fieldType: 'richtext', component: PlutoRichtextField },

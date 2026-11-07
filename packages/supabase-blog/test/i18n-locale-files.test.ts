@@ -95,14 +95,14 @@ describe('supabase-blog locale files', () => {
       expect([...namespaces].toSorted()).toEqual(['content', 'supabase-blog'])
     })
 
-    it(`${code} has only the post and term types under content`, () => {
+    it(`${code} has only the post, term and author types under content`, () => {
       const types = new Set(
         Object.keys(locales[code]!)
           .filter((key) => key.startsWith('content.'))
           .map((key) => key.split('.')[1]!)
       )
 
-      expect([...types].toSorted()).toEqual(['category', 'post', 'tag'])
+      expect([...types].toSorted()).toEqual(['author', 'category', 'post', 'tag'])
     })
   }
 })
@@ -145,9 +145,10 @@ describe('content.post keys', () => {
   it('give the English label of each term type and field, byte for byte', async () => {
     const { blogTagType, blogCategoryType } =
       await import('../shared/utils/content-terms')
+    const { blogAuthorType } = await import('../shared/utils/content-authors')
     const en = locales.en!
 
-    for (const type of [blogTagType, blogCategoryType]) {
+    for (const type of [blogTagType, blogCategoryType, blogAuthorType]) {
       expect(en[`content.${type.name}.label`]).toBe(type.label)
       expect(en[`content.${type.name}.labelPlural`]).toBe(type.labelPlural)
 
@@ -163,9 +164,10 @@ describe('content.post keys', () => {
   it('have a label key for every field in each locale', async () => {
     const { blogTagType, blogCategoryType } =
       await import('../shared/utils/content-terms')
+    const { blogAuthorType } = await import('../shared/utils/content-authors')
 
     for (const code of codes) {
-      for (const type of [blogTagType, blogCategoryType]) {
+      for (const type of [blogTagType, blogCategoryType, blogAuthorType]) {
         expect(locales[code]![`content.${type.name}.label`]).toBeTruthy()
 
         for (const field of type.fields) {

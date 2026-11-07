@@ -32,6 +32,7 @@ Row Level Security rules use named capabilities, checked through
 - `posts:publish` — insert a row, or update any row.
 - `posts:delete` — delete any row.
 - `terms:manage` — insert, update or delete a row of `tags` or `categories` (see "Tags and categories").
+- `authors:manage` — insert, update or delete a row of `authors` (see "Authors").
 
 `public.has_capability()` folds in `public.is_admin()`, so an admin holds every
 capability with no extra setup. There is no ownership-scoped capability yet — a holder of
@@ -60,6 +61,8 @@ engine discovers, applies, and records migrations. This layer's migration files,
 - `db/migrations/007_post_terms.sql` — the tables `tags` and `categories`, the columns
   `posts.tag_ids` and `posts.category_ids`, their RLS, grants, the `terms:manage` capability and the
   delete triggers (see "Tags and categories").
+- `db/migrations/008_post_authors.sql` — the table `authors`, the column `posts.author_ids`, its RLS,
+  grants, the `authors:manage` capability and the delete trigger (see "Authors").
 
 ## Tags and categories
 
@@ -80,6 +83,29 @@ holds `*`. Two `security definer` functions (`search_path = ''`, execute revoked
 and authenticated) run in `after delete` triggers on `tags` and `categories`. They remove the
 deleted id from the posts with `array_remove`, so a post never keeps a dangling id. A post save
 fails until the migration runs. `test/post-terms-migration.test.ts` checks the text of the SQL.
+
+## Authors
+
+An author is the public profile of a post author (`shared/utils/content-authors.ts`:
+`blogAuthorType`): `name` (the title field), `slug`, `bio` and `avatar` (a media id). It is
+public on the public API, has no status, sorts by `name`, and takes `created_at` and `updated_at`.
+Its nav order is 230. Writing and deleting need `authors:manage`. The server plugin and the client
+plugin register it with `post`. See the authors skill of `@plutocms/core`.
+
+The table `authors` has `id` (identity), `created_at`, `updated_at`, `name`, `slug` (unique), `bio`
+and `avatar`. It has no link to a sign-in user. A visitor reads every column (the public API reads
+with `select('*')`), so never add a user id, an email or a role to it.
+
+A post stores the ids of its authors in `author_ids` (`bigint[] not null default '{}'`, a GIN index),
+in byline order. The post field `authors` is a `multiple` `reference` field with `create: true`,
+`remember: true` (a new post gets the authors that the user saved last time) and
+`publicFields: ['avatar', 'bio']`. Core expands it in the public API to
+`[{ id, label, slug, avatar, bio }]` and resolves `?filter[authors]=<slug>`.
+
+Migration 008 gives `authors:manage` to every role that holds `posts:publish`. A `security definer`
+function in an `after delete` trigger on `authors` removes the deleted id from the posts. A post
+save fails until the migration runs. `test/post-authors-migration.test.ts` checks the text of the
+SQL, and the copy test of the plan ran it on PGlite.
 
 ## The public API
 

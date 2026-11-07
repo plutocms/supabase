@@ -12,7 +12,8 @@
       "readDrafts": "Read draft posts",
       "publish": "Create and publish posts",
       "delete": "Delete posts",
-      "manageTerms": "Create, edit and delete tags and categories"
+      "manageTerms": "Create, edit and delete tags and categories",
+      "manageAuthors": "Create, edit and delete authors"
     },
     "navbar": {
       "editPost": "Edit post"
@@ -80,6 +81,9 @@
         "slug": {
           "label": "Slug"
         },
+        "authors": {
+          "label": "Authors"
+        },
         "cover": {
           "label": "Cover image"
         },
@@ -125,6 +129,24 @@
         },
         "description": {
           "label": "Description"
+        }
+      }
+    },
+    "author": {
+      "label": "Author",
+      "labelPlural": "Authors",
+      "fields": {
+        "name": {
+          "label": "Name"
+        },
+        "slug": {
+          "label": "Slug"
+        },
+        "bio": {
+          "label": "Bio"
+        },
+        "avatar": {
+          "label": "Avatar"
         }
       }
     }

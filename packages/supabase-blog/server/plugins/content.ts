@@ -14,4 +14,6 @@ export default defineNitroPlugin(() => {
   for (const type of blogTermTypes) {
     registerContentType(type)
   }
+  // The authors of the post: the post field `authors` points to them.
+  registerContentType(blogAuthorType)
 })
