@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.22.0](https://github.com/plutocms/supabase/compare/supabase-blog-v0.21.1...supabase-blog-v0.22.0) (2026-11-07)
+
+
+### Features
+
+* **supabase-blog:** authors for posts ([#242](https://github.com/plutocms/supabase/issues/242)) ([23deb40](https://github.com/plutocms/supabase/commit/23deb40d586c7459bddbb915fda15f44bb120b6f))
+
 ## [0.21.1](https://github.com/plutocms/supabase/compare/supabase-blog-v0.21.0...supabase-blog-v0.21.1) (2026-11-06)
 
 
