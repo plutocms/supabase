@@ -158,6 +158,28 @@ add drafts: `includeUnpublished` decides that, as before.
 `query.ids` applies `.in(pkColumn, ids)`. An empty list makes no query and gives an empty result with a
 total of 0. Core uses it to expand references with one read per target.
 
+## Trash
+
+For a type with `trash` (the "Trash" of the content-model skill of core), a trashed row has its
+trash column set: `resolveTrashColumn(type)`, `type.trash.column` or `deleted_at`. The layer of the
+table adds the column and the policies in a migration (supabase-blog: 009).
+
+- `list`, `get` (by id and by slug) and `countCreated` add `.is(column, null)` (`liveOnly`), so a
+  trashed row is not in the admin list, the public API or the reference expansion.
+- `trash.move`: an update of the column to now, for a live row (`.is(column, null)`); 404 when no row
+  changed. `trash.restore`: the column back to null, for a trashed row; 404 when none. The id never
+  changes, so a restore never answers 409.
+- `trash.list`: the trashed rows (`.not(column, 'is', null)`), the last trashed first, `search` on
+  the title, `_deletedAt` on each item.
+- `trash.purge` and `trash.purgeBefore`: the real delete of trashed rows only, then
+  `deleteRevisions` for each. The delete triggers of the layer (the references to a term or an
+  author) run then.
+
+A system request (`isPlutoSystemEvent`: the scheduled task `pluto:trash:purge` of core) gets the
+service client (`optionalServiceClient`). Without the service role key it answers 401
+`pluto.errors.unauthorized`, and the task skips the type; opening a Trash still purges with the
+client of the user.
+
 ## Timestamps on items
 
 `mapColumnsToFields` drops every column that no field declares, and a timestamp is not a field.

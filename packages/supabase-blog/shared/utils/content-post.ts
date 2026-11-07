@@ -156,6 +156,8 @@ export const postType = defineContentType({
   // The public API (`/api/pluto/v1/content/post`): published posts only. The server hook
   // `toPublic` (server/utils/post-public.ts) adds `excerpt` to a list item and `html` to one item.
   api: { public: true },
+  // Remove moves a post to the trash (`deleted_at`, migration 009). See the "Trash" of core.
+  trash: true,
   basePath: '/admin/posts',
   newPath: '/admin/post/new',
   editPath: (id) => `/admin/post/edit/${id}`,
