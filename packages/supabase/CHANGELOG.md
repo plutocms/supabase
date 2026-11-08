@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.28.0](https://github.com/plutocms/supabase/compare/v0.27.0...v0.28.0) (2026-11-08)
+
+
+### Features
+
+* scheduled publish and pending review ([#261](https://github.com/plutocms/supabase/issues/261)) ([2eb8653](https://github.com/plutocms/supabase/commit/2eb8653cd3fec38248c6bf44200c0e55b399afdd))
+
 ## [0.27.0](https://github.com/plutocms/supabase/compare/v0.26.0...v0.27.0) (2026-11-07)
 
 
