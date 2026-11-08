@@ -17,9 +17,10 @@ export default defineNuxtPlugin(() => {
         icon: 'lucide:file-text',
         to: '/admin/posts',
         defaultOpen: true,
+        // The list first, then the create link: the order of core (the Git CMS posts).
         children: [
-          { label: 'supabase-blog.nav.createPost', to: '/admin/post/new' },
           { label: 'supabase-blog.nav.allPosts', to: '/admin/posts' },
+          { label: 'supabase-blog.nav.createPost', to: '/admin/post/new' },
         ],
       },
     ],
