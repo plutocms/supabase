@@ -44,6 +44,11 @@ export default defineNuxtPlugin(() => {
         label: 'supabase-blog.capabilities.readDrafts',
       },
       {
+        id: 'posts-write',
+        key: 'posts:write',
+        label: 'supabase-blog.capabilities.write',
+      },
+      {
         id: 'posts-publish',
         key: 'posts:publish',
         label: 'supabase-blog.capabilities.publish',

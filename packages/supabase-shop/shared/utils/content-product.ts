@@ -151,11 +151,27 @@ export const productType = defineContentType({
     },
   ],
   slug: { field: 'slug' },
-  status: false,
+  // Draft, review, scheduled and published (migration 008). A product is public when it is live.
+  status: {
+    column: 'status',
+    default: 'draft',
+    publishedValue: 'published',
+    publishedAtColumn: 'published_at',
+    values: [
+      { label: 'Draft', value: 'draft' },
+      { label: 'Published', value: 'published' },
+    ],
+    schedule: true,
+    review: true,
+  },
   // Remove moves a product to the trash (`deleted_at`, migration 007). See the "Trash" of core.
   trash: true,
   timestamps: { created: 'created_at', updated: false },
-  capabilities: { write: 'products:manage', delete: 'products:delete' },
+  capabilities: {
+    write: 'products:manage',
+    publish: 'products:publish',
+    delete: 'products:delete',
+  },
   autoRoutes: false,
   // The public API (`/api/pluto/v1/content/product`). The list of fields is
   // explicit, so a column added later stays private until someone adds it

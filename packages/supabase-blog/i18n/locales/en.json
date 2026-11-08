@@ -10,7 +10,8 @@
     },
     "capabilities": {
       "readDrafts": "Read draft posts",
-      "publish": "Create and publish posts",
+      "write": "Write posts and send them to review",
+      "publish": "Create, publish and schedule posts",
       "delete": "Delete posts",
       "manageTerms": "Create, edit and delete tags and categories",
       "manageAuthors": "Create, edit and delete authors"

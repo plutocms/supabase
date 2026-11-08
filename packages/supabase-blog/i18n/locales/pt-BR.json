@@ -10,7 +10,8 @@
     },
     "capabilities": {
       "readDrafts": "Ler rascunhos de posts",
-      "publish": "Criar e publicar posts",
+      "write": "Escrever posts e enviar para revisão",
+      "publish": "Criar, publicar e agendar posts",
       "delete": "Excluir posts",
       "manageTerms": "Criar, editar e excluir tags e categorias",
       "manageAuthors": "Criar, editar e excluir autores"

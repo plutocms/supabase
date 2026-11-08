@@ -189,7 +189,9 @@ export type Database = {
           is_custom: boolean
           name: string
           price: number
+          published_at: string | null
           slug: string
+          status: string
           stock_quantity: number | null
         }
         Insert: {
@@ -202,7 +204,9 @@ export type Database = {
           is_custom?: boolean
           name: string
           price: number
+          published_at?: string | null
           slug: string
+          status?: string
           stock_quantity?: number | null
         }
         Update: {
@@ -215,7 +219,9 @@ export type Database = {
           is_custom?: boolean
           name?: string
           price?: number
+          published_at?: string | null
           slug?: string
+          status?: string
           stock_quantity?: number | null
         }
         Relationships: [

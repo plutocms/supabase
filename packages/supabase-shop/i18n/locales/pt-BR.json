@@ -10,6 +10,7 @@
     },
     "capabilities": {
       "productsManage": "Criar e editar produtos",
+      "productsPublish": "Publicar e agendar produtos",
       "productsDelete": "Excluir produtos",
       "manageTaxonomy": "Gerenciar categorias e disponibilidade dos produtos"
     },

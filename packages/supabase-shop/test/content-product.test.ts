@@ -57,10 +57,17 @@ describe('productType', () => {
     expect(new Set(names).size).toBe(names.length)
   })
 
-  it('declares no status workflow', async () => {
+  it('has a status workflow with schedule and review (migration 008)', async () => {
     const { productType } = await import('../shared/utils/content-product')
 
-    expect(productType.status).toBe(false)
+    expect(productType.status).toMatchObject({
+      column: 'status',
+      default: 'draft',
+      publishedValue: 'published',
+      publishedAtColumn: 'published_at',
+      schedule: true,
+      review: true,
+    })
   })
 
   it('declares no created-timestamp override, and disables updated', async () => {
@@ -94,10 +101,11 @@ describe('productType', () => {
     }
   })
 
-  it('declares write/delete capabilities, but leaves read ungated', async () => {
+  it('declares write/publish/delete capabilities, but leaves read ungated', async () => {
     const { productType } = await import('../shared/utils/content-product')
 
     expect(productType.capabilities?.write).toBe('products:manage')
+    expect(productType.capabilities?.publish).toBe('products:publish')
     expect(productType.capabilities?.delete).toBe('products:delete')
     expect(productType.capabilities?.read).toBeUndefined()
   })

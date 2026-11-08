@@ -295,6 +295,90 @@ function isListField(type: PlutoContentType, fieldName: string): boolean {
   return field?.type === 'reference' && field.multiple === true
 }
 
+/**
+ * Only the live rows: published, or scheduled with a time that has come (`isLiveStatus` of core).
+ * The read policies of the database have the same rule (`public.pluto_is_live`).
+ */
+function liveStatusFilter<
+  B extends {
+    eq: (column: string, value: unknown) => B
+    or: (filters: string) => B
+  },
+>(builder: B, type: PlutoContentType, statusColumn: string): B {
+  const rules = statusRules(type)!
+  if (rules.scheduled === undefined || !rules.publishedAtColumn) {
+    return builder.eq(statusColumn, rules.published)
+  }
+  const now = new Date().toISOString()
+  return builder.or(
+    `${statusColumn}.eq.${rules.published},and(${statusColumn}.eq.${rules.scheduled},${rules.publishedAtColumn}.lte."${now}")`
+  )
+}
+
+function publishCapability(type: PlutoContentType): string | undefined {
+  return type.capabilities?.publish ?? type.capabilities?.write
+}
+
+/**
+ * The publish time of a save, the same rule as the Git CMS. A scheduled save sets the planned time
+ * (`values.publishAt`, in the future; else 400). A scheduled item that keeps its status keeps its
+ * time when the payload has no new one. Publish now of a scheduled item stamps the time now, and a
+ * scheduled item that goes to a draft or to review loses its time. Else the first publish stamps
+ * the time. Answers the value to write, `null` to clear, or `undefined` to leave the column.
+ */
+function publishTimeFor(
+  type: PlutoContentType,
+  before: unknown,
+  after: unknown,
+  storedTime: unknown,
+  values: Record<string, unknown>
+): string | null | undefined {
+  const rules = statusRules(type)
+  if (!rules?.publishedAtColumn || after === undefined) {
+    return undefined
+  }
+  const now = Date.now()
+  if (rules.scheduled !== undefined && after === rules.scheduled) {
+    if (before !== rules.scheduled || Object.hasOwn(values, 'publishAt')) {
+      const key = scheduleError(type, values.publishAt, now)
+      if (key) {
+        throw createPlutoError({
+          statusCode: 400,
+          message: 'The schedule time is not valid.',
+          key,
+        })
+      }
+      return new Date(statusTime(values.publishAt)!).toISOString()
+    }
+    return undefined
+  }
+  if (rules.scheduled !== undefined && before === rules.scheduled) {
+    return after === rules.published ? new Date(now).toISOString() : null
+  }
+  if (after === rules.published && storedTime == null) {
+    return new Date(now).toISOString()
+  }
+  return undefined
+}
+
+/**
+ * A clear 403 before the write, when the status change needs the publish capability. The database
+ * refuses it too (`posts_status_guard`), but with a less clear error.
+ */
+async function requireStatusChange(
+  ctx: PlutoContentContext,
+  before: unknown,
+  after: unknown
+): Promise<void> {
+  if (isPlutoSystemEvent(ctx.event)) {
+    return
+  }
+  const capability = publishCapability(ctx.type)
+  if (capability && statusChangeNeedsPublish(ctx.type, before, after)) {
+    await requireCapability(ctx.event, capability)
+  }
+}
+
 async function list(
   ctx: PlutoContentContext,
   query: PlutoContentQuery
@@ -318,9 +402,7 @@ async function list(
 
   const statusColumn = resolveStatusColumn(ctx.type)
   if (statusColumn && query.includeUnpublished !== true) {
-    const publishedValue =
-      (ctx.type.status && ctx.type.status.publishedValue) || 'published'
-    builder = builder.eq(statusColumn, publishedValue)
+    builder = liveStatusFilter(builder, ctx.type, statusColumn)
   }
 
   // Only one status. The status column has a default and no null, so an equality is enough.
@@ -458,6 +540,18 @@ async function create(
     } else if (ctx.type.status && ctx.type.status.default !== undefined) {
       row[statusColumn] = ctx.type.status.default
     }
+    await requireStatusChange(ctx, undefined, row[statusColumn])
+    const timeColumn = statusRules(ctx.type)?.publishedAtColumn
+    const time = publishTimeFor(
+      ctx.type,
+      undefined,
+      row[statusColumn],
+      undefined,
+      values
+    )
+    if (timeColumn && time !== undefined) {
+      row[timeColumn] = time
+    }
   }
 
   // A client never controls its own creation timestamp. Always stamp it,
@@ -513,7 +607,10 @@ async function update(
   // column name resolves to its own `GenericStringError` type instead of a
   // usable row shape.
   let existing: Record<string, unknown> | null = null
-  if (statusColumn && Object.hasOwn(values, 'status')) {
+  const publishApart =
+    ctx.type.capabilities?.publish !== undefined &&
+    ctx.type.capabilities.publish !== ctx.type.capabilities.write
+  if (statusColumn && (Object.hasOwn(values, 'status') || publishApart)) {
     const { data: stored, error: fetchError } = await client
       .from(ctx.type.source)
       .select('*')
@@ -527,18 +624,27 @@ async function update(
     existing = stored as Record<string, unknown> | null
   }
 
-  // Published-at preservation, generalizing supabase-blog's hand-written
-  // edit route: stamp published-at the first time a row is published, but
-  // never overwrite an already-set value on a later edit.
-  if (
-    statusColumn &&
-    ctx.type.status &&
-    ctx.type.status.publishedAtColumn &&
-    row[statusColumn] === ctx.type.status.publishedValue &&
-    existing &&
-    existing[ctx.type.status.publishedAtColumn] == null
-  ) {
-    row[ctx.type.status.publishedAtColumn] = new Date().toISOString()
+  // The status rules and the publish time (`publishTimeFor`): the first publish stamps the time
+  // and a later edit never overwrites it; a schedule sets the planned time.
+  if (statusColumn && existing) {
+    const before =
+      existing[statusColumn] ??
+      (ctx.type.status ? ctx.type.status.default : undefined)
+    const after = Object.hasOwn(values, 'status') ? values.status : before
+    await requireStatusChange(ctx, before, after)
+    const timeColumn = statusRules(ctx.type)?.publishedAtColumn
+    if (timeColumn && Object.hasOwn(values, 'status')) {
+      const time = publishTimeFor(
+        ctx.type,
+        before,
+        after,
+        existing[timeColumn],
+        values
+      )
+      if (time !== undefined) {
+        row[timeColumn] = time
+      }
+    }
   }
 
   const { data, error } = await client
@@ -830,6 +936,37 @@ async function authorize(event: H3Event, capability: string): Promise<void> {
 }
 
 /** Builds the Supabase/PostgREST-backed `PlutoContentAdapter`. Register it with `registerContentAdapter` from a `server/plugins/*.ts` file. */
+/**
+ * Publishes the scheduled rows whose time is `at` or earlier, and keeps their time. The scheduled
+ * task of core gives a system request (the service client); the admin list of a publisher gives
+ * the client of the user. Trashed rows stay.
+ */
+async function publishDue(
+  ctx: PlutoContentContext,
+  at: string
+): Promise<number> {
+  const rules = statusRules(ctx.type)
+  const statusColumn = resolveStatusColumn(ctx.type)
+  if (!rules?.scheduled || !rules.publishedAtColumn || !statusColumn) {
+    return 0
+  }
+  const client = await getClient(ctx.event)
+  const pkColumn = ctx.type.primaryKey ?? 'id'
+  const { data, error } = await liveOnly(
+    client
+      .from(ctx.type.source)
+      .update({ [statusColumn]: rules.published })
+      .eq(statusColumn, rules.scheduled)
+      .lte(rules.publishedAtColumn, at),
+    ctx.type
+  ).select(pkColumn)
+
+  if (error) {
+    throw toContentError(error)
+  }
+  return data?.length ?? 0
+}
+
 export function createSupabaseContentAdapter(): PlutoContentAdapter {
   return {
     id: 'supabase',
@@ -845,6 +982,7 @@ export function createSupabaseContentAdapter(): PlutoContentAdapter {
       purge,
       purgeBefore,
     },
+    publishDue,
     authorize,
     countCreated,
     timestampKeys,
