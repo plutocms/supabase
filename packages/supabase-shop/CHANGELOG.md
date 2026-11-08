@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.24.1](https://github.com/plutocms/supabase/compare/supabase-shop-v0.24.0...supabase-shop-v0.24.1) (2026-11-08)
+
+
+### Bug Fixes
+
+* **blog:** the list first in the sidebar, the block buttons on the left, the standard cover ([#278](https://github.com/plutocms/supabase/issues/278)) ([29e0df1](https://github.com/plutocms/supabase/commit/29e0df1b601def7b0067701f7fd280233b459b33))
+
 ## [0.24.0](https://github.com/plutocms/supabase/compare/supabase-shop-v0.23.0...supabase-shop-v0.24.0) (2026-11-08)
 
 
