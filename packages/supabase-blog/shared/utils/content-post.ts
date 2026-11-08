@@ -163,6 +163,10 @@ export const postType = defineContentType({
   api: { public: true },
   // Remove moves a post to the trash (`deleted_at`, migration 009). See the "Trash" of core.
   trash: true,
+  // The standard cover image of core (the field above): the public API gives `cover`, and the
+  // admin list shows it. No standard excerpt: the table has no excerpt column (the hook
+  // `toPublic` makes one from the body).
+  cover: true,
   basePath: '/admin/posts',
   newPath: '/admin/post/new',
   editPath: (id) => `/admin/post/edit/${id}`,

@@ -48,7 +48,6 @@ const customHandlers = {
   },
 } satisfies EditorCustomHandlers
 
-
 function imageToolbarItems(editor: Editor): EditorToolbarItem[][] {
   const node = editor.state.doc.nodeAt(editor.state.selection.from)
 
@@ -362,9 +361,12 @@ const MENU_BG = 'dark:bg-neutral-950'
         layout="bubble"
       />
 
+      <!-- The block buttons stay on the left (no flip): the content has a left gutter for them.
+           A flip to the right made the editor scroll sideways. -->
       <UEditorDragHandle
         v-slot="{ ui: dragHandleUi, onClick }"
         :editor="editor"
+        :options="{ flip: false }"
         @node-change="
           (event) => {
             selectedNode = event
@@ -425,7 +427,7 @@ const MENU_BG = 'dark:bg-neutral-950'
 
       <EditorContent
         :editor="editor"
-        :class="ui.content({ class: props.ui?.content })"
+        :class="ui.content({ class: ['ps-16', props.ui?.content] })"
         role="presentation"
         data-slot="content"
       />
