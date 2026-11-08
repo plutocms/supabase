@@ -55,8 +55,8 @@ Media page has "Fill in missing image sizes" for the pixel size of those files.
 - `app/pages/admin/product/new.vue` renders `<PlutoContentForm type="product" />`.
 - `app/pages/admin/product/edit/[id].vue` renders `<PlutoContentForm type="product" :id="..." />`.
 
-`shared/content/product.ts` declares every field, sets `status: false` (products have no
-publish workflow) and `timestamps: { created: 'created_at', updated: false }` (no
+`shared/content/product.ts` declares every field, a status workflow with schedule and review
+(see "Status, schedule and review") and `timestamps: { created: 'created_at', updated: false }` (no
 `updated_at` column), and declares `capabilities.write`/`capabilities.delete` but no
 `capabilities.read` — matching the RLS rule above, and the content-model skill's rule that a
 content type with no declared capability for an operation leaves that operation open. It sets
@@ -176,11 +176,11 @@ that capability, so only an admin passes. A type with no write capability would 
 The routes of this layer are under `/api/_pluto/shop/`. Core blocks every cross-site request
 that is not a GET on `/api/_pluto/**`.
 
-| Route                                     | Use                                                                         |
-| ----------------------------------------- | --------------------------------------------------------------------------- |
-| `GET /api/_pluto/shop/categories`         | Options of the `category` field.                                            |
-| `POST /api/_pluto/shop/categories`        | Inline "create category". Needs `shop:manage_taxonomy`.                     |
-| `GET /api/_pluto/shop/availability`       | Options of the `availability` field.                                        |
+| Route                               | Use                                                     |
+| ----------------------------------- | ------------------------------------------------------- |
+| `GET /api/_pluto/shop/categories`   | Options of the `category` field.                        |
+| `POST /api/_pluto/shop/categories`  | Inline "create category". Needs `shop:manage_taxonomy`. |
+| `GET /api/_pluto/shop/availability` | Options of the `availability` field.                    |
 
 Errors use `createPlutoError` with `supabase-shop.errors.*` keys.
 
@@ -286,6 +286,18 @@ availability types have `trash: true`, so Remove moves an item to the trash of t
   category, and a product shows no label for one. `product_media` has no trash: the images of a
   trashed product stay until the purge.
 - `shared/types/supabase.ts` of `@plutocms/supabase` has the column for the three tables.
+
+## Status, schedule and review
+
+`db/migrations/008_product_status.sql`: products get `status` (default `'published'`, so every
+existing product stays in the shop, and a check: `draft`, `review`, `scheduled`, `published`) and
+`published_at`. "Allow public read access" shows the live products only
+(`public.pluto_is_live(status, published_at)`, the same function as the blog); "Allow
+products:manage read of every product" shows the others to staff. Every role with `products:manage`
+gets the new `products:publish`; the trigger `products_status_guard` keeps a signed-in user without
+it to drafts and review. The product type has a status workflow (`default: 'draft'`, `schedule`,
+`review`) and `capabilities.publish: 'products:publish'`, so a new product from the admin is a
+draft until Publish. The storefront reads the public API, so it shows the live products only.
 
 ## Data API grants
 

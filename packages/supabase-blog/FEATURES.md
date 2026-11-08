@@ -33,6 +33,9 @@ policies shared by every project here.
 - Trash: posts, tags, categories and authors go to the trash (migration 009, `deleted_at`), with
   restore and a purge after 30 days. Visitors never read a trashed row. A role with `posts:delete`
   moves a post to the trash without `posts:publish`.
+- Scheduled publish and review (migration 010): schedule a post for a date and time; a
+  Contributor role (`posts:write`) writes posts and sends them to review, and an editor
+  (`posts:publish`) publishes them.
 - `PlutoProse`: displays a stored richtext value (markdown, HTML, or Tiptap JSON) as sanitized,
   styled HTML on a public page, with no Tiptap editor instance involved. Plain CSS (`.pluto-prose`
   of core, from `@plutocms/css/base`), so it works with no Tailwind.

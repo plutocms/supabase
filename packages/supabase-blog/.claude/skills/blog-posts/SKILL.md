@@ -69,8 +69,17 @@ engine discovers, applies, and records migrations. This layer's migration files,
   `authors:manage`) reads it. A role with `posts:delete` may update a post
   (`"Allow posts:delete trash on posts"`), and the trigger `posts_trash_only_guard` keeps a signed-in
   user without `posts:publish` to `deleted_at` (and `updated_at`). The guard checks `current_user =
-  'authenticated'`, so the delete triggers (security definer) and the service role pass. The post,
+'authenticated'`, so the delete triggers (security definer) and the service role pass. The post,
   term and author types have `trash: true`. The delete triggers run at the purge, not at the trash.
+- `db/migrations/010_scheduled_publish.sql` — scheduled publish and pending review: the status check
+  allows `draft`, `review`, `scheduled`, `published`; `public.pluto_is_live(status, published_at)`
+  (published, or scheduled with a time that has come) in both read policies; the capability
+  `posts:write` (every role with `posts:publish` gets it) and the built-in role `contributor`
+  (`posts:write`, `posts:read_drafts`); insert and update need `posts:write` or `posts:publish`;
+  the trigger `posts_status_guard` keeps a signed-in user without `posts:publish` to drafts and
+  review, and refuses a change of a published or scheduled post (a trash-only change passes). The
+  trash guard of 009 also passes `posts:write`. The post type: `schedule: true`, `review: true`,
+  `write: 'posts:write'`, `publish: 'posts:publish'`.
 
 ## Tags and categories
 

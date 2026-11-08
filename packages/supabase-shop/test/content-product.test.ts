@@ -84,7 +84,11 @@ describe('productType', () => {
 
     const media = productType.fields.find((field) => field.name === 'media')
 
-    expect(media).toMatchObject({ type: 'media', multiple: true, accept: ['image/*', 'model/gltf-binary'] })
+    expect(media).toMatchObject({
+      type: 'media',
+      multiple: true,
+      accept: ['image/*', 'model/gltf-binary'],
+    })
     expect(media?.virtual).toBeUndefined()
     expect(productType.api?.fields).toContain('media')
   })
@@ -119,7 +123,9 @@ describe('productType', () => {
   it('previewUrl links a product to /product/<slug>, and an unsaved one to nothing', async () => {
     const { productType } = await import('../shared/utils/content-product')
 
-    expect(productType.previewUrl?.({ id: 1, slug: 'mug' })).toBe('/product/mug')
+    expect(productType.previewUrl?.({ id: 1, slug: 'mug' })).toBe(
+      '/product/mug'
+    )
     expect(productType.previewUrl?.({ id: 1, slug: '' })).toBeUndefined()
     expect(productType.previewUrl?.({ id: 1 })).toBeUndefined()
   })

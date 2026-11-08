@@ -26,7 +26,11 @@ const { createSupabaseContentAdapter } =
   await import('../server/utils/content-adapter')
 
 /** A chainable stand-in for a PostgREST builder. It records each call and resolves to `result`. */
-function makeBuilder(result: { data: unknown; error: unknown; count?: number }) {
+function makeBuilder(result: {
+  data: unknown
+  error: unknown
+  count?: number
+}) {
   const calls: Array<[string, unknown[]]> = []
   const builder: Record<string, unknown> = {
     then: (resolve: (value: unknown) => unknown) => resolve(result),
@@ -182,7 +186,9 @@ describe('the publish time', () => {
       publishAt: '2026-05-02T09:00:00Z',
     })
 
-    expect(published.calls.find(([name]) => name === 'insert')![1][0]).toMatchObject({
+    expect(
+      published.calls.find(([name]) => name === 'insert')![1][0]
+    ).toMatchObject({
       status: 'published',
       published_at: '2026-05-01T12:00:00.000Z',
     })
@@ -209,9 +215,19 @@ describe('the publish time', () => {
   })
 
   it('clears the time of an unscheduled post, and stamps Publish now', async () => {
-    const stored = { id: 1, status: 'scheduled', published_at: '2026-05-09T00:00:00Z' }
-    const draft = makeBuilder({ data: { ...stored, status: 'draft' }, error: null })
-    const live = makeBuilder({ data: { ...stored, status: 'published' }, error: null })
+    const stored = {
+      id: 1,
+      status: 'scheduled',
+      published_at: '2026-05-09T00:00:00Z',
+    }
+    const draft = makeBuilder({
+      data: { ...stored, status: 'draft' },
+      error: null,
+    })
+    const live = makeBuilder({
+      data: { ...stored, status: 'published' },
+      error: null,
+    })
     postsAnswer(
       makeBuilder({ data: stored, error: null }).builder,
       draft.builder,
@@ -223,14 +239,18 @@ describe('the publish time', () => {
     await adapter.update(ctxFor(makeType()), 1, { status: 'draft' })
     await adapter.update(ctxFor(makeType()), 1, { status: 'published' })
 
-    expect(draft.calls.find(([name]) => name === 'update')![1][0]).toMatchObject({
+    expect(
+      draft.calls.find(([name]) => name === 'update')![1][0]
+    ).toMatchObject({
       status: 'draft',
       published_at: null,
     })
-    expect(live.calls.find(([name]) => name === 'update')![1][0]).toMatchObject({
-      status: 'published',
-      published_at: '2026-05-01T12:00:00.000Z',
-    })
+    expect(live.calls.find(([name]) => name === 'update')![1][0]).toMatchObject(
+      {
+        status: 'published',
+        published_at: '2026-05-01T12:00:00.000Z',
+      }
+    )
   })
 })
 
