@@ -3,6 +3,7 @@ import {
   fieldColumn,
   mapColumnsToFields,
 } from '@plutocms/core/shared/utils/content-map'
+import { statusRules } from '@plutocms/core/shared/utils/content-status'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Both client sources are fakes. The session client comes from
@@ -93,6 +94,7 @@ beforeEach(() => {
   publicRead = false
   vi.stubGlobal('fieldColumn', fieldColumn)
   vi.stubGlobal('mapColumnsToFields', mapColumnsToFields)
+  vi.stubGlobal('statusRules', statusRules)
   vi.stubGlobal('isPublicRead', () => publicRead)
   vi.stubGlobal('isPlutoSystemEvent', () => false)
   vi.stubGlobal('useRuntimeConfig', () => ({

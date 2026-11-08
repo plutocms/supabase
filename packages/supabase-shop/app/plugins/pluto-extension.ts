@@ -27,6 +27,11 @@ export default defineNuxtPlugin(() => {
         label: 'supabase-shop.capabilities.productsManage',
       },
       {
+        id: 'products-publish',
+        key: 'products:publish',
+        label: 'supabase-shop.capabilities.productsPublish',
+      },
+      {
         id: 'products-delete',
         key: 'products:delete',
         label: 'supabase-shop.capabilities.productsDelete',

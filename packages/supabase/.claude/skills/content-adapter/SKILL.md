@@ -180,6 +180,29 @@ service client (`optionalServiceClient`). Without the service role key it answer
 `pluto.errors.unauthorized`, and the task skips the type; opening a Trash still purges with the
 client of the user.
 
+## Scheduled publish and review
+
+For a type with `status.schedule` or `status.review` (the "Scheduled publish and review" of the
+content-model skill of core). The rules are the core utils (`statusRules`, `isLiveStatus`,
+`statusChangeNeedsPublish`, `scheduleError`, auto-imported). The layer of the table adds the
+statuses, the live rule and a status guard in a migration (supabase-blog 010, supabase-shop 008).
+
+- **Live rule:** `list` without `includeUnpublished` uses `liveStatusFilter`: `.eq(status, published)`,
+  or for a type with a schedule `.or('status.eq.published,and(status.eq.scheduled,published_at.lte."<now>")')`.
+  `get` relies on RLS: the read policies use the SQL function `public.pluto_is_live(status, published_at)`.
+- **Publish time** (`publishTimeFor`, the same rule as the Git CMS): a scheduled save writes
+  `publishAt` (ISO, after now, else 400) to `publishedAtColumn`; Publish now of a scheduled row
+  stamps now; a scheduled row that goes to a draft or to review gets `null`; the first publish
+  stamps now (a create as published too). The payload key `publishAt` is never a column.
+- **Capability:** `requireStatusChange` calls `requireCapability(publish)` before the write when
+  `statusChangeNeedsPublish` (a clear 403; the SQL guard refuses it too). `update` reads the stored
+  row when the payload has a status or when `capabilities.publish` differs from `write`. A system
+  request skips the check.
+- **`publishDue(ctx, at)`:** `update({ status: published }).eq(status, scheduled).lte(publishedAt, at)`,
+  live rows only (`liveOnly`), and answers the count. A system request (the task
+  `pluto:publish:scheduled`) uses the service client; the admin list of a publisher uses the client
+  of the user.
+
 ## Timestamps on items
 
 `mapColumnsToFields` drops every column that no field declares, and a timestamp is not a field.

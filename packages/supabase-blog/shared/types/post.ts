@@ -1,6 +1,6 @@
 import type { Database } from '#shared/types/supabase'
 
-export type PostStatus = 'draft' | 'published'
+export type PostStatus = 'draft' | 'review' | 'scheduled' | 'published'
 
 // These two must stay plain object type aliases, not interfaces. An
 // interface has no implicit index signature, so it does not structurally

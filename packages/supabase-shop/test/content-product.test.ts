@@ -57,10 +57,17 @@ describe('productType', () => {
     expect(new Set(names).size).toBe(names.length)
   })
 
-  it('declares no status workflow', async () => {
+  it('has a status workflow with schedule and review (migration 008)', async () => {
     const { productType } = await import('../shared/utils/content-product')
 
-    expect(productType.status).toBe(false)
+    expect(productType.status).toMatchObject({
+      column: 'status',
+      default: 'draft',
+      publishedValue: 'published',
+      publishedAtColumn: 'published_at',
+      schedule: true,
+      review: true,
+    })
   })
 
   it('declares no created-timestamp override, and disables updated', async () => {
@@ -77,7 +84,11 @@ describe('productType', () => {
 
     const media = productType.fields.find((field) => field.name === 'media')
 
-    expect(media).toMatchObject({ type: 'media', multiple: true, accept: ['image/*', 'model/gltf-binary'] })
+    expect(media).toMatchObject({
+      type: 'media',
+      multiple: true,
+      accept: ['image/*', 'model/gltf-binary'],
+    })
     expect(media?.virtual).toBeUndefined()
     expect(productType.api?.fields).toContain('media')
   })
@@ -94,10 +105,11 @@ describe('productType', () => {
     }
   })
 
-  it('declares write/delete capabilities, but leaves read ungated', async () => {
+  it('declares write/publish/delete capabilities, but leaves read ungated', async () => {
     const { productType } = await import('../shared/utils/content-product')
 
     expect(productType.capabilities?.write).toBe('products:manage')
+    expect(productType.capabilities?.publish).toBe('products:publish')
     expect(productType.capabilities?.delete).toBe('products:delete')
     expect(productType.capabilities?.read).toBeUndefined()
   })
@@ -111,7 +123,9 @@ describe('productType', () => {
   it('previewUrl links a product to /product/<slug>, and an unsaved one to nothing', async () => {
     const { productType } = await import('../shared/utils/content-product')
 
-    expect(productType.previewUrl?.({ id: 1, slug: 'mug' })).toBe('/product/mug')
+    expect(productType.previewUrl?.({ id: 1, slug: 'mug' })).toBe(
+      '/product/mug'
+    )
     expect(productType.previewUrl?.({ id: 1, slug: '' })).toBeUndefined()
     expect(productType.previewUrl?.({ id: 1 })).toBeUndefined()
   })

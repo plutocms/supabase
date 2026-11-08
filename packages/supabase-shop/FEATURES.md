@@ -14,6 +14,8 @@ policies shared by every project here.
 - Trash: products, categories and availability go to the trash (migration 007, `deleted_at`), with
   restore and a purge after 30 days. Shoppers never read a trashed row. A role with
   `products:delete` moves a product to the trash without `products:manage`.
+- Product status (migration 008): draft, review, scheduled and published; schedule a product for a
+  date and time. Existing products stay published. `products:publish` publishes.
 - Storefront composables: `useProducts`, `useProduct` and `useProductCategories`, on
   `definePlutoContent` of core. @.claude/skills/shop-products/SKILL.md
 - Headless storefront API: the `product`, `product-category` and `product-availability` types

@@ -145,11 +145,16 @@ export const postType = defineContentType({
       { label: 'Draft', value: 'draft' },
       { label: 'Published', value: 'published' },
     ],
+    // Scheduled publish and pending review (migration 010). Core adds the values.
+    schedule: true,
+    review: true,
   },
   timestamps: { created: 'created_at', updated: 'updated_at' },
   capabilities: {
     read: 'posts:read_drafts',
-    write: 'posts:publish',
+    // A contributor (posts:write) saves drafts and sends them to review; an editor publishes.
+    write: 'posts:write',
+    publish: 'posts:publish',
     delete: 'posts:delete',
   },
   autoRoutes: false,
