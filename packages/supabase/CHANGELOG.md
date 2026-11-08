@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.29.0](https://github.com/plutocms/supabase/compare/v0.28.0...v0.29.0) (2026-11-08)
+
+
+### Features
+
+* **blog:** embeds, and attribute values escaped once ([#269](https://github.com/plutocms/supabase/issues/269)) ([da339f6](https://github.com/plutocms/supabase/commit/da339f6ce3aeebcb876511d2307e12e972cbc878))
+
 ## [0.28.0](https://github.com/plutocms/supabase/compare/v0.27.0...v0.28.0) (2026-11-08)
 
 
