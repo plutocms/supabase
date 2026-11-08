@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.24.0](https://github.com/plutocms/supabase/compare/supabase-shop-v0.23.0...supabase-shop-v0.24.0) (2026-11-08)
+
+
+### Features
+
+* **blog:** embeds, and attribute values escaped once ([#269](https://github.com/plutocms/supabase/issues/269)) ([da339f6](https://github.com/plutocms/supabase/commit/da339f6ce3aeebcb876511d2307e12e972cbc878))
+
 ## [0.23.0](https://github.com/plutocms/supabase/compare/supabase-shop-v0.22.0...supabase-shop-v0.23.0) (2026-11-08)
 
 
