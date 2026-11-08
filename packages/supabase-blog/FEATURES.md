@@ -36,6 +36,8 @@ policies shared by every project here.
 - Scheduled publish and review (migration 010): schedule a post for a date and time; a
   Contributor role (`posts:write`) writes posts and sends them to review, and an editor
   (`posts:publish`) publishes them.
+- Embeds: a URL alone on its line of a post becomes the player of an embed provider of core
+  (YouTube, Vimeo); `PlutoProse` shows the body through `PlutoHtml` of core.
 - `PlutoProse`: displays a stored richtext value (markdown, HTML, or Tiptap JSON) as sanitized,
   styled HTML on a public page, with no Tiptap editor instance involved. Plain CSS (`.pluto-prose`
   of core, from `@plutocms/css/base`), so it works with no Tailwind.

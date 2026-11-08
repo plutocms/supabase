@@ -1,3 +1,4 @@
+import type { Tokens } from 'marked'
 import { Marked } from 'marked'
 import { ELEMENT_NODE, parse, TEXT_NODE, walkSync } from 'ultrahtml'
 import { richtextJsonToHtml } from './richtext-json'
@@ -10,7 +11,36 @@ export type RichtextFormat = 'markdown' | 'html' | 'json'
 // `PostEditor.vue`, so a post renders the same GFM extras (tables, task
 // lists, strikethrough, autolinks) on the public page as the editor
 // understands while writing it. `breaks` stays at its default (false).
-const markedInstance = new Marked({ gfm: true })
+//
+// A paragraph that is one URL alone gets `data-pluto-embed`, the same rule as the renderer of core
+// (`isEmbedParagraph`): `PlutoHtml` of core shows the player of an embed provider there. See the
+// content-model skill of core ("Embeds").
+const markedInstance = new Marked({
+  gfm: true,
+  renderer: {
+    paragraph(token) {
+      if (!isEmbedParagraph(token.tokens)) {
+        return false
+      }
+      return `<p data-pluto-embed="">${this.parser.parseInline(token.tokens)}</p>\n`
+    },
+  },
+})
+
+/**
+ * A paragraph that is one http(s) link and nothing else, with the URL as its text: a URL alone on
+ * its line, or `[url](url)`. The same rule as `isEmbedParagraph` of core.
+ */
+export function isEmbedParagraph(tokens: Tokens.Generic[]): boolean {
+  const parts = tokens.filter(
+    (token) => !(token.type === 'text' && !String(token.raw).trim())
+  )
+  if (parts.length !== 1 || parts[0]!.type !== 'link') {
+    return false
+  }
+  const link = parts[0] as Tokens.Link
+  return /^https?:\/\//i.test(link.href) && link.text.trim() === link.href
+}
 
 const STARTS_WITH_TAG = /^<(?:!--|[a-z][a-z0-9-]*)[\s>/]/i
 const HAS_CLOSING_TAG = /<\/[a-z][a-z0-9-]*\s*>/i

@@ -94,6 +94,11 @@ const SAFE_DATA_IMAGE_PREFIXES = [
 // attacker could use to hide a scheme such as "javascript:".
 const NAMED_ENTITIES: Record<string, string> = {
   amp: '&',
+  quot: '"',
+  apos: "'",
+  lt: '<',
+  gt: '>',
+  nbsp: '\u00A0',
   colon: ':',
   NewLine: '\n',
   Tab: '\t',
@@ -109,7 +114,9 @@ function decodeEntitiesOnce(value: string): string {
           isHex ? body.slice(2) : body.slice(1),
           isHex ? 16 : 10
         )
-        return Number.isNaN(codePoint) ? match : String.fromCodePoint(codePoint)
+        return Number.isNaN(codePoint) || codePoint > 0x10ffff
+          ? match
+          : String.fromCodePoint(codePoint)
       }
       return NAMED_ENTITIES[body] ?? match
     }
@@ -161,6 +168,16 @@ export function isSafeUrl(value: string): boolean {
 // this sanitizer keeps must be escaped here, or a value such as
 // `alt='x" onerror="alert(1)'` breaks out of the quote and injects a new,
 // live attribute in the final HTML.
+/**
+ * The value to write for a kept attribute. ultrahtml gives the raw value, which can hold entities
+ * already (marked writes `&amp;` in a URL). Decode it once, as a browser reads it, then escape it
+ * once, so `?a=1&amp;b=2` stays `?a=1&amp;b=2` and does not become `&amp;amp;`. The same rule
+ * as the sanitizer of core.
+ */
+function keptValue(value: string): string {
+  return escapeAttributeValue(decodeEntitiesOnce(value))
+}
+
 function escapeAttributeValue(value: string): string {
   return value
     .replace(/&/g, '&amp;')
@@ -194,20 +211,20 @@ function filterAttributes(element: ElementNode, name: string): void {
   switch (name) {
     case 'a': {
       if (typeof attributes.href === 'string' && isSafeUrl(attributes.href)) {
-        kept.href = escapeAttributeValue(attributes.href)
+        kept.href = keptValue(attributes.href)
       }
       if (typeof attributes.title === 'string') {
-        kept.title = escapeAttributeValue(attributes.title)
+        kept.title = keptValue(attributes.title)
       }
       break
     }
     case 'img': {
       if (typeof attributes.src === 'string' && isSafeUrl(attributes.src)) {
-        kept.src = escapeAttributeValue(attributes.src)
+        kept.src = keptValue(attributes.src)
       }
       for (const key of ['alt', 'title', 'width', 'height']) {
         if (typeof attributes[key] === 'string') {
-          kept[key] = escapeAttributeValue(attributes[key])
+          kept[key] = keptValue(attributes[key])
         }
       }
       break
@@ -232,6 +249,14 @@ function filterAttributes(element: ElementNode, name: string): void {
         if ('disabled' in attributes) {
           kept.disabled = ''
         }
+      }
+      break
+    }
+    case 'p': {
+      // The mark of a paragraph that can be an embed (see `isEmbedParagraph` in richtext.ts).
+      // Only its presence counts: the value is always empty.
+      if ('data-pluto-embed' in attributes) {
+        kept['data-pluto-embed'] = ''
       }
       break
     }
