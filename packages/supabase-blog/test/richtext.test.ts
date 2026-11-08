@@ -73,3 +73,28 @@ describe('richtextToPlainText', () => {
     expect(plain).toContain('First paragraph & more.')
   })
 })
+
+describe('the embed paragraph (the rule of core)', () => {
+  it('marks a URL alone on its line and [url](url), and nothing else', () => {
+    expect(renderRichtext('https://youtu.be/dQw4w9WgXcQ', 'markdown')).toBe(
+      '<p data-pluto-embed=""><a href="https://youtu.be/dQw4w9WgXcQ">https://youtu.be/dQw4w9WgXcQ</a></p>\n'
+    )
+    expect(
+      renderRichtext('[https://vimeo.com/1](https://vimeo.com/1)', 'markdown')
+    ).toContain('data-pluto-embed')
+    for (const markdown of [
+      'Watch https://youtu.be/dQw4w9WgXcQ now',
+      '[Watch](https://youtu.be/dQw4w9WgXcQ)',
+    ]) {
+      expect(renderRichtext(markdown, 'markdown')).not.toContain(
+        'data-pluto-embed'
+      )
+    }
+  })
+
+  it('escapes a & of a URL once', () => {
+    expect(renderRichtext('[a](https://x.y/?a=1&b=2)', 'markdown')).toBe(
+      '<p><a href="https://x.y/?a=1&amp;b=2">a</a></p>\n'
+    )
+  })
+})

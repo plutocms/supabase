@@ -161,3 +161,30 @@ describe('isSafeUrl', () => {
     expect(isSafeUrl('data:text/html,<script>alert(1)</script>')).toBe(false)
   })
 })
+
+describe('the embed mark and the escapes', () => {
+  it('keeps data-pluto-embed on a paragraph only, always empty', () => {
+    expect(
+      sanitizeRichtextHtml(
+        '<p data-pluto-embed="x"><a href="https://a.b">l</a></p>'
+      )
+    ).toBe('<p data-pluto-embed=""><a href="https://a.b">l</a></p>')
+    expect(
+      sanitizeRichtextHtml(
+        '<div data-pluto-embed=""><a href="https://a.b">l</a></div>'
+      )
+    ).toBe('<a href="https://a.b">l</a>')
+  })
+
+  it('escapes each kept value once, and keeps a quote inside it', () => {
+    expect(
+      sanitizeRichtextHtml('<a href="https://x.y/?a=1&amp;b=2">a</a>')
+    ).toBe('<a href="https://x.y/?a=1&amp;b=2">a</a>')
+    expect(
+      sanitizeRichtextHtml('<img src="/a" alt="x&quot; onerror=&quot;a()">')
+    ).toBe('<img src="/a" alt="x&quot; onerror=&quot;a()">')
+    expect(() =>
+      sanitizeRichtextHtml('<a href="&#99999999999;">x</a>')
+    ).not.toThrow()
+  })
+})
