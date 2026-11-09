@@ -2,6 +2,8 @@
 
 The Supabase packages of [Pluto](https://github.com/plutocms/pluto), in one Bun workspace.
 
+**Docs:** [Supabase](https://pluto.vulmix.dev/docs/supabase)
+
 | Package                                            | npm                                                                                |
 | -------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | [`packages/supabase`](packages/supabase)           | [`@plutocms/supabase`](https://www.npmjs.com/package/@plutocms/supabase)           |
