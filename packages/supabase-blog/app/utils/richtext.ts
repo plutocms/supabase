@@ -1,6 +1,7 @@
 import type { Tokens } from 'marked'
 import { Marked } from 'marked'
 import { ELEMENT_NODE, parse, TEXT_NODE, walkSync } from 'ultrahtml'
+import { plutoComponentExtension } from '#layers/pluto/shared/markdown/render'
 import { richtextJsonToHtml } from './richtext-json'
 import { sanitizeRichtextHtml } from './richtext-sanitize'
 
@@ -15,8 +16,13 @@ export type RichtextFormat = 'markdown' | 'html' | 'json'
 // A paragraph that is one URL alone gets `data-pluto-embed`, the same rule as the renderer of core
 // (`isEmbedParagraph`): `PlutoHtml` of core shows the player of an embed provider there. See the
 // content-model skill of core ("Embeds").
+//
+// An empty component of the site (`::name{props}` then `::`) becomes the mark of a content
+// component (`plutoComponentExtension` of core): `PlutoHtml` renders the component there. See the
+// content-components skill of core.
 const markedInstance = new Marked({
   gfm: true,
+  extensions: [plutoComponentExtension()],
   renderer: {
     paragraph(token) {
       if (!isEmbedParagraph(token.tokens)) {

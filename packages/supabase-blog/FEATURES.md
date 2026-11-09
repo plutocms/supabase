@@ -38,6 +38,12 @@ policies shared by every project here.
   (`posts:publish`) publishes them.
 - Embeds: a URL alone on its line of a post becomes the player of an embed provider of core
   (YouTube, Vimeo); `PlutoProse` shows the body through `PlutoHtml` of core.
+- Content components: a component of the site (`components/content/` with `definePlutoBlock`) in
+  a post, `::name{props}` then `::`. `PostEditor` shows it as the chip of core
+  (`PlutoContentComponentNode`), with **Insert a component** in the toolbar
+  (`PlutoBlockInsertMenu`) and an item for each component in the slash menu; the Markdown path
+  and the sanitizer keep the mark of core, and `PlutoHtml` renders the component. See the
+  content-components skill of core.
 - `PlutoProse`: displays a stored richtext value (markdown, HTML, or Tiptap JSON) as sanitized,
   styled HTML on a public page, with no Tiptap editor instance involved. Plain CSS (`.pluto-prose`
   of core, from `@plutocms/css/base`), so it works with no Tailwind.

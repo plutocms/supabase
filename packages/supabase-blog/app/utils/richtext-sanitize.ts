@@ -1,5 +1,10 @@
 import type { ElementNode } from 'ultrahtml'
 import { ELEMENT_NODE, parse, renderSync, walkSync } from 'ultrahtml'
+import {
+  PLUTO_COMPONENT_ATTRIBUTE,
+  PLUTO_COMPONENT_PROPS_ATTRIBUTE,
+  readComponentMarker,
+} from '#layers/pluto/shared/markdown/component'
 
 // This file is the trust boundary for `PlutoProse`. Everything it lets
 // through ends up in a `v-html` on a public page. Keep it an allowlist,
@@ -301,6 +306,26 @@ export function sanitizeRichtextHtml(html: string): string {
     if (DROP_ELEMENTS.has(name)) {
       actions.push(() => dropNode(element))
       return
+    }
+
+    // The mark of a content component (see `readComponentMarker` of core): a `div` with a valid
+    // name keeps the name and the props (parsed, filtered and written again), and nothing else.
+    // It has no children: the site renders the component there.
+    if (name === 'div') {
+      const marker = readComponentMarker(element.attributes)
+      if (marker) {
+        actions.push(() => {
+          element.name = 'div'
+          element.attributes = {
+            [PLUTO_COMPONENT_ATTRIBUTE]: escapeAttributeValue(marker.name),
+            [PLUTO_COMPONENT_PROPS_ATTRIBUTE]: escapeAttributeValue(
+              JSON.stringify(marker.props)
+            ),
+          }
+          element.children = []
+        })
+        return
+      }
     }
 
     if (!ALLOWED_ELEMENTS.has(name)) {

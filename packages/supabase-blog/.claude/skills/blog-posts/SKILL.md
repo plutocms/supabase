@@ -186,6 +186,13 @@ The toolbar and menu item definitions (fixed toolbar, bubble toolbar, suggestion
 drag-handle's block menu) live in `app/utils/postEditorItems.ts`. The editor reads them through
 `usePostEditorItems()` (see "Translation" below).
 
+Content components (the content-components skill of core): the extensions have
+`PlutoContentComponentNode` of core (a chip with a props form). `usePostEditorItems()` reads
+`usePlutoContentComponents()`: with at least one component, the fixed toolbar gets a `component`
+slot (filled with `PlutoBlockInsertMenu` of core), and the Insert group of the slash menu gets one
+`plutoComponent` item per component (`{ name, label, icon }`). The custom handler `plutoComponent`
+runs `insertPlutoComponent(item.name)`. The tests stub `usePlutoContentComponents`.
+
 ### Markdown at the boundary
 
 The document lives as native ProseMirror state while the user types. `PostEditor.vue` never
