@@ -3,8 +3,8 @@
   "type": "module",
   "version": "0.24.1",
   "description": "Shop dashboard layer for Pluto",
-  "license": "MIT",
   "author": "Victor Ribeiro",
+  "license": "MIT",
   "homepage": "https://github.com/plutocms/supabase/tree/main/packages/supabase-shop#readme",
   "repository": {
     "type": "git",
