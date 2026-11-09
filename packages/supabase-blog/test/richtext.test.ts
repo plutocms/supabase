@@ -98,3 +98,22 @@ describe('the embed paragraph (the rule of core)', () => {
     )
   })
 })
+
+describe('content components', () => {
+  it('renders an empty component as the mark of core, with safe props only', () => {
+    expect(
+      renderRichtext(
+        'Before\n\n::promo-card{title="Hi" to="javascript:alert(1)" onclick="x"}\n::\n\nAfter',
+        'markdown'
+      )
+    ).toBe(
+      '<p>Before</p>\n<div data-pluto-component="promo-card" data-pluto-props="{&quot;title&quot;:&quot;Hi&quot;}"></div>\n<p>After</p>\n'
+    )
+  })
+
+  it('keeps a component with content as text', () => {
+    expect(renderRichtext('::note\nHello\n::\n', 'markdown')).not.toContain(
+      'data-pluto-component'
+    )
+  })
+})

@@ -24,14 +24,18 @@ Four pure functions, each in its own file under `app/utils/`, run in this order:
 2. **Convert** — `renderRichtext()` (`richtext.ts`) turns that value into an HTML string.
    Markdown goes through `marked` (with `gfm: true`, matching the editor). A paragraph that
    is one http(s) URL alone (or `[url](url)`) gets `data-pluto-embed` (`isEmbedParagraph`, the
-   rule of core). JSON goes through
+   rule of core). An empty component of the site (`::name{props}` then `::`) becomes the mark
+   of a content component (`plutoComponentExtension` of core, imported with
+   `#layers/pluto/shared/markdown/render`). JSON goes through
    `richtextJsonToHtml()` (`richtext-json.ts`), a small hand-written serializer. HTML passes
    through unchanged.
 3. **Sanitize** — every path, with no exception, finishes by calling
    `sanitizeRichtextHtml()` (`richtext-sanitize.ts`) before the HTML leaves `renderRichtext()`.
 4. **Output** — `PlutoProse.vue` passes the sanitized string to `PlutoHtml` of core, which sets
    it as `innerHTML` and puts the player of an embed provider in place of a paragraph that is one
-   URL alone (`data-pluto-embed`; see the content-model skill of core, "Embeds").
+   URL alone (`data-pluto-embed`; see the content-model skill of core, "Embeds"), and the
+   component of the site in place of a content component mark (the content-components skill of
+   core).
 
 `richtextToPlainText()` (`richtext.ts`) runs the same pipeline, then strips the result down to
 plain text, for use outside `PlutoProse` (an excerpt, a `<meta description>`, and so on).
@@ -97,7 +101,10 @@ use `ultrahtml/transformers/sanitize`, because that transformer leaves `on*` eve
   `script`, `style`, `iframe`, `object`, `embed`, `svg`, `form`, `video`, and about a dozen
   others in the same family — see the `DROP_ELEMENTS` set in `richtext-sanitize.ts` for the
   full list.
-- Every other element (a `<div>`, a hyphenated custom element, and so on) is unwrapped: its
+- A `div` with a valid content component mark (`readComponentMarker` of core) keeps
+  `data-pluto-component` and `data-pluto-props` (the props parsed, filtered by
+  `safeComponentProps`, and written again), and loses its children.
+- Every other element (another `<div>`, a hyphenated custom element, and so on) is unwrapped: its
   children stay, the tag itself is dropped.
 - Kept attributes are narrow and per-element: `href`/`title` on `a`, `src`/`alt`/`title`/
   `width`/`height` on `img`, a `language-*` class on `code`, `type`/`checked`/`disabled` on a

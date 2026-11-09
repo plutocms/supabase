@@ -14,6 +14,10 @@ describe('usePostEditorItems in English', () => {
   beforeEach(() => {
     vi.stubGlobal('computed', computed)
     vi.stubGlobal('usePlutoI18n', () => createI18nStub())
+    // No content components: the snapshots hold the editor of a site with none.
+    vi.stubGlobal('usePlutoContentComponents', () => ({
+      list: computed(() => []),
+    }))
   })
 
   afterEach(() => {
@@ -58,5 +62,35 @@ describe('usePostEditorItems in English', () => {
         type
       ).toMatchSnapshot(type)
     }
+  })
+})
+
+describe('usePostEditorItems with content components', () => {
+  beforeEach(() => {
+    vi.stubGlobal('computed', computed)
+    vi.stubGlobal('usePlutoI18n', () => createI18nStub())
+    vi.stubGlobal('usePlutoContentComponents', () => ({
+      list: computed(() => [
+        { name: 'promo-card', label: 'Promo card', icon: 'i-lucide-megaphone' },
+      ]),
+    }))
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('adds the component menu to the toolbar, and each component to the slash menu', () => {
+    const items = usePostEditorItems()
+    expect(plain(items.fixedToolbarItems.value).at(-1)).toContainEqual({
+      slot: 'component',
+      icon: 'i-lucide-puzzle',
+    })
+    expect(plain(items.suggestionItems.value).at(-1)).toContainEqual({
+      kind: 'plutoComponent',
+      name: 'promo-card',
+      label: 'Promo card',
+      icon: 'i-lucide-megaphone',
+    })
   })
 })

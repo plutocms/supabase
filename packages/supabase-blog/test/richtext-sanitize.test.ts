@@ -188,3 +188,19 @@ describe('the embed mark and the escapes', () => {
     ).not.toThrow()
   })
 })
+
+describe('the content component mark', () => {
+  it('keeps a valid mark, empty, with its props written again', () => {
+    expect(
+      sanitizeRichtextHtml(
+        '<div data-pluto-component="card" data-pluto-props="{&quot;title&quot;:&quot;T&quot;,&quot;onclick&quot;:&quot;x&quot;}" onclick="alert(1)"><script>alert(1)</script>child</div>'
+      )
+    ).toBe(
+      '<div data-pluto-component="card" data-pluto-props="{&quot;title&quot;:&quot;T&quot;}"></div>'
+    )
+  })
+
+  it('unwraps a div with no valid mark', () => {
+    expect(sanitizeRichtextHtml('<div class="x">text</div>')).toBe('text')
+  })
+})

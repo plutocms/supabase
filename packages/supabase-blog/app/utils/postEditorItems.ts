@@ -17,6 +17,14 @@ import { upperFirst } from 'scule'
 // eslint-disable-next-line ts/consistent-type-definitions -- see note above
 type ImageUploadHandlers = {
   imageUpload: EditorCustomHandlers['imageUpload']
+  plutoComponent: EditorCustomHandlers['plutoComponent']
+}
+
+/** A content component of the site in the slash menu: its block key, label and icon. */
+export interface PostEditorComponentItem {
+  name: string
+  label: string
+  icon: string
 }
 
 /** A translate function: a message key in, the text out. */
@@ -97,8 +105,21 @@ function linkAndImageItems(t: EditorItemsTranslate) {
   ]
 }
 
-/** The fixed toolbar items, with text from `t`. */
-export function createFixedToolbarItems(t: EditorItemsTranslate) {
+/** The component menu of core (`PlutoBlockInsertMenu`), when the site has content components. */
+function componentItems(components: boolean) {
+  return components
+    ? [{ slot: 'component' as const, icon: 'i-lucide-puzzle' }]
+    : []
+}
+
+/**
+ * The fixed toolbar items, with text from `t`. `components` adds the `component` slot (the
+ * content components of the site).
+ */
+export function createFixedToolbarItems(
+  t: EditorItemsTranslate,
+  options: { components?: boolean } = {}
+) {
   return [
     [
       {
@@ -148,7 +169,7 @@ export function createFixedToolbarItems(t: EditorItemsTranslate) {
       },
     ],
     markItems(t),
-    linkAndImageItems(t),
+    [...linkAndImageItems(t), ...componentItems(options.components ?? false)],
   ] satisfies EditorToolbarItem<ImageUploadHandlers>[][]
 }
 
@@ -201,7 +222,14 @@ export function createBubbleToolbarItems(t: EditorItemsTranslate) {
 }
 
 /** The suggestion menu items, with text from `t`. */
-export function createSuggestionItems(t: EditorItemsTranslate) {
+/**
+ * The slash menu items, with text from `t`. Each content component of the site is an item of the
+ * Insert group (the `plutoComponent` handler inserts it and opens its settings).
+ */
+export function createSuggestionItems(
+  t: EditorItemsTranslate,
+  components: PostEditorComponentItem[] = []
+) {
   return [
     [
       { type: 'label', label: t('supabase-blog.editor.style') },
@@ -239,6 +267,12 @@ export function createSuggestionItems(t: EditorItemsTranslate) {
         label: t('supabase-blog.editor.image'),
         icon: 'i-lucide-image',
       },
+      ...components.map((component) => ({
+        kind: 'plutoComponent' as const,
+        name: component.name,
+        label: component.label,
+        icon: component.icon,
+      })),
     ],
   ] satisfies EditorSuggestionMenuItem<ImageUploadHandlers>[][]
 }

@@ -11,11 +11,24 @@ import {
  * language. The arrays are computed, so a language switch updates them.
  */
 export function usePostEditorItems() {
-  const { t } = usePlutoI18n()
+  const { t, tx } = usePlutoI18n()
+  // The content components of the site (core): the toolbar menu and the slash menu items.
+  const { list: components } = usePlutoContentComponents()
 
-  const fixedToolbarItems = computed(() => createFixedToolbarItems(t))
+  const fixedToolbarItems = computed(() =>
+    createFixedToolbarItems(t, { components: components.value.length > 0 })
+  )
   const bubbleToolbarItems = computed(() => createBubbleToolbarItems(t))
-  const suggestionItems = computed(() => createSuggestionItems(t))
+  const suggestionItems = computed(() =>
+    createSuggestionItems(
+      t,
+      components.value.map((component) => ({
+        name: component.name,
+        label: tx(component.label),
+        icon: component.icon,
+      }))
+    )
+  )
 
   function createBlockMenuItemTree(
     editor: Editor,

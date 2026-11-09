@@ -46,6 +46,14 @@ const customHandlers = {
     isActive: (editor: Editor) => editor.isActive('image'),
     isDisabled: undefined,
   },
+  // A content component of the site, from the slash menu (`createSuggestionItems`).
+  plutoComponent: {
+    canExecute: () => true,
+    execute: (editor: Editor, item: { name: string }) =>
+      editor.chain().focus().insertPlutoComponent(item.name),
+    isActive: () => false,
+    isDisabled: undefined,
+  },
 } satisfies EditorCustomHandlers
 
 function imageToolbarItems(editor: Editor): EditorToolbarItem[][] {
@@ -154,6 +162,8 @@ const extensions = [
   }),
   Code.extend({ excludes: 'code' }),
   Image,
+  // A content component (`::name{props}` then `::`): a chip with a props form. From core.
+  PlutoContentComponentNode,
   Placeholder.configure({
     // A function, so the text follows the admin language. It runs each time
     // the editor draws the placeholder.
@@ -326,6 +336,9 @@ const MENU_BG = 'dark:bg-neutral-950'
       >
         <template #link>
           <EditorLinkPopover :editor="editor" auto-open />
+        </template>
+        <template #component>
+          <PlutoBlockInsertMenu :editor="editor" />
         </template>
       </EditorToolbar>
 
