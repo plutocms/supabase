@@ -1,10 +1,12 @@
 # E-commerce layer for Pluto with Supabase
 
-This layer provides e-commerce functionalities upon [`@plutocms/supabase`](https://github.com/plutocms/supabase) layer.
+This layer adds a shop to Pluto. It stores the products in Supabase, with [`@plutocms/supabase`](https://github.com/plutocms/supabase).
+
+**Docs:** [Supabase shop](https://pluto.vulmix.dev/docs/layers/supabase-shop)
 
 ## Installation
 
-Install the `supabase-shop` layer. Your app extends only this layer. It brings `@plutocms/supabase` (and with it `@plutocms/core`).
+Install the `supabase-shop` layer. Your app extends only this layer. It brings `@plutocms/supabase` (and with it `@plutocms/core`) and the [shop add-on](https://pluto.vulmix.dev/docs/layers/shop) `@plutocms/shop`.
 
 ```bash
 # npm

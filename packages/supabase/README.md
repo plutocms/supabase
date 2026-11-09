@@ -1,11 +1,13 @@
 # Supabase Layer for Pluto
 
-This layer integrates Supabase as a backend service for Pluto, providing a robust and scalable solution for managing content and data.
+This layer makes Supabase the backend of Pluto: the database, the sign-in, the users, and the roles.
+
+**Docs:** [Supabase](https://pluto.vulmix.dev/docs/supabase)
 
 ## Installation
 
 > [!NOTE]
-> Make sure you have a Supabase project set up. You will need the project ID, URL, and API key. You can find these in your [Supabase dashboard](https://supabase.com/dashboard).
+> Make sure you have a Supabase project set up. You need the URL and the publishable key of the project. You can find these in your [Supabase dashboard](https://supabase.com/dashboard).
 
 1. Create a `.env` file in the root of your project and add the following environment variables:
 
@@ -42,10 +44,7 @@ This layer provides the following composables:
 
 Pluto core owns the admin shell: the `/admin` route, the sign-in page, the route guard and the
 top navbar. This layer registers an auth driver, and core renders the shell from it. See
-`.claude/skills/auth-driver/SKILL.md`.
-
-An app that overrode `NavbarAdmin` or `pages/admin.vue` of an older version must move to registry
-entries. See "Migrating an app" in that skill.
+[Auth](https://pluto.vulmix.dev/docs/supabase/auth).
 
 ### Invite users (access API)
 

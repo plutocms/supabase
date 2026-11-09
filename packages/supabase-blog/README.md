@@ -2,6 +2,8 @@
 
 This layer adds a blog to Pluto. It stores posts in Supabase. Editors write them in the Pluto admin with a rich text editor. The layer builds on [`@plutocms/supabase`](https://github.com/plutocms/supabase).
 
+**Docs:** [Blog layer](https://pluto.vulmix.dev/docs/layers/blog)
+
 ## What the layer gives
 
 - **Post admin:** list, create, edit and delete posts at `/admin/posts`, `/admin/post/new` and `/admin/post/edit/:id`. The pages run on the generic content UI of `@plutocms/core`, against the `post` content type.
@@ -9,7 +11,7 @@ This layer adds a blog to Pluto. It stores posts in Supabase. Editors write them
 - **Images:** a cover image, and inline images in the body. The editor picks a file or uploads one, through the media library of `@plutocms/core` (stored in Supabase Storage).
 - **Tags and categories:** the `tag` and `category` content types, and the post fields `categories` and `tags` with an inline create. The public API gives them on each post and filters by them (`?filter[tags]=<slug>`).
 - **Authors:** the `author` content type (a name, a bio and an avatar), and the post field `authors`, in byline order, with an inline create. A new post gets the authors that you saved last time. The public API gives each author with the avatar and the bio, and filters by them (`?filter[authors]=<slug>`). An author has no link to a user account, so no user data goes to the public site.
-- **Capabilities:** `posts:read_drafts`, `posts:publish` and `posts:delete` gate the actions. `terms:manage` gates creating, editing and deleting a tag or a category. `authors:manage` gates creating, editing and deleting an author. An admin holds all five.
+- **Capabilities:** `posts:read_drafts`, `posts:write`, `posts:publish` and `posts:delete` gate the actions. The Contributor role (`posts:write`) writes posts and sends them to review. `terms:manage` gates creating, editing and deleting a tag or a category. `authors:manage` gates creating, editing and deleting an author. An admin holds all six.
 - **Public data:** the published posts on the public API of Pluto, for a site in any stack: `GET /api/pluto/v1/content/post` and `GET /api/pluto/v1/content/post/<id or slug>`. A list item has an `excerpt`, and one post has its body as sanitized `html`. In Nuxt, use `usePlutoPublicList` and `usePlutoPublicItem`. See https://pluto.vulmix.dev/docs/build/public-api.
 - **`PlutoProse`:** a component that shows a stored richtext value (Markdown, HTML or Tiptap JSON) as sanitized, styled HTML. Use it on a public post page.
 - **Migrations:** the `posts` table and its policies ship as layer migrations. An admin applies them from `/admin/migrations`.
@@ -18,8 +20,8 @@ For the full detail, see [FEATURES.md](./FEATURES.md).
 
 ## Requirements
 
-- A Supabase project, with `SUPABASE_URL` and `SUPABASE_KEY` in your `.env`. See the [`@plutocms/supabase` README](https://github.com/plutocms/supabase).
-- Nuxt 4 and a Tailwind entry file that your app owns. See the single Tailwind build section in the [`@plutocms/core` README](https://github.com/plutocms/pluto).
+- A Supabase project, with `SUPABASE_URL` and `SUPABASE_KEY` in your `.env`. See [Supabase](https://pluto.vulmix.dev/docs/supabase).
+- Nuxt 4 and a Tailwind entry file that your app owns. See [Styles](https://pluto.vulmix.dev/docs/build/styles).
 
 ## Installation
 
@@ -48,7 +50,6 @@ The `package.json` of the app lists only `@plutocms/supabase-blog`, besides `nux
 ## Links
 
 - Starter: the blog template, [`blog`](https://github.com/plutocms/templates/tree/main/templates/blog) of `plutocms/templates`, with the Supabase backend: `npm create pluto@latest my-blog -t blog --backend supabase`. The same template works with the Git CMS.
-- Skills: `.claude/skills/blog-posts/SKILL.md` and `.claude/skills/prose/SKILL.md`.
 
 ## Development
 
