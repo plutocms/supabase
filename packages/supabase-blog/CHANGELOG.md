@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.26.0](https://github.com/plutocms/supabase/compare/supabase-blog-v0.25.1...supabase-blog-v0.26.0) (2026-11-09)
+
+
+### Features
+
+* **supabase-blog:** content components in the post editor and the public body ([#285](https://github.com/plutocms/supabase/issues/285)) ([64347f8](https://github.com/plutocms/supabase/commit/64347f817cf6b7d308f7feb65f8556692e0de079))
+
 ## [0.25.1](https://github.com/plutocms/supabase/compare/supabase-blog-v0.25.0...supabase-blog-v0.25.1) (2026-11-08)
 
 
