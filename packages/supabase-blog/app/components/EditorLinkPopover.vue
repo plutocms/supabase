@@ -111,7 +111,7 @@ function handleKeyDown(event: KeyboardEvent) {
 </script>
 
 <template>
-  <UPopover v-model:open="open" :ui="{ content: 'p-0.5' }">
+  <UPopover v-model:open="open" :ui="{ content: 'p-0.5' }" arrow>
     <UTooltip :text="t('supabase-blog.editor.link')">
       <UButton
         :active="snapshot?.active ?? false"

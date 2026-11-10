@@ -231,8 +231,9 @@ label: 'pluto.post.outline', … } }`, and the `content` field sets `widget: 'po
 - **Visual** mode shows the `richtext` widget of this layer (`PlutoRichtextField.vue`, which
   wraps `PostEditor.vue`) with the `canvas` prop. In canvas, the wrapper has no label and no
   border, and the text fills the rest of the height (the compose panel of core scrolls, not the
-  widget). `PostEditor` gets `canvas` too: its fixed toolbar is a separate rounded bar, one step
-  darker than the text (`bg-pluto-toolbar` of core), sticky at `top-2`, in one row
+  widget). `PostEditor` gets `canvas` too: its fixed toolbar is a separate rounded bar (white with a
+  soft shadow in light mode, the dark sidebar color in dark mode: the classes of the core toolbar),
+  sticky at `top-2`, in one row
   (`EditorToolbar` `overflow`: the items that do not fit go into a **More tools** popover,
   `supabase-blog.editor.moreTools`). The image upload stays.
 - **Markdown** mode shows the Markdown source next to a preview of the site. The preview is an

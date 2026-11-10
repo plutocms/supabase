@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.30.0](https://github.com/plutocms/supabase/compare/v0.29.0...v0.30.0) (2026-11-10)
+
+
+### Features
+
+* the post editor look of core, a line icon for the backend badge, shop translations ([#293](https://github.com/plutocms/supabase/issues/293)) ([96f582b](https://github.com/plutocms/supabase/commit/96f582b261524fa9511d1f32451ae8a801dcc3b1))
+
+
+### Bug Fixes
+
+* declare the MIT license of supabase and supabase-shop; short READMEs ([#289](https://github.com/plutocms/supabase/issues/289)) ([d9b0745](https://github.com/plutocms/supabase/commit/d9b07459d1315bc75e8188535c8db0d2f9212399))
+
 ## [0.29.0](https://github.com/plutocms/supabase/compare/v0.28.0...v0.29.0) (2026-11-08)
 
 
