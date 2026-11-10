@@ -1112,6 +1112,11 @@ exports[`usePostEditorItems in English > gives the fixed toolbar 1`] = `
       "icon": "i-lucide-heading",
       "items": [
         {
+          "icon": "i-lucide-type",
+          "kind": "paragraph",
+          "label": "Paragraph",
+        },
+        {
           "icon": "i-lucide-heading-1",
           "kind": "heading",
           "label": "Heading 1",

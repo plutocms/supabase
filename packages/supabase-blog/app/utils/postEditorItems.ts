@@ -138,7 +138,15 @@ export function createFixedToolbarItems(
         icon: 'i-lucide-heading',
         tooltip: { text: t('supabase-blog.editor.headings') },
         content: { align: 'start' },
-        items: headingItems(t, [1, 2, 3, 4]),
+        // Paragraph first: it turns a heading back into plain text.
+        items: [
+          {
+            kind: 'paragraph',
+            label: t('supabase-blog.editor.paragraph'),
+            icon: 'i-lucide-type',
+          },
+          ...headingItems(t, [1, 2, 3, 4]),
+        ],
       },
       {
         icon: 'i-lucide-list',
