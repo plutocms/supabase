@@ -46,6 +46,11 @@ const props = withDefaults(
     options?: Record<string, unknown>
     class?: string
     ui?: Record<string, string>
+    /**
+     * One row (the `fixed` layout only): the items that do not fit go into a "More tools"
+     * popover at the end of the row, as the same buttons. Default: the groups wrap.
+     */
+    overflow?: boolean
   }>(),
   {
     layout: 'fixed',
@@ -294,6 +299,88 @@ const snapshot = useEditorSnapshot(
   buildGroups,
   () => [props.items, locale.value]
 )
+
+// --- One row (`overflow`) ---------------------------------------------------
+//
+// Every button has the same width, so the split reads the width of one button, of one separator,
+// and the two gaps (between the groups and inside a group) once, then counts.
+const { t } = usePlutoI18n()
+const row = useTemplateRef<HTMLElement>('row')
+const { width } = useElementSize(row)
+const sizes = ref({ item: 28, separator: 1, gap: 6, groupGap: 2 })
+
+function px(value: string | undefined): number {
+  const n = Number.parseFloat(value ?? '')
+  return Number.isFinite(n) ? n : 0
+}
+
+function measure() {
+  const el = row.value
+  if (!el) {
+    return
+  }
+  const base = el.querySelector<HTMLElement>('[data-slot="base"]')
+  const group = el.querySelector<HTMLElement>('[data-slot="group"]')
+  const button = el.querySelector<HTMLElement>('[data-slot="group"] button')
+  const separator = el.querySelector<HTMLElement>('[data-slot="separator"]')
+  sizes.value = {
+    item: button?.offsetWidth || sizes.value.item,
+    separator: separator?.offsetWidth ?? sizes.value.separator,
+    gap: base ? px(getComputedStyle(base).columnGap) : sizes.value.gap,
+    groupGap: group
+      ? px(getComputedStyle(group).columnGap)
+      : sizes.value.groupGap,
+  }
+}
+watch(
+  () => Boolean(snapshot.value?.length),
+  (ready) => ready && nextTick(measure),
+  { immediate: true }
+)
+
+/** The width of some groups in one row. */
+function rowWidth(groups: ResolvedItem[][]): number {
+  const { item, separator, gap, groupGap } = sizes.value
+  const filled = groups.filter((group) => group.length > 0)
+  const items = filled.reduce(
+    (sum, group) => sum + group.length * item + (group.length - 1) * groupGap,
+    0
+  )
+  const separators = Math.max(filled.length - 1, 0)
+  const children = filled.length + separators
+  return items + separators * separator + Math.max(children - 1, 0) * gap
+}
+
+const split = computed(() => {
+  const all = (snapshot.value ?? []).filter((group) => group.length > 0)
+  if (!props.overflow || width.value === 0 || rowWidth(all) <= width.value) {
+    return { visible: all, overflow: [] as ResolvedItem[][] }
+  }
+  // Room for the More button and its gap.
+  const room = width.value - sizes.value.item - sizes.value.gap
+  const visible: ResolvedItem[][] = []
+  const overflow: ResolvedItem[][] = []
+  let full = false
+  for (const group of all) {
+    if (full) {
+      overflow.push(group)
+      continue
+    }
+    const kept: ResolvedItem[] = []
+    for (const [index, entry] of group.entries()) {
+      if (rowWidth([...visible, [...kept, entry]]) > room) {
+        full = true
+        overflow.push(group.slice(index))
+        break
+      }
+      kept.push(entry)
+    }
+    if (kept.length) {
+      visible.push(kept)
+    }
+  }
+  return { visible, overflow }
+})
 </script>
 
 <template>
@@ -317,6 +404,54 @@ const snapshot = useEditorSnapshot(
       </EditorToolbarItems>
     </div>
   </BubbleMenu>
+
+  <!-- One row: the items that do not fit go into the More popover. -->
+  <div
+    v-else-if="overflow"
+    ref="row"
+    :class="props.class"
+    class="flex w-full min-w-0 items-center gap-1.5"
+  >
+    <div
+      :class="ui.base({ class: [props.ui?.base, 'min-w-0 flex-nowrap'] })"
+      role="toolbar"
+      data-slot="base"
+    >
+      <EditorToolbarItems :groups="split.visible" :ui="ui">
+        <template v-for="(_, name) in $slots" #[name]="slotProps">
+          <slot :name="name" v-bind="slotProps" />
+        </template>
+      </EditorToolbarItems>
+    </div>
+
+    <UPopover v-if="split.overflow.length" :content="{ align: 'end' }">
+      <UTooltip :text="t('supabase-blog.editor.moreTools')">
+        <UButton
+          :aria-label="t('supabase-blog.editor.moreTools')"
+          class="ms-auto shrink-0"
+          icon="i-lucide-ellipsis"
+          color="neutral"
+          variant="ghost"
+          size="sm"
+          square
+        />
+      </UTooltip>
+
+      <template #content>
+        <div
+          :aria-label="t('supabase-blog.editor.moreTools')"
+          :class="ui.base({ class: 'max-w-64 flex-wrap p-1' })"
+          role="toolbar"
+        >
+          <EditorToolbarItems :groups="split.overflow" :ui="ui">
+            <template v-for="(_, name) in $slots" #[name]="slotProps">
+              <slot :name="name" v-bind="slotProps" />
+            </template>
+          </EditorToolbarItems>
+        </div>
+      </template>
+    </UPopover>
+  </div>
 
   <div
     v-else

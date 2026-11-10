@@ -20,6 +20,8 @@ import EditorToolbar from './EditorToolbar.vue'
 const props = defineProps<{
   placeholder?: string
   ui?: Record<string, string>
+  /** The look of the core post editor: the toolbar is a rounded bar in one row (see PlutoRichtextField). */
+  canvas?: boolean
 }>()
 
 const { t, locale } = usePlutoI18n()
@@ -329,10 +331,17 @@ const MENU_BG = 'dark:bg-neutral-950'
         popover: { content: MENU_BG },
       }"
     >
+      <!-- In the post editor (`canvas`), the toolbar is a separate rounded bar, one step darker than
+           the text (`bg-pluto-toolbar` of core), in one row: the rest goes into More. -->
       <EditorToolbar
         :editor="editor"
         :items="fixedToolbarItems"
-        class="border-b border-muted sticky top-0 inset-x-0 p-2 z-10 bg-default flex-wrap"
+        :overflow="canvas"
+        :class="
+          canvas
+            ? 'bg-pluto-toolbar border-default sticky top-2 z-10 rounded-lg border px-2 py-1.5 shadow-xs'
+            : 'border-b border-muted sticky top-0 inset-x-0 p-2 z-10 bg-default flex-wrap'
+        "
       >
         <template #link>
           <EditorLinkPopover :editor="editor" auto-open />

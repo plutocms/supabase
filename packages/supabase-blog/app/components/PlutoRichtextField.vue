@@ -6,9 +6,10 @@
 // — this wrapper is the adapter, so PostEditor.vue itself stays untouched.
 //
 // With `canvas`, the core post editor (`post-canvas`) shows this widget as its
-// Visual mode: no label, and a full-height box that scrolls its own text, like
-// the Markdown mode of the post editor. No padding: the post editor sets the
-// space around it.
+// Visual mode: no label and no border (the compose panel has the background of
+// the text). The toolbar is a separate rounded bar in one row that stays at the
+// top, and the text fills the rest of the height. The compose panel scrolls, not
+// this widget. No padding: the post editor sets the space around it.
 const props = defineProps<{
   field: PlutoTextField
   modelValue: unknown
@@ -34,7 +35,7 @@ const value = computed(() => (props.modelValue as string | undefined) ?? '')
 const UFormField = resolveComponent('UFormField')
 const frame = computed(() =>
   props.canvas
-    ? { is: 'div', attrs: { class: 'flex h-full min-h-0 flex-col' } }
+    ? { is: 'div', attrs: { class: 'flex flex-col' } }
     : {
         is: UFormField,
         attrs: {
@@ -52,13 +53,14 @@ const frame = computed(() =>
          input instead of forwarding an unsupported prop. -->
     <div
       :class="[
-        canvas && 'flex min-h-0 flex-1 flex-col',
+        canvas && 'flex flex-1 flex-col',
         disabled && 'pointer-events-none opacity-60',
       ]"
     >
       <PostEditor
         ref="editor"
         :model-value="value"
+        :canvas="canvas"
         :placeholder="
           t('supabase-blog.editor.fieldPlaceholder', {
             label: field.label.toLowerCase(),
@@ -67,9 +69,9 @@ const frame = computed(() =>
         :ui="
           canvas
             ? {
-                root: 'border-default bg-default flex min-h-0 flex-1 flex-col overflow-hidden rounded-md border',
-                content: 'min-h-0 flex-1 overflow-y-auto',
-                base: 'min-h-full px-8 py-6',
+                root: 'flex flex-1 flex-col',
+                content: 'flex flex-1 flex-col',
+                base: 'flex-1 px-8 py-6',
               }
             : undefined
         "

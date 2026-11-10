@@ -68,7 +68,8 @@
         "apply": "Aplicar link",
         "open": "Abrir em uma nova janela",
         "remove": "Remover link"
-      }
+      },
+      "moreTools": "Mais ferramentas"
     }
   },
   "content": {
