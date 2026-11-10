@@ -424,7 +424,7 @@ const split = computed(() => {
       </EditorToolbarItems>
     </div>
 
-    <UPopover v-if="split.overflow.length" :content="{ align: 'end' }">
+    <UPopover v-if="split.overflow.length" :content="{ align: 'end' }" arrow>
       <UTooltip :text="t('supabase-blog.editor.moreTools')">
         <UButton
           :aria-label="t('supabase-blog.editor.moreTools')"

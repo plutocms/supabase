@@ -69,7 +69,9 @@
         "open": "Abrir em uma nova janela",
         "remove": "Remover link"
       },
-      "moreTools": "Mais ferramentas"
+      "moreTools": "Mais ferramentas",
+      "addBlock": "Adicionar um bloco",
+      "blockMenu": "Arraste para mover, clique para o menu do bloco"
     }
   },
   "content": {

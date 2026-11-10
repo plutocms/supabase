@@ -71,7 +71,10 @@ const frame = computed(() =>
             ? {
                 root: 'flex flex-1 flex-col',
                 content: 'flex flex-1 flex-col',
-                base: 'flex-1 px-8 py-6',
+                // The text in line with the title; the editor element reaches into the gutter of
+                // the column (`-ms-14 ps-14`), so the pointer stays in it on the way to the block
+                // buttons (Tiptap hides them when the pointer leaves the editor).
+                base: 'flex-1 -ms-14 ps-14 pe-0 pt-12 pb-3 sm:ps-14 sm:pe-0',
               }
             : undefined
         "

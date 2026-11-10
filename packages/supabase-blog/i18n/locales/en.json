@@ -69,7 +69,9 @@
         "open": "Open in new window",
         "remove": "Remove link"
       },
-      "moreTools": "More tools"
+      "moreTools": "More tools",
+      "addBlock": "Add a block",
+      "blockMenu": "Drag to move, click for the block menu"
     }
   },
   "content": {

@@ -115,10 +115,21 @@ function imageToolbarItems(editor: Editor): EditorToolbarItem[][] {
   ]
 }
 
+// The block under the drag handle, from its `hover` event (`node-change` fires on a click only).
 const selectedNode = ref<{
   node: JSONContent
   pos: number
 }>()
+// The block of the open menu of the handle: the pointer can hover other blocks while it is open.
+const menuNode = ref<{
+  node: JSONContent
+  pos: number
+}>()
+const handleOnEmptyLine = computed(
+  () =>
+    selectedNode.value?.node.type === 'paragraph' &&
+    !selectedNode.value.node.content?.length
+)
 
 // The drag-handle's block-menu items. `editor.isActive(...)`/`editor.can()`
 // run inside `mapEditorItems`, so this must never be called from a template
@@ -129,16 +140,31 @@ const selectedNode = ref<{
 const blockMenuItems = shallowRef<DropdownMenuItem[][]>([])
 
 function rebuildBlockMenu(editor: Editor) {
-  if (!selectedNode.value?.node?.type) {
+  const current = menuNode.value ?? selectedNode.value
+  if (!current?.node?.type) {
     blockMenuItems.value = []
     return
   }
 
   blockMenuItems.value = mapEditorItems(
     editor,
-    createBlockMenuItemTree(editor, selectedNode.value),
+    createBlockMenuItemTree(editor, current),
     customHandlers
   ) as DropdownMenuItem[][]
+}
+
+/** A menu of the handle opens or closes: keep its block, and keep the handle in place. */
+function onHandleMenu(editor: Editor, open: boolean) {
+  menuNode.value = open ? selectedNode.value : undefined
+  editor.chain().setMeta('lockDragHandle', open).run()
+}
+
+/**
+ * The Markdown of the editor, without the blank lines at the end: the empty last line of the editor
+ * (`PlutoTrailingParagraph`) never reaches the post, and an open post stays unchanged.
+ */
+function trimEnd(markdown: string): string {
+  return markdown.replace(/(?:\s|&nbsp;)+$/u, '')
 }
 
 const ui = computed(() =>
@@ -166,6 +192,8 @@ const extensions = [
   Image,
   // A content component (`::name{props}` then `::`): a chip with a props form. From core.
   PlutoContentComponentNode,
+  // An empty line at the end, so the "+" has a place after the last block. From core.
+  PlutoTrailingParagraph,
   Placeholder.configure({
     // A function, so the text follows the admin language. It runs each time
     // the editor draws the placeholder.
@@ -205,7 +233,8 @@ function flush() {
   } catch {
     markdown = editor.value.getText()
   }
-  if (markdown === lastEmitted) {
+  markdown = trimEnd(markdown)
+  if (markdown === trimEnd(lastEmitted)) {
     return
   }
   lastEmitted = markdown
@@ -316,10 +345,50 @@ watch(locale, () => {
 const handlers = computed(() => ({ ...createHandlers(), ...customHandlers }))
 provide('editorHandlers', handlers)
 
+/**
+ * The menu of the "+" of an empty line: the items of the slash menu (`suggestionItems`). An item
+ * puts the caret in that line and runs its handler there. No "/" goes into the text.
+ */
+const insertMenuItems = computed<DropdownMenuItem[][]>(() =>
+  suggestionItems.value.map((group) =>
+    group.map((item): DropdownMenuItem => {
+      if ('type' in item && item.type) {
+        return { type: item.type, label: item.label }
+      }
+      const { kind, label, icon } = item as {
+        kind: string
+        label?: string
+        icon?: string
+      }
+      return {
+        label,
+        icon,
+        onSelect: () => {
+          const current = menuNode.value ?? selectedNode.value
+          const handler = (
+            handlers.value as Record<string, EditorCustomHandlers[string]>
+          )[kind]
+          if (!editor.value || !current || !handler) {
+            return
+          }
+          editor.value
+            .chain()
+            .focus()
+            .setTextSelection(current.pos + 1)
+            .run()
+          handler.execute(editor.value, item).run()
+        },
+      }
+    })
+  )
+)
+
 // The menus (the bubble toolbars, the dropdowns, the slash and block menus)
 // open on top of the editor, which has the same background in dark mode. A
 // darker background sets them apart.
 const MENU_BG = 'dark:bg-neutral-950'
+// The arrow of a menu has the same color as the menu.
+const MENU_ARROW = 'dark:fill-neutral-950'
 </script>
 
 <template>
@@ -327,19 +396,22 @@ const MENU_BG = 'dark:bg-neutral-950'
     <UTheme
       v-if="editor"
       :ui="{
-        dropdownMenu: { content: MENU_BG },
-        popover: { content: MENU_BG },
+        dropdownMenu: { content: MENU_BG, arrow: MENU_ARROW },
+        popover: { content: MENU_BG, arrow: MENU_ARROW },
       }"
     >
       <!-- In the post editor (`canvas`), the toolbar is a separate rounded bar, one step darker than
-           the text (`bg-pluto-toolbar` of core), in one row: the rest goes into More. -->
+           the text in dark mode, white with a soft shadow in light mode, in one row: the rest goes into
+           More. It is as wide as the focused title (`-mx-2`), and `data-pluto-editor-toolbar` tells
+           the post editor its height (the Outline scrolls a heading under it). -->
       <EditorToolbar
         :editor="editor"
         :items="fixedToolbarItems"
         :overflow="canvas"
+        :data-pluto-editor-toolbar="canvas ? '' : undefined"
         :class="
           canvas
-            ? 'bg-pluto-toolbar border-default sticky top-2 z-10 rounded-lg border px-2 py-1.5 shadow-xs'
+            ? 'border border-[oklch(0_0_0/0.19)] bg-white shadow-[0px_12px_15px_-15px_#0000007a] dark:border-default dark:bg-(--pluto-admin-sidebar) sticky top-2 z-10 -mx-2 rounded-lg px-2 py-1.5'
             : 'border-b border-muted sticky top-0 inset-x-0 p-2 z-10 bg-default flex-wrap'
         "
       >
@@ -383,39 +455,36 @@ const MENU_BG = 'dark:bg-neutral-950'
         layout="bubble"
       />
 
-      <!-- The block buttons stay on the left (no flip): the content has a left gutter for them.
-           A flip to the right made the editor scroll sideways. -->
+      <!-- In the gutter at the left of the text: the grip of a block (drag to move; a click opens the
+           block menu), or the "+" of an empty line (the slash items, for that line). No flip: the
+           buttons stay in the gutter, so the editor does not scroll sideways. -->
       <UEditorDragHandle
-        v-slot="{ ui: dragHandleUi, onClick }"
+        v-slot="{ ui: dragHandleUi }"
         :editor="editor"
         :options="{ flip: false }"
-        @node-change="
-          (event) => {
-            selectedNode = event
-            if (!editor) return
-            rebuildBlockMenu(editor)
-          }
-        "
+        @hover="(event) => (selectedNode = event)"
       >
-        <UButton
-          :class="dragHandleUi.handle()"
-          icon="i-lucide-plus"
-          color="neutral"
-          variant="ghost"
-          size="sm"
-          @click="
-            (e) => {
-              e.stopPropagation()
-
-              if (!editor) return
-
-              const selected = onClick()
-              handlers.suggestion?.execute(editor, { pos: selected?.pos }).run()
-            }
-          "
-        />
+        <UDropdownMenu
+          v-if="handleOnEmptyLine"
+          :modal="false"
+          :items="insertMenuItems"
+          :content="{ side: 'bottom', align: 'start' }"
+          :ui="{ content: `max-h-80 ${MENU_BG}`, label: 'text-xs' }"
+          arrow
+          @update:open="(isOpen) => editor && onHandleMenu(editor, isOpen)"
+        >
+          <UButton
+            :aria-label="t('supabase-blog.editor.addBlock')"
+            :class="dragHandleUi.handle()"
+            icon="i-lucide-plus"
+            color="neutral"
+            variant="ghost"
+            size="sm"
+          />
+        </UDropdownMenu>
 
         <UDropdownMenu
+          v-else
           v-slot="{ open }"
           :modal="false"
           :items="blockMenuItems"
@@ -424,13 +493,14 @@ const MENU_BG = 'dark:bg-neutral-950'
           @update:open="
             (isOpen) => {
               if (!editor) return
-              editor.chain().setMeta('lockDragHandle', isOpen).run()
+              onHandleMenu(editor, isOpen)
               if (isOpen) rebuildBlockMenu(editor)
             }
           "
         >
           <UButton
             :active="open"
+            :aria-label="t('supabase-blog.editor.blockMenu')"
             :class="dragHandleUi.handle()"
             color="neutral"
             variant="ghost"
@@ -447,9 +517,11 @@ const MENU_BG = 'dark:bg-neutral-950'
         :ui="{ content: MENU_BG }"
       />
 
+      <!-- Outside the canvas, a left gutter for the block buttons. In the canvas, the post editor
+           gives the column its gutter (see PlutoRichtextField). -->
       <EditorContent
         :editor="editor"
-        :class="ui.content({ class: ['ps-16', props.ui?.content] })"
+        :class="ui.content({ class: [!canvas && 'ps-16', props.ui?.content] })"
         role="presentation"
         data-slot="content"
       />
