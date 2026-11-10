@@ -71,6 +71,37 @@
           "label": "Category",
           "description": "Groups similar pieces in the store."
         }
+      },
+      "status": {
+        "draft": "Draft",
+        "published": "Published"
+      }
+    },
+    "product-category": {
+      "label": "Product category",
+      "labelPlural": "Product categories",
+      "fields": {
+        "label": {
+          "label": "Label"
+        },
+        "slug": {
+          "label": "Slug"
+        },
+        "description": {
+          "label": "Description"
+        }
+      }
+    },
+    "product-availability": {
+      "label": "Product availability",
+      "labelPlural": "Product availabilities",
+      "fields": {
+        "label": {
+          "label": "Label"
+        },
+        "slug": {
+          "label": "Slug"
+        }
       }
     }
   }

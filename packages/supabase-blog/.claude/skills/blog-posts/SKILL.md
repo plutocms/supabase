@@ -229,14 +229,19 @@ label: 'pluto.post.outline', … } }`, and the `content` field sets `widget: 'po
 `post-canvas` widget is the core post editor of `@plutocms/core`:
 
 - **Visual** mode shows the `richtext` widget of this layer (`PlutoRichtextField.vue`, which
-  wraps `PostEditor.vue`) with the `canvas` prop. In canvas, the wrapper has no label, and the
-  editor is a centered writing column. The image upload stays.
+  wraps `PostEditor.vue`) with the `canvas` prop. In canvas, the wrapper has no label and no
+  border, and the text fills the rest of the height (the compose panel of core scrolls, not the
+  widget). `PostEditor` gets `canvas` too: its fixed toolbar is a separate rounded bar, one step
+  darker than the text (`bg-pluto-toolbar` of core), sticky at `top-2`, in one row
+  (`EditorToolbar` `overflow`: the items that do not fit go into a **More tools** popover,
+  `supabase-blog.editor.moreTools`). The image upload stays.
 - **Markdown** mode shows the Markdown source next to a preview of the site. The preview is an
   iframe of `/_pluto/post-preview`. An app can replace the default preview with its own
   `components/PlutoPostPreview.vue`.
 - The left panel shows the outline (the headings of the post) and the mode switch. Markdown that
   the visual editor cannot keep turns Visual off.
-- The other fields (the title and the slug) are in the panel on the right.
+- The title is above the editor (core shows it, and takes it out of the right panel). The other
+  fields (the slug and the rest) are in the panel on the right.
 - The form's toolbar shows the post status (Draft or Published), Save draft or Update, Publish,
   and an overflow menu with Unpublish and Delete. Publish uses the `posts:publish` capability.
 
