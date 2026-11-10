@@ -161,7 +161,7 @@ export default defineNuxtPlugin(() => {
       id: 'supabase',
       kind: 'database',
       label: 'Supabase',
-      icon: 'i-lucide-database',
+      icon: 'pluto-supabase:logo',
       details: SupabaseBackendDetails,
     },
     // The pending-migrations notice, shown at the top of the admin pages.
