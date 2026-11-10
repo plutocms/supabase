@@ -161,7 +161,8 @@ export default defineNuxtPlugin(() => {
       id: 'supabase',
       kind: 'database',
       label: 'Supabase',
-      icon: 'pluto-supabase:logo',
+      // Official backends use a Lucide line icon (see the admin-shell skill in pluto).
+      icon: 'i-lucide-database-zap',
       details: SupabaseBackendDetails,
     },
     // The pending-migrations notice, shown at the top of the admin pages.
