@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.27.0](https://github.com/plutocms/supabase/compare/supabase-blog-v0.26.0...supabase-blog-v0.27.0) (2026-11-10)
+
+
+### Features
+
+* **supabase-blog:** the post editor of core 0.67: block buttons, + menu, empty last line ([#296](https://github.com/plutocms/supabase/issues/296)) ([dcb4406](https://github.com/plutocms/supabase/commit/dcb440639d3eb5b644f4bdc94b209decb020fc84))
+* the post editor look of core, a line icon for the backend badge, shop translations ([#293](https://github.com/plutocms/supabase/issues/293)) ([96f582b](https://github.com/plutocms/supabase/commit/96f582b261524fa9511d1f32451ae8a801dcc3b1))
+
 ## [0.26.0](https://github.com/plutocms/supabase/compare/supabase-blog-v0.25.1...supabase-blog-v0.26.0) (2026-11-09)
 
 
