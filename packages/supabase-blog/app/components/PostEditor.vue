@@ -339,6 +339,7 @@ const MENU_ARROW = 'dark:fill-neutral-950'
         :editor="editor"
         :items="fixedToolbarItems"
         :overflow="canvas"
+        :data-pluto-admin-dark="canvas || undefined"
         :class="
           canvas
             ? 'bg-pluto-toolbar border-default sticky top-2 z-10 rounded-lg border px-2 py-1.5 shadow-xs'
