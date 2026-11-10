@@ -71,7 +71,7 @@ const frame = computed(() =>
             ? {
                 root: 'flex flex-1 flex-col',
                 content: 'flex flex-1 flex-col',
-                base: 'flex-1 px-8 py-6',
+                base: 'flex-1 px-8 pt-10 pb-6',
               }
             : undefined
         "

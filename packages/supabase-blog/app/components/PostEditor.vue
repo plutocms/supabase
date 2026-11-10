@@ -334,15 +334,15 @@ const MENU_ARROW = 'dark:fill-neutral-950'
       }"
     >
       <!-- In the post editor (`canvas`), the toolbar is a separate rounded bar, one step darker than
-           the text (`bg-pluto-toolbar` of core), in one row: the rest goes into More. -->
+           the text in dark mode, white with a soft shadow in light mode, in one row: the rest goes into
+           More. -->
       <EditorToolbar
         :editor="editor"
         :items="fixedToolbarItems"
         :overflow="canvas"
-        :data-pluto-admin-dark="canvas || undefined"
         :class="
           canvas
-            ? 'bg-pluto-toolbar border-default sticky top-2 z-10 rounded-lg border px-2 py-1.5 shadow-xs'
+            ? 'border border-[oklch(0_0_0/0.19)] bg-white shadow-[0px_12px_15px_-15px_#0000007a] dark:border-default dark:bg-(--pluto-admin-sidebar) sticky top-2 z-10 rounded-lg px-2 py-1.5'
             : 'border-b border-muted sticky top-0 inset-x-0 p-2 z-10 bg-default flex-wrap'
         "
       >
