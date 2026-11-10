@@ -95,14 +95,18 @@ describe('supabase-shop locale files', () => {
       expect([...namespaces].toSorted()).toEqual(['content', 'supabase-shop'])
     })
 
-    it(`${code} has only the product type under content`, () => {
+    it(`${code} has only the types of this layer under content`, () => {
       const types = new Set(
         Object.keys(locales[code]!)
           .filter((key) => key.startsWith('content.'))
           .map((key) => key.split('.')[1]!)
       )
 
-      expect([...types]).toEqual(['product'])
+      expect([...types].toSorted()).toEqual([
+        'product',
+        'product-availability',
+        'product-category',
+      ])
     })
   }
 })
