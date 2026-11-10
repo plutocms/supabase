@@ -71,6 +71,37 @@
           "label": "Categoria",
           "description": "Agrupa peças parecidas na loja."
         }
+      },
+      "status": {
+        "draft": "Rascunho",
+        "published": "Publicado"
+      }
+    },
+    "product-category": {
+      "label": "Categoria de produto",
+      "labelPlural": "Categorias de produto",
+      "fields": {
+        "label": {
+          "label": "Nome"
+        },
+        "slug": {
+          "label": "Slug"
+        },
+        "description": {
+          "label": "Descrição"
+        }
+      }
+    },
+    "product-availability": {
+      "label": "Disponibilidade",
+      "labelPlural": "Disponibilidades",
+      "fields": {
+        "label": {
+          "label": "Nome"
+        },
+        "slug": {
+          "label": "Slug"
+        }
       }
     }
   }
