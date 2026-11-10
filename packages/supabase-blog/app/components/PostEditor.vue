@@ -320,6 +320,8 @@ provide('editorHandlers', handlers)
 // open on top of the editor, which has the same background in dark mode. A
 // darker background sets them apart.
 const MENU_BG = 'dark:bg-neutral-950'
+// The arrow of a menu has the same color as the menu.
+const MENU_ARROW = 'dark:fill-neutral-950'
 </script>
 
 <template>
@@ -327,8 +329,8 @@ const MENU_BG = 'dark:bg-neutral-950'
     <UTheme
       v-if="editor"
       :ui="{
-        dropdownMenu: { content: MENU_BG },
-        popover: { content: MENU_BG },
+        dropdownMenu: { content: MENU_BG, arrow: MENU_ARROW },
+        popover: { content: MENU_BG, arrow: MENU_ARROW },
       }"
     >
       <!-- In the post editor (`canvas`), the toolbar is a separate rounded bar, one step darker than

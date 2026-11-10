@@ -138,6 +138,7 @@ export function createFixedToolbarItems(
         icon: 'i-lucide-heading',
         tooltip: { text: t('supabase-blog.editor.headings') },
         content: { align: 'start' },
+        arrow: true,
         // Paragraph first: it turns a heading back into plain text.
         items: [
           {
@@ -152,6 +153,7 @@ export function createFixedToolbarItems(
         icon: 'i-lucide-list',
         tooltip: { text: t('supabase-blog.editor.lists') },
         content: { align: 'start' },
+        arrow: true,
         items: [
           {
             kind: 'bulletList',
@@ -192,6 +194,7 @@ export function createBubbleToolbarItems(t: EditorItemsTranslate) {
         activeVariant: 'ghost',
         tooltip: { text: t('supabase-blog.editor.turnInto') },
         content: { align: 'start' },
+        arrow: true,
         ui: { label: 'text-xs' },
         items: [
           { type: 'label', label: t('supabase-blog.editor.turnInto') },

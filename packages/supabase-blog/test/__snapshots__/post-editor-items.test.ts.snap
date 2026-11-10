@@ -960,6 +960,7 @@ exports[`usePostEditorItems in English > gives the bubble toolbar 1`] = `
     {
       "activeColor": "neutral",
       "activeVariant": "ghost",
+      "arrow": true,
       "content": {
         "align": "start",
       },
@@ -1106,6 +1107,7 @@ exports[`usePostEditorItems in English > gives the fixed toolbar 1`] = `
   ],
   [
     {
+      "arrow": true,
       "content": {
         "align": "start",
       },
@@ -1146,6 +1148,7 @@ exports[`usePostEditorItems in English > gives the fixed toolbar 1`] = `
       },
     },
     {
+      "arrow": true,
       "content": {
         "align": "start",
       },
