@@ -176,6 +176,7 @@ async function completeDatabaseSetup() {
         ? t('supabase.setup.doneDescription')
         : t('supabase.setup.description')
     "
+    wide
   >
     <template v-if="done">
       <EnvPersistWarning
