@@ -1,13 +1,22 @@
+import { fileURLToPath } from 'node:url'
+import { plutoLayer } from '@plutocms/core/layers'
+
 // The playground: a small app to try the layers of this repo together, like an app made from a
-// template. It extends the layers by package name; the Bun workspace links the names to
-// `packages/`, so a change in a layer shows here at once. Core comes from npm, or from a local
-// checkout with `PLUTO_CORE_PATH`.
+// template. Every Pluto layer comes from its local checkout next to this repo (core, the shop
+// add-on, and the layers of this repo), so a change in any of them shows here at once. A
+// checkout that is missing comes from npm. `PLUTO_USE_LOCAL=false` uses npm for all of them, and
+// `PLUTO_<NAME>_PATH` points one layer at another folder (see the local-layers skill of core).
 //
 // The Supabase project comes from `playground/.env` (see `.env.example`). Leave `DATABASE_URL`
 // out: with it, the server applies the pending migrations of the branch to that database when it
 // starts.
+const root = fileURLToPath(new URL('../..', import.meta.url))
+
 export default defineNuxtConfig({
-  extends: ['@plutocms/supabase-shop', '@plutocms/supabase-blog'],
+  extends: [
+    plutoLayer('@plutocms/supabase-shop', { root }),
+    plutoLayer('@plutocms/supabase-blog', { root }),
+  ],
 
   css: ['~/assets/css/main.css'],
 
