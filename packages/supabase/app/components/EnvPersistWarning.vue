@@ -43,7 +43,7 @@ async function copyEnvLine() {
   <UAlert
     :title="t('supabase.envWarning.title')"
     color="warning"
-    variant="outline"
+    variant="subtle"
     icon="lucide:triangle-alert"
   >
     <template #description>

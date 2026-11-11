@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { StepperItem } from '@nuxt/ui'
 
+// Before any account exists: the layout and the card of the admin auth pages.
 definePageMeta({
-  layout: 'setup',
+  layout: 'auth',
 })
 
-const { t, uiLocale } = usePlutoI18n()
+const { t } = usePlutoI18n()
 
 useHead({
   title: () => t('supabase.setup.title'),
@@ -212,229 +213,204 @@ function handleStepChange(step: number) {
 </script>
 
 <template>
-  <UApp :locale="uiLocale">
-    <div class="flex min-h-dvh items-center justify-center p-4">
-      <UCard class="w-full max-w-125">
-        <div class="flex flex-col gap-y-8">
-          <UStepper ref="stepper" v-model="currentStep" :items="items" linear />
+  <PlutoAdminAuthCard
+    :title="
+      currentStep === 1
+        ? t('supabase.setup.doneTitle')
+        : t('supabase.setup.title')
+    "
+  >
+    <UStepper
+      ref="stepper"
+      v-model="currentStep"
+      :items="items"
+      size="sm"
+      linear
+    />
 
-          <div>
-            <section v-if="currentStep === 0">
-              <UForm
-                id="database-setup-form"
-                class="flex flex-col gap-y-4"
-                @submit="handleStepChange(currentStep)"
+    <div>
+      <section v-if="currentStep === 0">
+        <UForm
+          id="database-setup-form"
+          class="flex flex-col gap-y-4"
+          @submit="handleStepChange(currentStep)"
+        >
+          <UFormField
+            :label="t('supabase.connection.connectionString')"
+            required
+          >
+            <UInput
+              v-model="databaseForm.connectionString"
+              :disabled="isSettingUpDatabase"
+              placeholder="postgresql://"
+              autofocus
+              required
+            />
+
+            <template #help>
+              <SupabaseMessageParts
+                :message="t('supabase.connection.connectionStringHelp')"
               >
-                <UFormField
-                  :label="t('supabase.connection.connectionString')"
-                  required
-                >
-                  <UInput
-                    v-model="databaseForm.connectionString"
-                    :disabled="isSettingUpDatabase"
-                    placeholder="postgresql://"
-                    autofocus
-                    required
-                  />
-
-                  <template #help>
-                    <SupabaseMessageParts
-                      :message="t('supabase.connection.connectionStringHelp')"
-                    >
-                      <template #link>
-                        <ULink
-                          :to="`https://supabase.com/dashboard/project/${projectId}/database/settings?showConnect=true&method=transaction`"
-                          target="_blank"
-                          class="underline"
-                          external
-                        >
-                          {{
-                            t('supabase.connection.connectionStringHelpLink')
-                          }}
-                        </ULink>
-                      </template>
-                    </SupabaseMessageParts>
-                  </template>
-                </UFormField>
-
-                <UFormField :label="t('supabase.connection.password')" required>
-                  <UInput
-                    v-model="databaseForm.password"
-                    :disabled="isSettingUpDatabase"
-                    type="password"
-                    placeholder="• • • • •"
-                    required
-                  />
-                </UFormField>
-
-                <UAlert
-                  color="secondary"
-                  icon="lucide:badge-info"
-                  variant="outline"
-                >
-                  <template #description>
-                    <SupabaseMessageParts
-                      :message="t('supabase.connection.passwordInfo')"
-                    >
-                      <template #link>
-                        <ULink
-                          to="https://supabase.com/dashboard/project/_/database/settings"
-                          target="_blank"
-                        >
-                          {{ t('supabase.connection.passwordInfoLink') }}
-                        </ULink>
-                      </template>
-                    </SupabaseMessageParts>
-                  </template>
-                </UAlert>
-
-                <UAlert
-                  :title="t('supabase.connection.whyTitle')"
-                  color="warning"
-                  variant="outline"
-                  icon="lucide:info"
-                >
-                  <template #description>
-                    <div class="flex flex-col gap-y-4">
-                      <p>
-                        <SupabaseMessageParts
-                          :message="t('supabase.setup.why')"
-                        >
-                          <template #promise>
-                            <UTooltip
-                              :text="t('supabase.setup.promiseTooltip')"
-                            >
-                              <span
-                                class="underline decoration-dotted cursor-help"
-                              >
-                                {{ t('supabase.setup.promise') }}</span
-                              ></UTooltip
-                            >
-                          </template>
-                        </SupabaseMessageParts>
-                      </p>
-
-                      <div>
-                        <UPopover :content="{ side: 'bottom' }" arrow>
-                          <UButton
-                            :label="t('supabase.setup.technicalDetails')"
-                            icon="lucide:lightbulb"
-                            color="info"
-                            variant="subtle"
-                            class="w-fit"
-                            size="sm"
-                          />
-
-                          <template #content>
-                            <div
-                              class="flex flex-col gap-y-4 max-w-xs p-4 text-white text-sm"
-                            >
-                              <p>
-                                <SupabaseMessageParts
-                                  :message="
-                                    t('supabase.setup.technicalDetailsRequest')
-                                  "
-                                >
-                                  <template #route>
-                                    <ULink
-                                      to="https://github.com/plutocms/supabase/blob/main/server/api/_pluto/supabase/setup/index.post.ts"
-                                      target="_blank"
-                                      class="underline"
-                                    >
-                                      {{
-                                        t(
-                                          'supabase.setup.technicalDetailsRoute'
-                                        )
-                                      }}</ULink
-                                    >
-                                  </template>
-                                  <template #files>
-                                    <ULink
-                                      to="https://github.com/plutocms/supabase/tree/main/db/migrations"
-                                      target="_blank"
-                                      class="underline"
-                                    >
-                                      {{
-                                        t(
-                                          'supabase.setup.technicalDetailsFiles'
-                                        )
-                                      }}</ULink
-                                    >
-                                  </template>
-                                </SupabaseMessageParts>
-                              </p>
-
-                              <p>
-                                {{ t('supabase.setup.technicalDetailsStored') }}
-                              </p>
-                            </div>
-                          </template>
-                        </UPopover>
-                      </div>
-                    </div>
-                  </template>
-                </UAlert>
-
-                <UAlert
-                  v-if="isDev"
-                  :title="t('supabase.connection.restartTitle')"
-                  :description="t('supabase.setup.restartDescription')"
-                  color="info"
-                  variant="outline"
-                  icon="lucide:refresh-cw"
-                />
-              </UForm>
-            </section>
-
-            <section v-if="currentStep === 1">
-              <div class="flex flex-col gap-y-4">
-                <hgroup class="text-center">
-                  <span class="text-3xl">🎉</span>
-
-                  <h1 class="font-bold text-2xl">
-                    {{ t('supabase.setup.doneTitle') }}
-                  </h1>
-                </hgroup>
-
-                <p class="text-balance text-center text-lg">
-                  {{ t('supabase.setup.doneDescription') }}
-                </p>
-
-                <EnvPersistWarning
-                  v-if="envNotPersisted"
-                  :connection-string="submittedConnectionString"
-                />
-
-                <p class="text-center">
-                  <UButton
-                    icon="lucide:arrow-right"
-                    to="/admin/signup"
-                    color="primary"
-                    trailing
+                <template #link>
+                  <ULink
+                    :to="`https://supabase.com/dashboard/project/${projectId}/database/settings?showConnect=true&method=transaction`"
+                    target="_blank"
+                    class="underline"
+                    external
                   >
-                    {{ t('supabase.setup.goToSignup') }}
-                  </UButton>
-                </p>
-              </div>
-            </section>
-          </div>
+                    {{ t('supabase.connection.connectionStringHelpLink') }}
+                  </ULink>
+                </template>
+              </SupabaseMessageParts>
+            </template>
+          </UFormField>
 
-          <div class="flex justify-end">
-            <div class="w-full sm:w-auto">
-              <UButton
-                v-if="stepper?.hasNext"
-                :form="currentStepId"
-                :loading="currentLoading"
-                leading-icon="lucide:check"
-                type="submit"
-                class="w-full justify-center sm:w-auto"
+          <UFormField :label="t('supabase.connection.password')" required>
+            <UInput
+              v-model="databaseForm.password"
+              :disabled="isSettingUpDatabase"
+              type="password"
+              placeholder="• • • • •"
+              required
+            />
+          </UFormField>
+
+          <UAlert color="secondary" icon="lucide:badge-info" variant="subtle">
+            <template #description>
+              <SupabaseMessageParts
+                :message="t('supabase.connection.passwordInfo')"
               >
-                {{ currentStepSubmitLabel }}
-              </UButton>
-            </div>
-          </div>
+                <template #link>
+                  <ULink
+                    to="https://supabase.com/dashboard/project/_/database/settings"
+                    target="_blank"
+                  >
+                    {{ t('supabase.connection.passwordInfoLink') }}
+                  </ULink>
+                </template>
+              </SupabaseMessageParts>
+            </template>
+          </UAlert>
+
+          <UAlert
+            :title="t('supabase.connection.whyTitle')"
+            color="warning"
+            variant="subtle"
+            icon="lucide:info"
+          >
+            <template #description>
+              <div class="flex flex-col gap-y-4">
+                <p>
+                  <SupabaseMessageParts :message="t('supabase.setup.why')">
+                    <template #promise>
+                      <UTooltip :text="t('supabase.setup.promiseTooltip')">
+                        <span class="underline decoration-dotted cursor-help">
+                          {{ t('supabase.setup.promise') }}</span
+                        ></UTooltip
+                      >
+                    </template>
+                  </SupabaseMessageParts>
+                </p>
+
+                <div>
+                  <UPopover :content="{ side: 'bottom' }" arrow>
+                    <UButton
+                      :label="t('supabase.setup.technicalDetails')"
+                      icon="lucide:lightbulb"
+                      color="info"
+                      variant="subtle"
+                      class="w-fit"
+                      size="sm"
+                    />
+
+                    <template #content>
+                      <div class="flex max-w-xs flex-col gap-y-4 p-4 text-sm">
+                        <p>
+                          <SupabaseMessageParts
+                            :message="
+                              t('supabase.setup.technicalDetailsRequest')
+                            "
+                          >
+                            <template #route>
+                              <ULink
+                                to="https://github.com/plutocms/supabase/blob/main/server/api/_pluto/supabase/setup/index.post.ts"
+                                target="_blank"
+                                class="underline"
+                              >
+                                {{
+                                  t('supabase.setup.technicalDetailsRoute')
+                                }}</ULink
+                              >
+                            </template>
+                            <template #files>
+                              <ULink
+                                to="https://github.com/plutocms/supabase/tree/main/db/migrations"
+                                target="_blank"
+                                class="underline"
+                              >
+                                {{
+                                  t('supabase.setup.technicalDetailsFiles')
+                                }}</ULink
+                              >
+                            </template>
+                          </SupabaseMessageParts>
+                        </p>
+
+                        <p>
+                          {{ t('supabase.setup.technicalDetailsStored') }}
+                        </p>
+                      </div>
+                    </template>
+                  </UPopover>
+                </div>
+              </div>
+            </template>
+          </UAlert>
+
+          <UAlert
+            v-if="isDev"
+            :title="t('supabase.connection.restartTitle')"
+            :description="t('supabase.setup.restartDescription')"
+            color="info"
+            variant="subtle"
+            icon="lucide:refresh-cw"
+          />
+        </UForm>
+      </section>
+
+      <section v-if="currentStep === 1">
+        <div class="flex flex-col gap-y-4">
+          <p class="text-muted text-sm">
+            {{ t('supabase.setup.doneDescription') }}
+          </p>
+
+          <EnvPersistWarning
+            v-if="envNotPersisted"
+            :connection-string="submittedConnectionString"
+          />
+
+          <UButton
+            icon="lucide:arrow-right"
+            to="/admin/signup"
+            color="primary"
+            class="w-full justify-center"
+            trailing
+          >
+            {{ t('supabase.setup.goToSignup') }}
+          </UButton>
         </div>
-      </UCard>
+      </section>
     </div>
-  </UApp>
+
+    <UButton
+      v-if="stepper?.hasNext"
+      :form="currentStepId"
+      :loading="currentLoading"
+      leading-icon="lucide:check"
+      type="submit"
+      class="w-full justify-center"
+    >
+      {{ currentStepSubmitLabel }}
+    </UButton>
+  </PlutoAdminAuthCard>
 </template>

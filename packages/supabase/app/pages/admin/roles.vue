@@ -124,140 +124,136 @@ function menuItems(role: AccessRole): DropdownMenuItem[][] {
 </script>
 
 <template>
-  <main>
-    <AdminView>
-      <!-- The section (the Users item of the menu) and its tabs, like Settings. -->
-      <h1 class="text-3xl font-bold lg:text-4xl">
-        {{ t('supabase.access.users.title') }}
-      </h1>
+  <PlutoViewAdminPanel>
+    <!-- The section (the Users item of the menu) and its tabs, like Settings. -->
+    <template #toolbar>
+      <PlutoViewToolbar
+        :title="t('supabase.access.users.title')"
+        icon="lucide:users"
+      >
+        <template #right>
+          <UButton icon="lucide:plus" @click="openRole(null)">
+            {{ t('supabase.access.roles.create') }}
+          </UButton>
+        </template>
+      </PlutoViewToolbar>
 
       <PlutoAdminNavTabs />
+    </template>
 
-      <div class="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h2 class="text-xl font-semibold">
-            {{ t('supabase.access.roles.title') }}
-          </h2>
-          <p class="text-muted text-sm">
-            {{ t('supabase.access.roles.description') }}
-          </p>
+    <p class="text-muted text-sm">
+      {{ t('supabase.access.roles.description') }}
+    </p>
+
+    <UAlert
+      v-if="!allowed"
+      :title="t('pluto.settings.noPermission.title')"
+      :description="
+        t('pluto.settings.noPermission.description', {
+          page: t('supabase.access.roles.title'),
+        })
+      "
+      icon="lucide:lock"
+      color="warning"
+    />
+
+    <!-- Loading -->
+    <div
+      v-else-if="status === 'loading'"
+      class="flex flex-col gap-y-3"
+      aria-busy="true"
+    >
+      <USkeleton v-for="row in 3" :key="row" class="h-12 w-full" />
+    </div>
+
+    <!-- Error -->
+    <UAlert
+      v-else-if="status === 'error'"
+      :title="t('supabase.access.roles.error.title')"
+      :description="loadError"
+      :actions="[
+        {
+          label: t('pluto.common.tryAgain'),
+          color: 'neutral',
+          variant: 'outline',
+          onClick: load,
+        },
+      ]"
+      color="error"
+      variant="subtle"
+      icon="lucide:circle-x"
+    />
+
+    <!-- The list -->
+    <UTable
+      v-else
+      :data="roles"
+      :columns="columns"
+      class="border-default rounded-lg border"
+    >
+      <template #role-cell="{ row }">
+        <div class="flex min-w-0 flex-col">
+          <span class="flex items-center gap-2">
+            <span class="text-highlighted truncate font-medium">{{
+              row.original.label
+            }}</span>
+            <UBadge
+              v-if="row.original.is_builtin"
+              :label="t('supabase.access.roles.builtin')"
+              color="neutral"
+              variant="subtle"
+              size="sm"
+            />
+          </span>
+          <code class="text-muted truncate font-mono text-xs">{{
+            row.original.key
+          }}</code>
         </div>
+      </template>
 
-        <UButton icon="lucide:plus" @click="openRole(null)">
-          {{ t('supabase.access.roles.create') }}
-        </UButton>
-      </div>
+      <template #permissions-cell="{ row }">
+        <span v-if="isFullAccess(row.original)" class="text-sm">
+          {{ t('supabase.access.roles.fullAccess') }}
+        </span>
+        <span v-else class="text-sm">
+          {{
+            t(
+              'supabase.access.roles.permissionCount',
+              row.original.capabilities.length
+            )
+          }}
+        </span>
+      </template>
 
-      <UAlert
-        v-if="!allowed"
-        :title="t('pluto.settings.noPermission.title')"
-        :description="
-          t('pluto.settings.noPermission.description', {
-            page: t('supabase.access.roles.title'),
-          })
-        "
-        icon="lucide:lock"
-        color="warning"
-      />
+      <template #users-cell="{ row }">
+        <span class="text-sm">{{
+          t('supabase.access.roles.userCount', row.original.user_count)
+        }}</span>
+      </template>
 
-      <!-- Loading -->
-      <div
-        v-else-if="status === 'loading'"
-        class="flex flex-col gap-y-3"
-        aria-busy="true"
-      >
-        <USkeleton v-for="row in 3" :key="row" class="h-12 w-full" />
-      </div>
+      <template #actions-cell="{ row }">
+        <div class="flex justify-end">
+          <UDropdownMenu
+            :items="menuItems(row.original)"
+            :content="{ align: 'end' }"
+          >
+            <UButton
+              :aria-label="row.original.label"
+              icon="lucide:ellipsis"
+              color="neutral"
+              variant="ghost"
+            />
+          </UDropdownMenu>
+        </div>
+      </template>
+    </UTable>
 
-      <!-- Error -->
-      <UAlert
-        v-else-if="status === 'error'"
-        :title="t('supabase.access.roles.error.title')"
-        :description="loadError"
-        :actions="[
-          {
-            label: t('pluto.common.tryAgain'),
-            color: 'neutral',
-            variant: 'outline',
-            onClick: load,
-          },
-        ]"
-        color="error"
-        variant="subtle"
-        icon="lucide:circle-x"
-      />
-
-      <!-- The list -->
-      <UTable
-        v-else
-        :data="roles"
-        :columns="columns"
-        class="border-default rounded-lg border"
-      >
-        <template #role-cell="{ row }">
-          <div class="flex min-w-0 flex-col">
-            <span class="flex items-center gap-2">
-              <span class="text-highlighted truncate font-medium">{{
-                row.original.label
-              }}</span>
-              <UBadge
-                v-if="row.original.is_builtin"
-                :label="t('supabase.access.roles.builtin')"
-                color="neutral"
-                variant="subtle"
-                size="sm"
-              />
-            </span>
-            <code class="text-muted truncate font-mono text-xs">{{
-              row.original.key
-            }}</code>
-          </div>
-        </template>
-
-        <template #permissions-cell="{ row }">
-          <span v-if="isFullAccess(row.original)" class="text-sm">
-            {{ t('supabase.access.roles.fullAccess') }}
-          </span>
-          <span v-else class="text-sm">
-            {{
-              t(
-                'supabase.access.roles.permissionCount',
-                row.original.capabilities.length
-              )
-            }}
-          </span>
-        </template>
-
-        <template #users-cell="{ row }">
-          <span class="text-sm">{{
-            t('supabase.access.roles.userCount', row.original.user_count)
-          }}</span>
-        </template>
-
-        <template #actions-cell="{ row }">
-          <div class="flex justify-end">
-            <UDropdownMenu
-              :items="menuItems(row.original)"
-              :content="{ align: 'end' }"
-            >
-              <UButton
-                :aria-label="row.original.label"
-                icon="lucide:ellipsis"
-                color="neutral"
-                variant="ghost"
-              />
-            </UDropdownMenu>
-          </div>
-        </template>
-      </UTable>
-
-      <!-- Lazy: the chunk loads on the first open. -->
-      <RoleSlideover
-        v-if="slideoverMounted"
-        v-model:open="slideoverOpen"
-        :role="editing"
-        @saved="load"
-      />
-    </AdminView>
-  </main>
+    <!-- Lazy: the chunk loads on the first open. -->
+    <RoleSlideover
+      v-if="slideoverMounted"
+      v-model:open="slideoverOpen"
+      :role="editing"
+      @saved="load"
+    />
+  </PlutoViewAdminPanel>
 </template>

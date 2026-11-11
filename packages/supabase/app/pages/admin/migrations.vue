@@ -188,17 +188,20 @@ async function applyMigrations(useForm: boolean) {
 </script>
 
 <template>
-  <AdminView>
-    <h1 class="text-3xl font-bold lg:text-4xl">
-      {{ t('supabase.migrations.title') }}
-    </h1>
+  <PlutoViewAdminPanel>
+    <template #toolbar>
+      <PlutoViewToolbar
+        :title="t('supabase.migrations.title')"
+        icon="lucide:database-zap"
+      />
+    </template>
 
     <UAlert
       v-if="isReconnecting"
       :title="t('supabase.connection.restarting')"
       :description="t('supabase.migrations.reconnectingBanner')"
       color="info"
-      variant="outline"
+      variant="subtle"
       icon="lucide:refresh-cw"
     />
 
@@ -218,7 +221,7 @@ async function applyMigrations(useForm: boolean) {
             :title="t('supabase.migrations.upToDate')"
             :description="t('supabase.migrations.upToDateDescription')"
             color="success"
-            variant="outline"
+            variant="subtle"
             icon="lucide:check-circle"
           />
 
@@ -310,7 +313,7 @@ async function applyMigrations(useForm: boolean) {
               <UAlert
                 color="secondary"
                 icon="lucide:badge-info"
-                variant="outline"
+                variant="subtle"
               >
                 <template #description>
                   <SupabaseMessageParts
@@ -332,7 +335,7 @@ async function applyMigrations(useForm: boolean) {
                 :title="t('supabase.connection.whyTitle')"
                 :description="t('supabase.migrations.why')"
                 color="warning"
-                variant="outline"
+                variant="subtle"
                 icon="lucide:info"
               />
 
@@ -341,7 +344,7 @@ async function applyMigrations(useForm: boolean) {
                 :title="t('supabase.connection.restartTitle')"
                 :description="t('supabase.migrations.restartDescription')"
                 color="info"
-                variant="outline"
+                variant="subtle"
                 icon="lucide:refresh-cw"
               />
 
@@ -374,11 +377,13 @@ async function applyMigrations(useForm: boolean) {
       </UCard>
 
       <UCard v-if="lastRun">
-        <div class="flex flex-col gap-y-4">
+        <template #header>
           <h2 class="font-semibold">
             {{ t('supabase.migrations.lastRun') }}
           </h2>
+        </template>
 
+        <div class="flex flex-col gap-y-4">
           <EnvPersistWarning
             v-if="lastRun.success && lastRun.persisted === false"
             :connection-string="lastConnectionString"
@@ -410,7 +415,7 @@ async function applyMigrations(useForm: boolean) {
       :title="t('supabase.migrations.loadFailed')"
       :description="t('supabase.migrations.loadFailedDescription')"
       color="error"
-      variant="outline"
+      variant="subtle"
       icon="lucide:circle-x"
     >
       <template #actions>
@@ -424,5 +429,5 @@ async function applyMigrations(useForm: boolean) {
         </UButton>
       </template>
     </UAlert>
-  </AdminView>
+  </PlutoViewAdminPanel>
 </template>

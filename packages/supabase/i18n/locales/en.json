@@ -146,10 +146,10 @@
       "checkConsole": "Please check the console for more details."
     },
     "setup": {
-      "title": "Setup Wizard",
+      "title": "Set up the database",
       "steps": {
-        "database": "Database Setup",
-        "complete": "Complete Setup"
+        "database": "Database",
+        "complete": "Done"
       },
       "submit": "Set up database",
       "next": "Submit",
@@ -169,7 +169,7 @@
       "complete": "Database setup complete",
       "completeDescription": "Your database has been set up successfully.",
       "error": "Error setting up the database",
-      "doneTitle": "Setup Complete",
+      "doneTitle": "The database is ready",
       "doneDescription": "Your database is ready. Create your admin account by signing up.",
       "goToSignup": "Go to sign up"
     },

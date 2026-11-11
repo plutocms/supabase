@@ -146,10 +146,10 @@
       "checkConsole": "Verifique o console para ver mais detalhes."
     },
     "setup": {
-      "title": "Assistente de configuração",
+      "title": "Configure o banco de dados",
       "steps": {
-        "database": "Configuração do banco de dados",
-        "complete": "Concluir configuração"
+        "database": "Banco de dados",
+        "complete": "Pronto"
       },
       "submit": "Configurar banco de dados",
       "next": "Enviar",
@@ -169,7 +169,7 @@
       "complete": "Banco de dados configurado",
       "completeDescription": "Seu banco de dados foi configurado com sucesso.",
       "error": "Erro ao configurar o banco de dados",
-      "doneTitle": "Configuração concluída",
+      "doneTitle": "O banco de dados está pronto",
       "doneDescription": "Seu banco de dados está pronto. Crie sua conta de administrador fazendo o cadastro.",
       "goToSignup": "Ir para o cadastro"
     },
