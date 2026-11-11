@@ -410,7 +410,7 @@ const split = computed(() => {
     v-else-if="overflow"
     ref="row"
     :class="props.class"
-    class="flex w-full min-w-0 items-center gap-1.5"
+    class="flex min-w-0 items-center gap-1.5"
   >
     <div
       :class="ui.base({ class: [props.ui?.base, 'min-w-0 flex-nowrap'] })"

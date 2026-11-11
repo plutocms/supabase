@@ -514,14 +514,16 @@ const MENU_ARROW = 'dark:fill-neutral-950'
       <UEditorSuggestionMenu
         :editor="editor"
         :items="suggestionItems"
+        :suggestion="{ allow: plutoSlashMenuAllowed }"
         :ui="{ content: MENU_BG }"
       />
 
-      <!-- Outside the canvas, a left gutter for the block buttons. In the canvas, the post editor
-           gives the column its gutter (see PlutoRichtextField). -->
+      <!-- Outside the canvas, a left gutter for the block buttons, from `sm` (under it, Nuxt UI hides
+           the drag handle). In the canvas, the post editor gives the column its gutter (see
+           PlutoRichtextField). -->
       <EditorContent
         :editor="editor"
-        :class="ui.content({ class: [!canvas && 'ps-16', props.ui?.content] })"
+        :class="ui.content({ class: [!canvas && 'px-4 sm:ps-16 sm:pe-0', props.ui?.content] })"
         role="presentation"
         data-slot="content"
       />
