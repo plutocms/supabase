@@ -287,14 +287,12 @@ async function applyMigrations(useForm: boolean) {
                     :message="t('supabase.connection.connectionStringHelp')"
                   >
                     <template #link>
-                      <ULink
+                      <PlutoExternalLink
                         :to="`https://supabase.com/dashboard/project/${projectId}/database/settings?showConnect=true&connectTab=direct&method=transaction`"
-                        target="_blank"
                         class="underline"
-                        external
                       >
                         {{ t('supabase.connection.connectionStringHelpLink') }}
-                      </ULink>
+                      </PlutoExternalLink>
                     </template>
                   </SupabaseMessageParts>
                 </template>
@@ -320,12 +318,11 @@ async function applyMigrations(useForm: boolean) {
                     :message="t('supabase.connection.passwordInfo')"
                   >
                     <template #link>
-                      <ULink
+                      <PlutoExternalLink
                         to="https://supabase.com/dashboard/project/_/database/settings"
-                        target="_blank"
                       >
                         {{ t('supabase.connection.passwordInfoLink') }}
-                      </ULink>
+                      </PlutoExternalLink>
                     </template>
                   </SupabaseMessageParts>
                 </template>

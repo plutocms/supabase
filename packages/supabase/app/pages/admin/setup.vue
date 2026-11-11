@@ -206,14 +206,12 @@ async function completeDatabaseSetup() {
         <template #help>
           <SupabaseMessageParts :message="t('supabase.setup.connectionHelp')">
             <template #link>
-              <ULink
+              <PlutoExternalLink
                 :to="`https://supabase.com/dashboard/project/${projectId}/database/settings?showConnect=true&method=transaction`"
-                target="_blank"
                 class="text-default underline"
-                external
               >
                 {{ t('supabase.setup.connectionHelpLink') }}
-              </ULink>
+              </PlutoExternalLink>
             </template>
           </SupabaseMessageParts>
         </template>
@@ -236,14 +234,12 @@ async function completeDatabaseSetup() {
             </template>
 
             <template #link>
-              <ULink
+              <PlutoExternalLink
                 :to="`https://supabase.com/dashboard/project/${projectId ?? '_'}/database/settings`"
-                target="_blank"
                 class="text-default underline"
-                external
               >
                 {{ t('supabase.setup.passwordHelpLink') }}
-              </ULink>
+              </PlutoExternalLink>
             </template>
           </SupabaseMessageParts>
         </template>
@@ -281,26 +277,24 @@ async function completeDatabaseSetup() {
                   :message="t('supabase.setup.detailsRequest')"
                 >
                   <template #route>
-                    <ULink
+                    <PlutoExternalLink
                       to="https://github.com/plutocms/supabase/blob/main/packages/supabase/server/api/_pluto/supabase/setup/index.post.ts"
-                      target="_blank"
                       class="text-default underline"
                     >
                       {{ t('supabase.setup.detailsRoute') }}
-                    </ULink>
+                    </PlutoExternalLink>
                   </template>
                 </SupabaseMessageParts>
               </li>
               <li>
                 <SupabaseMessageParts :message="t('supabase.setup.detailsRun')">
                   <template #files>
-                    <ULink
+                    <PlutoExternalLink
                       to="https://github.com/plutocms/supabase/tree/main/packages/supabase/db/migrations"
-                      target="_blank"
                       class="text-default underline"
                     >
                       {{ t('supabase.setup.detailsFiles') }}
-                    </ULink>
+                    </PlutoExternalLink>
                   </template>
                 </SupabaseMessageParts>
               </li>

@@ -150,7 +150,7 @@ function handleKeyDown(event: KeyboardEvent) {
           <UButton
             :disabled="!url && !snapshot?.active"
             :title="t('supabase-blog.editor.linkPopover.open')"
-            icon="i-lucide-external-link"
+            icon="i-lucide-arrow-up-right"
             color="neutral"
             variant="ghost"
             size="sm"
