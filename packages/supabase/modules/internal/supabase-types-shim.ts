@@ -1,3 +1,4 @@
+// Not a Nuxt module: Nuxt loads every file of modules/ (and modules/*/index.ts), not this folder.
 /**
  * A shim that pluto-migrations wrote: one re-export of the types of an @plutocms/supabase copy
  * (installed, or linked from a local checkout).

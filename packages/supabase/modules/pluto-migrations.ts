@@ -9,7 +9,7 @@ import {
 } from 'node:fs'
 import { basename, dirname, join, relative } from 'node:path'
 import { createResolver, defineNuxtModule, getLayerDirectories } from 'nuxt/kit'
-import { supabaseTypesShim } from './supabase-types-shim'
+import { supabaseTypesShim } from './internal/supabase-types-shim'
 
 const noTransactionPattern = /^--\s*pluto:no-transaction\b/
 

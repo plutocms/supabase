@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { supabaseTypesShim } from '../modules/supabase-types-shim'
+import { supabaseTypesShim } from '../modules/internal/supabase-types-shim'
 
 const now = '../../node_modules/.bun/@plutocms+supabase@0.31.0+abc/node_modules/@plutocms/supabase/shared/types/supabase'
 const old = '../../node_modules/.bun/@plutocms+supabase@0.23.0+def/node_modules/@plutocms/supabase/shared/types/supabase'
