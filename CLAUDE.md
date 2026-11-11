@@ -28,9 +28,18 @@ is one PR.
   `PLUTO_SUPABASE_PATH`.
 - Never run a migration or the typegen against a remote database as a check.
 
+## Playground
+
+`playground/` is a private app that extends the shop and blog layers (and so `supabase`), like an
+app made from a template. `bun run dev` starts it on port 3200. It reads `playground/.env`
+(`SUPABASE_URL`, `SUPABASE_KEY`; see `.env.example`). Never put `DATABASE_URL` in it: with it, the
+server applies the pending migrations of the branch at startup. Set `PLUTO_CORE_PATH` to try a
+local core.
+
 ## Commands (at the root)
 
 - `bun install`
+- `bun run dev` (the playground)
 - `bun run lint`, `bun run lint:fix`, `bun run prettier`
 - `bun run typecheck`, `bun run test`, `bun run build` (each runs supabase, then shop, then blog)
 - One package: `bun run --cwd packages/<name> <script>`
