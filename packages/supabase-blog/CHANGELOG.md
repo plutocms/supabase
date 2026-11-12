@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.28.0](https://github.com/plutocms/supabase/compare/supabase-blog-v0.27.0...supabase-blog-v0.28.0) (2026-11-12)
+
+
+### Features
+
+* admin UI round 5: tooltips, a playground site, new tab links; core 0.68 ([#302](https://github.com/plutocms/supabase/issues/302)) ([441d322](https://github.com/plutocms/supabase/commit/441d322a52cf31712cd7510b0876ca885698fda7))
+
 ## [0.27.0](https://github.com/plutocms/supabase/compare/supabase-blog-v0.26.0...supabase-blog-v0.27.0) (2026-11-10)
 
 
