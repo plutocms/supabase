@@ -39,11 +39,11 @@
     "@plutocms/core": ">=0.68.0 <1.0.0",
     "@types/node": "^26.6.5",
     "@vueuse/nuxt": "^14.4.0",
-    "nuxt": "^4.6.2",
-    "vitest": "^5.0.5",
-    "vue": "3.5.44",
+    "nuxt": "^4.6.4",
+    "vitest": "^5.1.0",
+    "vue": "3.5.45",
     "vue-router": "5.4.0",
-    "vue-tsc": "^3.3.13"
+    "vue-tsc": "^3.3.14"
   },
   "publishConfig": {
     "access": "public"
