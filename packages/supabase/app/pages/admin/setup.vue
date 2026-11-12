@@ -178,6 +178,20 @@ async function completeDatabaseSetup() {
     "
     wide
   >
+    <template #partner>
+      <UIcon
+        name="i-lucide-arrow-right"
+        class="text-dimmed size-4 shrink-0"
+        aria-hidden="true"
+      />
+      <span class="flex items-center gap-x-1.5">
+        <SupabaseLogo class="size-6 shrink-0" aria-hidden="true" />
+        <span class="text-highlighted text-lg font-semibold tracking-tight">
+          Supabase
+        </span>
+      </span>
+    </template>
+
     <template v-if="done">
       <EnvPersistWarning
         v-if="envNotPersisted"
