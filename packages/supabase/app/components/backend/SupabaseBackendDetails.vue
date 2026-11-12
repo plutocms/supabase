@@ -43,7 +43,7 @@ const host = (() => {
       :label="t('supabase.backend.openDashboard')"
       :to="dashboard"
       color="neutral"
-      icon="i-lucide-external-link"
+      trailing-icon="i-lucide-arrow-up-right"
       size="xs"
       target="_blank"
       variant="outline"

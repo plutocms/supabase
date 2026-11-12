@@ -25,3 +25,6 @@ logs
 
 # Custom
 supabase/.temp
+
+# The playground: its seeded types shim
+playground/shared/types/supabase.ts

@@ -266,183 +266,185 @@ function menuItems(user: AccessUser): DropdownMenuItem[][] {
 </script>
 
 <template>
-  <main>
-    <AdminView>
-      <!-- The section (the Users item of the menu) and its tabs, like Settings. -->
-      <h1 class="text-3xl font-bold lg:text-4xl">
-        {{ t('supabase.access.users.title') }}
-      </h1>
+  <PlutoViewAdminPanel>
+    <!-- The section (the Users item of the menu) and its tabs, like Settings. -->
+    <template #toolbar>
+      <PlutoViewToolbar
+        :title="t('supabase.access.users.title')"
+        icon="lucide:users"
+      >
+        <template #right>
+          <UButton v-if="isAdmin" icon="lucide:user-plus" @click="openInvite">
+            {{ t('supabase.access.users.invite') }}
+          </UButton>
+        </template>
+      </PlutoViewToolbar>
 
       <PlutoAdminNavTabs />
+    </template>
 
-      <div class="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h2 class="text-xl font-semibold">
-            {{ t('supabase.access.users.title') }}
-          </h2>
-          <p class="text-muted text-sm">
-            {{ t('supabase.access.users.description') }}
-          </p>
-        </div>
+    <p class="text-muted text-sm">
+      {{ t('supabase.access.users.description') }}
+    </p>
 
-        <UButton v-if="isAdmin" icon="lucide:user-plus" @click="openInvite">
-          {{ t('supabase.access.users.invite') }}
-        </UButton>
-      </div>
+    <UAlert
+      v-if="!allowed"
+      :title="t('pluto.settings.noPermission.title')"
+      :description="
+        t('pluto.settings.noPermission.description', {
+          page: t('supabase.access.users.title'),
+        })
+      "
+      icon="lucide:lock"
+      color="warning"
+    />
 
-      <UAlert
-        v-if="!allowed"
-        :title="t('pluto.settings.noPermission.title')"
-        :description="
-          t('pluto.settings.noPermission.description', {
-            page: t('supabase.access.users.title'),
-          })
-        "
-        icon="lucide:lock"
-        color="warning"
-      />
+    <!-- Loading -->
+    <div
+      v-else-if="status === 'loading'"
+      class="flex flex-col gap-y-3"
+      aria-busy="true"
+    >
+      <USkeleton v-for="row in 4" :key="row" class="h-12 w-full" />
+    </div>
 
-      <!-- Loading -->
-      <div
-        v-else-if="status === 'loading'"
-        class="flex flex-col gap-y-3"
-        aria-busy="true"
-      >
-        <USkeleton v-for="row in 4" :key="row" class="h-12 w-full" />
-      </div>
+    <!-- Error -->
+    <UAlert
+      v-else-if="status === 'error'"
+      :title="t('supabase.access.users.error.title')"
+      :description="loadError"
+      :actions="[
+        {
+          label: t('pluto.common.tryAgain'),
+          color: 'neutral',
+          variant: 'outline',
+          onClick: load,
+        },
+      ]"
+      color="error"
+      variant="subtle"
+      icon="lucide:circle-x"
+    />
 
-      <!-- Error -->
-      <UAlert
-        v-else-if="status === 'error'"
-        :title="t('supabase.access.users.error.title')"
-        :description="loadError"
-        :actions="[
-          {
-            label: t('pluto.common.tryAgain'),
-            color: 'neutral',
-            variant: 'outline',
-            onClick: load,
-          },
-        ]"
-        color="error"
-        variant="subtle"
-        icon="lucide:circle-x"
-      />
+    <!-- Empty -->
+    <UEmpty
+      v-else-if="users.length === 0"
+      :title="t('supabase.access.users.empty.title')"
+      :description="t('supabase.access.users.empty.description')"
+      :actions="
+        isAdmin
+          ? [
+              {
+                label: t('supabase.access.users.invite'),
+                icon: 'lucide:user-plus',
+                onClick: openInvite,
+              },
+            ]
+          : []
+      "
+      icon="lucide:users"
+    />
 
-      <!-- Empty -->
-      <UEmpty
-        v-else-if="users.length === 0"
-        :title="t('supabase.access.users.empty.title')"
-        :description="t('supabase.access.users.empty.description')"
-        :actions="
-          isAdmin
-            ? [
-                {
-                  label: t('supabase.access.users.invite'),
-                  icon: 'lucide:user-plus',
-                  onClick: openInvite,
-                },
-              ]
-            : []
-        "
-        icon="lucide:users"
-      />
-
-      <!-- The list -->
-      <UTable
-        v-else
-        :data="users"
-        :columns="columns"
-        class="border-default rounded-lg border"
-      >
-        <template #user-cell="{ row }">
-          <div class="flex min-w-0 flex-col">
-            <span class="flex items-center gap-2">
-              <span class="text-highlighted truncate font-medium">{{
-                userDisplayName(row.original)
-              }}</span>
-              <UBadge
-                v-if="row.original.id === selfId"
-                :label="t('supabase.access.users.you')"
-                color="primary"
-                variant="subtle"
-                size="sm"
-              />
-            </span>
-            <span
-              v-if="row.original.email"
-              class="text-muted truncate text-sm"
-              >{{ row.original.email }}</span
-            >
-          </div>
-        </template>
-
-        <template #roles-cell="{ row }">
-          <div class="flex flex-wrap gap-1">
+    <!-- The list -->
+    <UTable
+      v-else
+      :data="users"
+      :columns="columns"
+      class="border-default rounded-lg border"
+    >
+      <template #user-cell="{ row }">
+        <div class="flex min-w-0 flex-col">
+          <span class="flex items-center gap-2">
+            <span class="text-highlighted truncate font-medium">{{
+              userDisplayName(row.original)
+            }}</span>
             <UBadge
-              v-if="isAdminUser(row.original)"
-              :label="t('supabase.access.users.administrator')"
+              v-if="row.original.id === selfId"
+              :label="t('supabase.access.users.you')"
               color="primary"
               variant="subtle"
+              size="sm"
             />
-            <template v-else>
-              <UBadge
-                v-for="key in row.original.roles"
-                :key="key"
-                :label="roleLabelOf(roles, key)"
-                color="neutral"
-                variant="subtle"
-              />
-            </template>
-          </div>
-        </template>
+          </span>
+          <span v-if="row.original.email" class="text-muted truncate text-sm">{{
+            row.original.email
+          }}</span>
+        </div>
+      </template>
 
-        <template #status-cell="{ row }">
-          <div class="flex flex-col items-start gap-1">
+      <template #roles-cell="{ row }">
+        <div class="flex flex-wrap gap-1">
+          <UBadge
+            v-if="isAdminUser(row.original)"
+            :label="t('supabase.access.users.administrator')"
+            color="primary"
+            variant="subtle"
+          />
+          <template v-else>
             <UBadge
-              v-if="userStatus(row.original) === 'active'"
-              :label="t('supabase.access.users.status.active')"
-              color="success"
+              v-for="key in row.original.roles"
+              :key="key"
+              :label="roleLabelOf(roles, key)"
+              color="neutral"
               variant="subtle"
             />
-            <template v-else>
-              <UBadge
-                :label="t('supabase.access.users.status.invited')"
-                color="warning"
-                variant="subtle"
-              />
-              <span v-if="row.original.invited_at" class="text-muted text-xs">
-                {{
-                  t('supabase.access.users.status.invitedOn', {
-                    date: dateText(row.original.invited_at, {
-                      dateStyle: 'medium',
-                    }),
-                  })
-                }}
-              </span>
-            </template>
-          </div>
-        </template>
+          </template>
+        </div>
+      </template>
 
-        <template #lastSignIn-cell="{ row }">
-          <span v-if="row.original.last_sign_in_at" class="text-sm">
-            {{
-              dateText(row.original.last_sign_in_at, {
-                dateStyle: 'medium',
-                timeStyle: 'short',
-              })
-            }}
-          </span>
-          <span v-else class="text-muted text-sm">{{
-            t('supabase.access.users.neverSignedIn')
-          }}</span>
-        </template>
+      <template #status-cell="{ row }">
+        <div class="flex flex-col items-start gap-1">
+          <UBadge
+            v-if="userStatus(row.original) === 'active'"
+            :label="t('supabase.access.users.status.active')"
+            color="success"
+            variant="subtle"
+          />
+          <template v-else>
+            <UBadge
+              :label="t('supabase.access.users.status.invited')"
+              color="warning"
+              variant="subtle"
+            />
+            <span v-if="row.original.invited_at" class="text-muted text-xs">
+              {{
+                t('supabase.access.users.status.invitedOn', {
+                  date: dateText(row.original.invited_at, {
+                    dateStyle: 'medium',
+                  }),
+                })
+              }}
+            </span>
+          </template>
+        </div>
+      </template>
 
-        <template #actions-cell="{ row }">
-          <div v-if="isAdmin" class="flex justify-end">
-            <UDropdownMenu
-              :items="menuItems(row.original)"
-              :content="{ align: 'end' }"
+      <template #lastSignIn-cell="{ row }">
+        <span v-if="row.original.last_sign_in_at" class="text-sm">
+          {{
+            dateText(row.original.last_sign_in_at, {
+              dateStyle: 'medium',
+              timeStyle: 'short',
+            })
+          }}
+        </span>
+        <span v-else class="text-muted text-sm">{{
+          t('supabase.access.users.neverSignedIn')
+        }}</span>
+      </template>
+
+      <template #actions-cell="{ row }">
+        <div v-if="isAdmin" class="flex justify-end">
+          <UDropdownMenu
+            :items="menuItems(row.original)"
+            :content="{ align: 'end' }"
+          >
+            <UTooltip
+              :text="
+                t('supabase.access.users.actionsLabel', {
+                  name: userDisplayName(row.original),
+                })
+              "
             >
               <UButton
                 :aria-label="
@@ -454,27 +456,27 @@ function menuItems(user: AccessUser): DropdownMenuItem[][] {
                 color="neutral"
                 variant="ghost"
               />
-            </UDropdownMenu>
-          </div>
-        </template>
-      </UTable>
+            </UTooltip>
+          </UDropdownMenu>
+        </div>
+      </template>
+    </UTable>
 
-      <!-- Lazy: the chunk loads on the first open. -->
-      <InviteModal
-        v-if="inviteMounted"
-        v-model:open="inviteOpen"
-        :roles="roles"
-        :capabilities="capabilities"
-        @done="load"
-      />
-      <EditRolesSlideover
-        v-if="editMounted"
-        v-model:open="editOpen"
-        :user="editUser"
-        :roles="roles"
-        :self="editUser?.id === selfId"
-        @saved="load"
-      />
-    </AdminView>
-  </main>
+    <!-- Lazy: the chunk loads on the first open. -->
+    <InviteModal
+      v-if="inviteMounted"
+      v-model:open="inviteOpen"
+      :roles="roles"
+      :capabilities="capabilities"
+      @done="load"
+    />
+    <EditRolesSlideover
+      v-if="editMounted"
+      v-model:open="editOpen"
+      :user="editUser"
+      :roles="roles"
+      :self="editUser?.id === selfId"
+      @saved="load"
+    />
+  </PlutoViewAdminPanel>
 </template>

@@ -136,36 +136,48 @@ function handleKeyDown(event: KeyboardEvent) {
         @keydown="handleKeyDown"
       >
         <div class="flex items-center mr-0.5">
-          <UButton
-            :disabled="!url && !snapshot?.active"
-            :title="t('supabase-blog.editor.linkPopover.apply')"
-            icon="i-lucide-corner-down-left"
-            variant="ghost"
-            size="sm"
-            @click="setLink"
-          />
+          <UTooltip :text="t('supabase-blog.editor.linkPopover.apply')">
+            <span class="inline-flex">
+              <UButton
+                :disabled="!url && !snapshot?.active"
+                :aria-label="t('supabase-blog.editor.linkPopover.apply')"
+                icon="i-lucide-corner-down-left"
+                variant="ghost"
+                size="sm"
+                @click="setLink"
+              />
+            </span>
+          </UTooltip>
 
           <USeparator orientation="vertical" class="h-6 mx-1" />
 
-          <UButton
-            :disabled="!url && !snapshot?.active"
-            :title="t('supabase-blog.editor.linkPopover.open')"
-            icon="i-lucide-external-link"
-            color="neutral"
-            variant="ghost"
-            size="sm"
-            @click="openLink"
-          />
+          <UTooltip :text="t('supabase-blog.editor.linkPopover.open')">
+            <span class="inline-flex">
+              <UButton
+                :disabled="!url && !snapshot?.active"
+                :aria-label="t('supabase-blog.editor.linkPopover.open')"
+                icon="i-lucide-arrow-up-right"
+                color="neutral"
+                variant="ghost"
+                size="sm"
+                @click="openLink"
+              />
+            </span>
+          </UTooltip>
 
-          <UButton
-            :disabled="!url && !snapshot?.active"
-            :title="t('supabase-blog.editor.linkPopover.remove')"
-            icon="i-lucide-trash"
-            color="neutral"
-            variant="ghost"
-            size="sm"
-            @click="removeLink"
-          />
+          <UTooltip :text="t('supabase-blog.editor.linkPopover.remove')">
+            <span class="inline-flex">
+              <UButton
+                :disabled="!url && !snapshot?.active"
+                :aria-label="t('supabase-blog.editor.linkPopover.remove')"
+                icon="i-lucide-trash"
+                color="neutral"
+                variant="ghost"
+                size="sm"
+                @click="removeLink"
+              />
+            </span>
+          </UTooltip>
         </div>
       </UInput>
     </template>

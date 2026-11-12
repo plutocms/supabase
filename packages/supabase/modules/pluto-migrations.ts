@@ -9,6 +9,7 @@ import {
 } from 'node:fs'
 import { basename, dirname, join, relative } from 'node:path'
 import { createResolver, defineNuxtModule, getLayerDirectories } from 'nuxt/kit'
+import { supabaseTypesShim } from './internal/supabase-types-shim'
 
 const noTransactionPattern = /^--\s*pluto:no-transaction\b/
 
@@ -116,7 +117,9 @@ export default defineNuxtModule({
       nuxt.options.rootDir,
       'shared/types/supabase.ts'
     )
-    if (!existsSync(consumerTypesPath)) {
+    // Seed the shim when the app has none, and fix the path of an earlier
+    // shim (see supabaseTypesShim).
+    {
       // Resolve *this exact* @plutocms/supabase instance's own snapshot
       // (local-linked or npm-installed, whichever is actually running)
       // rather than a bare package specifier, which would re-resolve
@@ -132,15 +135,19 @@ export default defineNuxtModule({
         importSpecifier = `./${importSpecifier}`
       }
 
-      mkdirSync(consumerTypesDir, { recursive: true })
-      writeFileSync(
-        consumerTypesPath,
-        `export * from '${importSpecifier}'\n`,
-        'utf-8'
-      )
-      console.warn(
-        '[pluto-migrations] Seeded shared/types/supabase.ts (re-exporting @plutocms/supabase types; no generated types found yet).'
-      )
+      const existing = existsSync(consumerTypesPath)
+        ? readFileSync(consumerTypesPath, 'utf-8')
+        : undefined
+      const shim = supabaseTypesShim(existing, importSpecifier)
+      if (shim !== null) {
+        mkdirSync(consumerTypesDir, { recursive: true })
+        writeFileSync(consumerTypesPath, shim, 'utf-8')
+        console.warn(
+          existing === undefined
+            ? '[pluto-migrations] Seeded shared/types/supabase.ts (re-exporting @plutocms/supabase types; no generated types found yet).'
+            : '[pluto-migrations] Updated the path in shared/types/supabase.ts (the @plutocms/supabase package moved).'
+        )
+      }
     }
 
     const layerDirs = getLayerDirectories()

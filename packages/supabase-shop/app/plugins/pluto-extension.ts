@@ -52,10 +52,15 @@ export default defineNuxtPlugin(() => {
         defaultOpen: true,
         // The list first, then the create link: the same order as the posts.
         children: [
-          { label: 'supabase-shop.nav.allProducts', to: '/admin/products' },
+          {
+            label: 'supabase-shop.nav.allProducts',
+            to: '/admin/products',
+            icon: 'lucide:list',
+          },
           {
             label: 'supabase-shop.nav.createProduct',
             to: '/admin/product/new',
+            icon: 'lucide:plus',
           },
         ],
       },

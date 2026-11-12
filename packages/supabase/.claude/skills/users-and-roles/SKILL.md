@@ -95,9 +95,10 @@ limit after custom SMTP is set. The panel never shows or stores a key.
   code for them and fails on a key that no code uses.
 - The `pluto.*` keys used here must exist in the published `@plutocms/core` of the dev
   dependency. Use `pluto.common.*` for shared words.
-- Each page draws the section like core Settings: an `h1` (Users), the section tabs of core
-  (`<PlutoAdminNavTabs />`: Users and Roles, from the children of the menu item), then its own
-  `h2`, description and action. Without
+- Each page draws the section like core Settings: `PlutoViewAdminPanel`, with a
+  `PlutoViewToolbar` (Users, `lucide:users`, the page action in `#right`: Invite or Create a
+  role) and the section tabs of core (`<PlutoAdminNavTabs />`: Users and Roles, from the children
+  of the menu item) in `#toolbar`. The body opens with the muted description of the tab. Without
   access, it shows the no-permission alert of core (`pluto.settings.noPermission.*`) and loads
   nothing: it loads only when `allowed` turns true.
 - The UI hides what a user cannot do. The routes check again.

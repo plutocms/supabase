@@ -28,9 +28,26 @@ is one PR.
   `PLUTO_SUPABASE_PATH`.
 - Never run a migration or the typegen against a remote database as a check.
 
+## Playground
+
+`playground/` is a private app that extends the shop and blog layers (and so `supabase`), like an
+app made from a template. `bun run dev` starts it on port 3200. It reads `playground/.env`
+(`SUPABASE_URL`, `SUPABASE_KEY`; see `.env.example`). Never put `DATABASE_URL` in it: with it, the
+server applies the pending migrations of the branch at startup.
+
+Its site is plain on purpose, to see the content of the project: `/` and `/posts/<slug>` for the
+posts, `/shop` and `/shop/<slug>` for the products, and `/cart` (the cart of the shop add-on).
+
+The playground takes every Pluto layer from the local checkouts next to this repo
+(`plutoLayer` of `@plutocms/core/layers`): core and the shop add-on from `../pluto`, and the
+layers of this repo. A missing checkout comes from npm. `PLUTO_USE_LOCAL=false` uses npm for all.
+Each layer reads its `PLUTO_<NAME>_PATH` (supabase-shop reads `PLUTO_SHOP_PATH` too), so keep that
+rule when a layer extends another Pluto layer.
+
 ## Commands (at the root)
 
 - `bun install`
+- `bun run dev` (the playground, with the local checkouts)
 - `bun run lint`, `bun run lint:fix`, `bun run prettier`
 - `bun run typecheck`, `bun run test`, `bun run build` (each runs supabase, then shop, then blog)
 - One package: `bun run --cwd packages/<name> <script>`

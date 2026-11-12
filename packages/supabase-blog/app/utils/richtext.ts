@@ -1,7 +1,10 @@
 import type { Tokens } from 'marked'
 import { Marked } from 'marked'
 import { ELEMENT_NODE, parse, TEXT_NODE, walkSync } from 'ultrahtml'
-import { plutoComponentExtension } from '#layers/pluto/shared/markdown/render'
+import {
+  plutoBlankLinkExtension,
+  plutoComponentExtension,
+} from '#layers/pluto/shared/markdown/render'
 import { richtextJsonToHtml } from './richtext-json'
 import { sanitizeRichtextHtml } from './richtext-sanitize'
 
@@ -20,9 +23,12 @@ export type RichtextFormat = 'markdown' | 'html' | 'json'
 // An empty component of the site (`::name{props}` then `::`) becomes the mark of a content
 // component (`plutoComponentExtension` of core): `PlutoHtml` renders the component there. See the
 // content-components skill of core.
+//
+// A link that opens in a new tab (`[text](url){target="_blank"}`, the "Open in a new tab" box of the
+// editor) renders with `target="_blank"` and a safe `rel` (`plutoBlankLinkExtension` of core).
 const markedInstance = new Marked({
   gfm: true,
-  extensions: [plutoComponentExtension()],
+  extensions: [plutoComponentExtension(), plutoBlankLinkExtension()],
   renderer: {
     paragraph(token) {
       if (!isEmbedParagraph(token.tokens)) {

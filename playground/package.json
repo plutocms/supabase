@@ -1,0 +1,15 @@
+{
+  "name": "supabase-playground",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "nuxt preview"
+  },
+  "dependencies": {
+    "@plutocms/supabase": "workspace:*",
+    "@plutocms/supabase-blog": "workspace:*",
+    "@plutocms/supabase-shop": "workspace:*"
+  }
+}

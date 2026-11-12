@@ -4,9 +4,11 @@
   "private": true,
   "description": "The Supabase integration of Pluto: the Supabase layer and its shop and blog layers",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "playground"
   ],
   "scripts": {
+    "dev": "bun run --cwd playground dev",
     "postinstall": "bun run --cwd packages/supabase dev:prepare && bun run --cwd packages/supabase-shop dev:prepare && bun run --cwd packages/supabase-blog dev:prepare",
     "build": "bun run --cwd packages/supabase build && bun run --cwd packages/supabase-shop build && bun run --cwd packages/supabase-blog build",
     "prettier": "prettier --write .",

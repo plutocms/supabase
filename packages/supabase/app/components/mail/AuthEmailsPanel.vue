@@ -72,7 +72,7 @@ const dashboardLinks = computed(() =>
           key: 'project',
           label: t('supabase.mail.authEmails.dashboardHome'),
           to: links.value.project,
-          icon: 'lucide:external-link',
+          icon: 'lucide:layout-dashboard',
         },
       ]
     : []
@@ -95,7 +95,7 @@ const dashboardLinks = computed(() =>
           :to="RESEND_SUPABASE_INTEGRATION_URL"
           target="_blank"
           rel="noopener noreferrer"
-          icon="lucide:external-link"
+          trailing-icon="i-lucide-arrow-up-right"
           color="neutral"
           variant="outline"
         >
@@ -149,6 +149,7 @@ const dashboardLinks = computed(() =>
           :icon="link.icon"
           target="_blank"
           rel="noopener noreferrer"
+          trailing-icon="i-lucide-arrow-up-right"
           color="neutral"
           variant="outline"
           size="sm"

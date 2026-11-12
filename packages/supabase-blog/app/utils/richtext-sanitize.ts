@@ -5,6 +5,7 @@ import {
   PLUTO_COMPONENT_PROPS_ATTRIBUTE,
   readComponentMarker,
 } from '#layers/pluto/shared/markdown/component'
+import { PLUTO_LINK_BLANK_REL } from '#layers/pluto/shared/markdown/link-target'
 
 // This file is the trust boundary for `PlutoProse`. Everything it lets
 // through ends up in a `v-html` on a public page. Keep it an allowlist,
@@ -220,6 +221,11 @@ function filterAttributes(element: ElementNode, name: string): void {
       }
       if (typeof attributes.title === 'string') {
         kept.title = keptValue(attributes.title)
+      }
+      // A new tab is the only target, always with a safe rel.
+      if (attributes.target === '_blank') {
+        kept.target = '_blank'
+        kept.rel = PLUTO_LINK_BLANK_REL
       }
       break
     }

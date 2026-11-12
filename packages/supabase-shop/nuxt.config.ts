@@ -1,12 +1,14 @@
 // Unset: the workspace link gives @plutocms/supabase (outside this repo, the npm package).
 // Set it to the path of another checkout to test unpublished changes.
 const supabaseLayer = process.env.PLUTO_SUPABASE_PATH || '@plutocms/supabase'
+// The same for the shop add-on of core (`plutoLayer` of an app sets it for a local checkout).
+const shopLayer = process.env.PLUTO_SHOP_PATH || '@plutocms/shop'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   // @plutocms/shop: the cart (`useCart`) and the price helpers (`formatProductPrice`), for
   // every backend. The settings of the cart are in app/app.config.ts.
-  extends: [[supabaseLayer, { install: true }], '@plutocms/shop'],
+  extends: [[supabaseLayer, { install: true }], shopLayer],
 
   $meta: {
     name: 'supabase-shop',
