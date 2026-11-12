@@ -439,16 +439,24 @@ function menuItems(user: AccessUser): DropdownMenuItem[][] {
             :items="menuItems(row.original)"
             :content="{ align: 'end' }"
           >
-            <UButton
-              :aria-label="
+            <UTooltip
+              :text="
                 t('supabase.access.users.actionsLabel', {
                   name: userDisplayName(row.original),
                 })
               "
-              icon="lucide:ellipsis"
-              color="neutral"
-              variant="ghost"
-            />
+            >
+              <UButton
+                :aria-label="
+                  t('supabase.access.users.actionsLabel', {
+                    name: userDisplayName(row.original),
+                  })
+                "
+                icon="lucide:ellipsis"
+                color="neutral"
+                variant="ghost"
+              />
+            </UTooltip>
           </UDropdownMenu>
         </div>
       </template>

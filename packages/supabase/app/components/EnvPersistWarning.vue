@@ -84,14 +84,16 @@ async function copyEnvLine() {
             {{ envLine }}
           </code>
 
-          <UButton
-            :aria-label="t('supabase.envWarning.copyLine')"
-            icon="lucide:copy"
-            variant="soft"
-            color="neutral"
-            size="sm"
-            @click="copyEnvLine"
-          />
+          <UTooltip :text="t('supabase.envWarning.copyLine')">
+            <UButton
+              :aria-label="t('supabase.envWarning.copyLine')"
+              icon="lucide:copy"
+              variant="soft"
+              color="neutral"
+              size="sm"
+              @click="copyEnvLine"
+            />
+          </UTooltip>
         </div>
       </div>
     </template>

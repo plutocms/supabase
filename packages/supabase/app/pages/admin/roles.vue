@@ -237,12 +237,14 @@ function menuItems(role: AccessRole): DropdownMenuItem[][] {
             :items="menuItems(row.original)"
             :content="{ align: 'end' }"
           >
-            <UButton
-              :aria-label="row.original.label"
-              icon="lucide:ellipsis"
-              color="neutral"
-              variant="ghost"
-            />
+            <UTooltip :text="row.original.label">
+              <UButton
+                :aria-label="row.original.label"
+                icon="lucide:ellipsis"
+                color="neutral"
+                variant="ghost"
+              />
+            </UTooltip>
           </UDropdownMenu>
         </div>
       </template>
