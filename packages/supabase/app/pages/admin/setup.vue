@@ -184,12 +184,7 @@ async function completeDatabaseSetup() {
         class="text-dimmed size-4 shrink-0"
         aria-hidden="true"
       />
-      <span class="flex items-center gap-x-1.5">
-        <SupabaseLogo class="size-6 shrink-0" aria-hidden="true" />
-        <span class="text-highlighted text-lg font-semibold tracking-tight">
-          Supabase
-        </span>
-      </span>
+      <SupabaseLogo class="size-7 shrink-0" role="img" aria-label="Supabase" />
     </template>
 
     <template v-if="done">
