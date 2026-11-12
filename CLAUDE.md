@@ -35,6 +35,9 @@ app made from a template. `bun run dev` starts it on port 3200. It reads `playgr
 (`SUPABASE_URL`, `SUPABASE_KEY`; see `.env.example`). Never put `DATABASE_URL` in it: with it, the
 server applies the pending migrations of the branch at startup.
 
+Its site is plain on purpose, to see the content of the project: `/` and `/posts/<slug>` for the
+posts, `/shop` and `/shop/<slug>` for the products, and `/cart` (the cart of the shop add-on).
+
 The playground takes every Pluto layer from the local checkouts next to this repo
 (`plutoLayer` of `@plutocms/core/layers`): core and the shop add-on from `../pluto`, and the
 layers of this repo. A missing checkout comes from npm. `PLUTO_USE_LOCAL=false` uses npm for all.
