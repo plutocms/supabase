@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.31.0](https://github.com/plutocms/supabase/compare/v0.30.0...v0.31.0) (2026-11-12)
+
+
+### Features
+
+* admin UI round 5: tooltips, a playground site, new tab links; core 0.68 ([#302](https://github.com/plutocms/supabase/issues/302)) ([441d322](https://github.com/plutocms/supabase/commit/441d322a52cf31712cd7510b0876ca885698fda7))
+
 ## [0.30.0](https://github.com/plutocms/supabase/compare/v0.29.0...v0.30.0) (2026-11-10)
 
 
