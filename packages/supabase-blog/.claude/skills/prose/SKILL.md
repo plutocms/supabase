@@ -145,11 +145,11 @@ browser defaults. See the public-components skill of core.
 
 ## Current behavior and known limits
 
-- **Links get no automatic `target`/`rel`.** `PlutoProse` keeps only `href` and `title` on an
-  `<a>`. A site that wants external links to open in a new tab, or to carry
-  `rel="noopener noreferrer"`, needs to add that itself (for example, with a small script pass
-  over the rendered content, or a future opt-in prop). This is documented current behavior, not
-  a bug.
+- **A link opens in a new tab only when the author asks.** The editor's "Open in a new tab" box
+  writes `[text](url){target="_blank"}`; `plutoBlankLinkExtension` of core renders it with
+  `target="_blank"`, and the sanitizer keeps `target` only as `_blank`, always with
+  `rel="noopener noreferrer"` (`PLUTO_LINK_BLANK_REL`). Any other `target` and any `rel` of the
+  input go. Other links get no automatic `target`/`rel`.
 - **Images get no automatic `loading="lazy"` or `decoding="async"`.** The serializer and
   sanitizer both stay minimal on purpose. Adding these is a reasonable follow-up, not something
   this pass does.

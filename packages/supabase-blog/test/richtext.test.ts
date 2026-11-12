@@ -57,6 +57,27 @@ describe('renderRichtext', () => {
     expect(html).toContain('<p>not really html</p>')
   })
 
+  it('opens a link with {target="_blank"} in a new tab, with a safe rel', () => {
+    const html = renderRichtext(
+      'See [the docs](https://a.dev){target="_blank"} now.',
+      'markdown'
+    )
+
+    expect(html).toContain(
+      '<a href="https://a.dev" target="_blank" rel="noopener noreferrer">the docs</a>'
+    )
+    expect(html).not.toContain('{target')
+  })
+
+  it('keeps no other target and no rel of an HTML link', () => {
+    const html = renderRichtext(
+      '<p><a href="https://a.dev" target="_top" rel="opener">a</a></p>',
+      'html'
+    )
+
+    expect(html).toContain('<a href="https://a.dev">a</a>')
+  })
+
   it('is deterministic across repeated calls, for stable hydration', () => {
     const value = '# Title\n\nSome **bold** text with a [link](/x).'
 
