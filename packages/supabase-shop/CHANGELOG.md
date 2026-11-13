@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.26.1](https://github.com/plutocms/supabase/compare/supabase-shop-v0.26.0...supabase-shop-v0.26.1) (2026-11-13)
+
+
+### Bug Fixes
+
+* **supabase-blog, supabase-shop:** ship without the pages entries of definePlutoExtension ([#313](https://github.com/plutocms/supabase/issues/313)) ([82fb6f5](https://github.com/plutocms/supabase/commit/82fb6f5c40d406dbcb1aa95ea131ad922ee5e239))
+
 ## [0.26.0](https://github.com/plutocms/supabase/compare/supabase-shop-v0.25.0...supabase-shop-v0.26.0) (2026-11-12)
 
 
