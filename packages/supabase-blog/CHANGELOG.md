@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.28.1](https://github.com/plutocms/supabase/compare/supabase-blog-v0.28.0...supabase-blog-v0.28.1) (2026-11-13)
+
+
+### Bug Fixes
+
+* **supabase-blog, supabase-shop:** ship without the pages entries of definePlutoExtension ([#313](https://github.com/plutocms/supabase/issues/313)) ([82fb6f5](https://github.com/plutocms/supabase/commit/82fb6f5c40d406dbcb1aa95ea131ad922ee5e239))
+
 ## [0.28.0](https://github.com/plutocms/supabase/compare/supabase-blog-v0.27.0...supabase-blog-v0.28.0) (2026-11-12)
 
 
