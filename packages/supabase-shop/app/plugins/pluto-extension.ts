@@ -65,20 +65,6 @@ export default defineNuxtPlugin(() => {
         ],
       },
     ],
-    pages: [
-      {
-        id: 'products',
-        path: '/admin/products',
-        title: 'supabase-shop.nav.products',
-        icon: 'lucide:box',
-      },
-      {
-        id: 'product-new',
-        path: '/admin/product/new',
-        title: 'supabase-shop.pages.newProduct',
-        parent: 'supabase-shop:products',
-      },
-    ],
     contentTypes: [{ id: 'product', type: productType }],
     // Registered by `widget:` name only, never bare `fieldType:` — a
     // `fieldType`-keyed entry becomes the app-wide default for every

@@ -32,20 +32,6 @@ export default defineNuxtPlugin(() => {
         ],
       },
     ],
-    pages: [
-      {
-        id: 'posts',
-        path: '/admin/posts',
-        title: 'supabase-blog.nav.posts',
-        icon: 'lucide:file-text',
-      },
-      {
-        id: 'post-new',
-        path: '/admin/post/new',
-        title: 'supabase-blog.pages.newPost',
-        parent: 'supabase-blog:posts',
-      },
-    ],
     capabilities: [
       {
         id: 'posts-read-drafts',
