@@ -29,25 +29,25 @@
   },
   "dependencies": {
     "@plutocms/supabase": ">=0.18.0 <1.0.0",
-    "@tiptap/core": "^3.32.0",
-    "@tiptap/extension-code": "^3.32.0",
-    "@tiptap/extension-image": "^3.32.0",
-    "@tiptap/extension-placeholder": "^3.32.0",
-    "@tiptap/markdown": "^3.32.0",
-    "@tiptap/pm": "^3.32.0",
-    "@tiptap/starter-kit": "^3.32.0",
-    "@tiptap/vue-3": "^3.32.0",
-    "marked": "^18.1.1",
+    "@tiptap/core": "^3.33.0",
+    "@tiptap/extension-code": "^3.33.0",
+    "@tiptap/extension-image": "^3.33.0",
+    "@tiptap/extension-placeholder": "^3.33.0",
+    "@tiptap/markdown": "^3.33.0",
+    "@tiptap/pm": "^3.33.0",
+    "@tiptap/starter-kit": "^3.33.0",
+    "@tiptap/vue-3": "^3.33.0",
+    "marked": "^18.2.0",
     "ultrahtml": "^1.7.0"
   },
   "devDependencies": {
     "@plutocms/core": ">=0.70.1 <1.0.0",
     "@types/bun": "^1.4.3",
-    "nuxt": "^4.6.2",
-    "vitest": "^5.0.5",
-    "vue": "^3.5.44",
+    "nuxt": "^4.6.4",
+    "vitest": "^5.1.0",
+    "vue": "^3.5.45",
     "vue-router": "^5.4.0",
-    "vue-tsc": "^3.3.13"
+    "vue-tsc": "^3.3.14"
   },
   "publishConfig": {
     "access": "public"
