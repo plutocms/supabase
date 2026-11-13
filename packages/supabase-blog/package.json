@@ -1,7 +1,7 @@
 {
   "name": "@plutocms/supabase-blog",
   "type": "module",
-  "version": "0.28.0",
+  "version": "0.28.1",
   "description": "Blog dashboard layer for Pluto",
   "author": "Victor Ribeiro",
   "license": "MIT",
