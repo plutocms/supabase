@@ -2,7 +2,7 @@
 // Renders one translated message that holds links or markup in the middle of
 // a sentence. Each `{name}` in the message becomes the slot with that name.
 // The word order stays in the translation, so each language can move the
-// parts. Example: <SupabaseMessageParts :message="t('…')"><template #link>…
+// parts. Example: <SupabaseMessageParts :message="tx('…')"><template #link>…
 const props = defineProps<{
   /** The translated message. Write each slot as `{name}`. */
   message: string
