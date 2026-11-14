@@ -1,7 +1,7 @@
 {
   "name": "@plutocms/supabase",
   "type": "module",
-  "version": "0.31.1",
+  "version": "0.31.2",
   "description": "Supabase backend layer for Pluto",
   "author": "Victor Ribeiro",
   "license": "MIT",

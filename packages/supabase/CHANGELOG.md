@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.31.2](https://github.com/plutocms/supabase/compare/v0.31.1...v0.31.2) (2026-11-14)
+
+
+### Bug Fixes
+
+* **supabase:** read the messages with slots through tx ([#325](https://github.com/plutocms/supabase/issues/325)) ([74477be](https://github.com/plutocms/supabase/commit/74477bef7d3787d2023c11597442616b16cc1bb2))
+
 ## [0.31.1](https://github.com/plutocms/supabase/compare/v0.31.0...v0.31.1) (2026-11-14)
 
 
