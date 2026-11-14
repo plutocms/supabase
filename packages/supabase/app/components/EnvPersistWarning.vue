@@ -14,7 +14,7 @@ const props = defineProps<{
 }>()
 
 const toast = useToast()
-const { t } = usePlutoI18n()
+const { t, tx } = usePlutoI18n()
 
 const envLine = computed(() => `DATABASE_URL="${props.connectionString}"`)
 
@@ -49,7 +49,7 @@ async function copyEnvLine() {
     <template #description>
       <div class="flex flex-col gap-y-3">
         <p>
-          <SupabaseMessageParts :message="t('supabase.envWarning.intro')">
+          <SupabaseMessageParts :message="tx('supabase.envWarning.intro')">
             <template #variable>
               <code>DATABASE_URL</code>
             </template>
@@ -61,14 +61,14 @@ async function copyEnvLine() {
 
         <ol class="list-inside list-decimal">
           <li>
-            <SupabaseMessageParts :message="t('supabase.envWarning.step1')">
+            <SupabaseMessageParts :message="tx('supabase.envWarning.step1')">
               <template #file>
                 <code>.env</code>
               </template>
             </SupabaseMessageParts>
           </li>
           <li>
-            <SupabaseMessageParts :message="t('supabase.envWarning.step2')">
+            <SupabaseMessageParts :message="tx('supabase.envWarning.step2')">
               <template #variable>
                 <code>DATABASE_URL</code>
               </template>

@@ -4,7 +4,7 @@ definePageMeta({
   layout: 'auth',
 })
 
-const { t } = usePlutoI18n()
+const { t, tx } = usePlutoI18n()
 
 useHead({
   title: () => t('supabase.setup.title'),
@@ -213,7 +213,7 @@ async function completeDatabaseSetup() {
         />
 
         <template #help>
-          <SupabaseMessageParts :message="t('supabase.setup.connectionHelp')">
+          <SupabaseMessageParts :message="tx('supabase.setup.connectionHelp')">
             <template #link>
               <PlutoExternalLink
                 :to="`https://supabase.com/dashboard/project/${projectId}/database/settings?showConnect=true&method=transaction`"
@@ -237,7 +237,7 @@ async function completeDatabaseSetup() {
         />
 
         <template #help>
-          <SupabaseMessageParts :message="t('supabase.setup.passwordHelp')">
+          <SupabaseMessageParts :message="tx('supabase.setup.passwordHelp')">
             <template #placeholder>
               <code>[YOUR-PASSWORD]</code>
             </template>
@@ -296,7 +296,7 @@ async function completeDatabaseSetup() {
                 </SupabaseMessageParts>
               </li>
               <li>
-                <SupabaseMessageParts :message="t('supabase.setup.detailsRun')">
+                <SupabaseMessageParts :message="tx('supabase.setup.detailsRun')">
                   <template #files>
                     <PlutoExternalLink
                       to="https://github.com/plutocms/supabase/tree/main/packages/supabase/db/migrations"
