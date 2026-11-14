@@ -37,7 +37,7 @@ export function authErrorKey(error: unknown): string | undefined {
  */
 export function resolveAuthErrorText(
   error: unknown,
-  i18n: { t: (key: string) => string; te: (key: string) => boolean }
+  i18n: Pick<ReturnType<typeof usePlutoI18n>, 't' | 'te'>
 ): string {
   const key = authErrorKey(error)
 

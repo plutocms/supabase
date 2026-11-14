@@ -28,11 +28,11 @@ export interface PostEditorComponentItem {
 }
 
 /** A translate function: a message key in, the text out. */
-export type EditorItemsTranslate = (key: string) => string
+export type EditorItemsTranslate = ReturnType<typeof usePlutoI18n>['t']
 
 // The node types that the block menu names. Each key is a full literal, so
 // the locale-file test can see it.
-const NODE_TYPE_KEYS: Record<string, string> = {
+const NODE_TYPE_KEYS = {
   paragraph: 'supabase-blog.editor.nodes.paragraph',
   heading: 'supabase-blog.editor.nodes.heading',
   bulletList: 'supabase-blog.editor.nodes.bulletList',
@@ -41,7 +41,7 @@ const NODE_TYPE_KEYS: Record<string, string> = {
   blockquote: 'supabase-blog.editor.nodes.blockquote',
   codeBlock: 'supabase-blog.editor.nodes.codeBlock',
   image: 'supabase-blog.editor.nodes.image',
-}
+} as const
 
 function headingItems(t: EditorItemsTranslate, levels: (1 | 2 | 3 | 4)[]) {
   const labels = {
@@ -295,7 +295,7 @@ export function createBlockMenuItemTree(
   selectedNode: { node: JSONContent; pos: number }
 ) {
   const nodeType = selectedNode.node.type ?? ''
-  const nodeKey = NODE_TYPE_KEYS[nodeType]
+  const nodeKey = NODE_TYPE_KEYS[nodeType as keyof typeof NODE_TYPE_KEYS]
 
   return [
     [

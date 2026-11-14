@@ -18,14 +18,14 @@ const { status, fetchStatus, pendingCount, refresh, runMigrations } =
 const isDev = import.meta.dev
 
 // The text of each result status that the server returns.
-const statusLabels: Record<string, string> = {
+const statusLabels = {
   applied: 'supabase.migrations.status.applied',
   skipped: 'supabase.migrations.status.skipped',
   failed: 'supabase.migrations.status.failed',
-}
+} as const
 
 function statusText(status: string): string {
-  const key = statusLabels[status]
+  const key = statusLabels[status as keyof typeof statusLabels]
 
   return key ? t(key) : status
 }
