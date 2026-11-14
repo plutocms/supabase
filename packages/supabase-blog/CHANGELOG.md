@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.28.2](https://github.com/plutocms/supabase/compare/supabase-blog-v0.28.1...supabase-blog-v0.28.2) (2026-11-14)
+
+
+### Bug Fixes
+
+* **supabase, supabase-blog:** type the translate helpers with the t of core ([#318](https://github.com/plutocms/supabase/issues/318)) ([ccdecaf](https://github.com/plutocms/supabase/commit/ccdecafea563fe43e29874b8ffb101d4cf8b8a75))
+
 ## [0.28.1](https://github.com/plutocms/supabase/compare/supabase-blog-v0.28.0...supabase-blog-v0.28.1) (2026-11-13)
 
 
