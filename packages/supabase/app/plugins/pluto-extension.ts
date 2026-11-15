@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from 'vue'
+import { supabasePageType } from '../../shared/utils/content-page'
 
 // The four components load on demand. They stay out of the entry chunk. Core
 // shows a skeleton while each chunk loads.
@@ -102,6 +103,9 @@ export default defineNuxtPlugin(() => {
       { immediate: true }
     )
   }
+
+  const pagesEnabled =
+    useRuntimeConfig().public.plutoPages?.enabled === true
 
   definePlutoExtension({
     id: 'supabase',
@@ -249,7 +253,33 @@ export default defineNuxtPlugin(() => {
         key: 'users:read',
         label: 'supabase.capabilities.usersRead',
       },
+      ...(pagesEnabled
+        ? [
+            {
+              id: 'pages-read-drafts',
+              key: 'pages:read_drafts',
+              label: 'supabase.capabilities.pagesReadDrafts',
+            },
+            {
+              id: 'pages-write',
+              key: 'pages:write',
+              label: 'supabase.capabilities.pagesWrite',
+            },
+            {
+              id: 'pages-publish',
+              key: 'pages:publish',
+              label: 'supabase.capabilities.pagesPublish',
+            },
+            {
+              id: 'pages-delete',
+              key: 'pages:delete',
+              label: 'supabase.capabilities.pagesDelete',
+            },
+          ]
+        : []),
     ],
+    // The page type, when the site turns pages on (`plutoPages.enabled`).
+    contentTypes: pagesEnabled ? [{ id: 'page', type: supabasePageType }] : [],
     // The admin language of the signed-in user, stored in profiles.locale
     // (005_profile_locale.sql). A save error carries the translated server
     // text, so the Settings language card can show it in a toast.
