@@ -32,6 +32,7 @@ describe('the page type of the Supabase layer', () => {
       'title',
       'slug',
       'description',
+      'layout',
       'body',
     ])
     expect(
