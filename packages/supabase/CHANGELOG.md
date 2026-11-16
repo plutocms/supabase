@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.34.0](https://github.com/plutocms/supabase/compare/v0.33.0...v0.34.0) (2026-11-16)
+
+
+### Features
+
+* **supabase:** menus and areas tables, and their content types ([#340](https://github.com/plutocms/supabase/issues/340)) ([247f7a7](https://github.com/plutocms/supabase/commit/247f7a7e907102b9b592703b8e0354c9394fd171))
+
 ## [0.33.0](https://github.com/plutocms/supabase/compare/v0.32.0...v0.33.0) (2026-11-16)
 
 
