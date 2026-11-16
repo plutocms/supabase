@@ -21,6 +21,10 @@ policies shared by every project here.
   It keeps a server copy of the unsaved changes of each editor (`pluto_content_backups`, migration
   012), so the edit form can offer them on another device.
   @.claude/skills/content-adapter/SKILL.md
+- Pages: the `page` content type in the base layer (migration 013, the `pages` table: trash, scheduled
+  publish, review, capability policies). A site turns it on with core `plutoPages: { enabled: true }`; the
+  layer then registers the type on the server and the client, with the capabilities `pages:read_drafts`,
+  `pages:write`, `pages:publish` and `pages:delete`. @.claude/skills/pages/SKILL.md
 - Auth driver: plugs Supabase sign-in into the admin shell that pluto core owns (navbar, sign-in
   page, route guard), keeps the setup guard in the driver, and registers the backend badge
   ("Database · Supabase", with the project and a dashboard link).

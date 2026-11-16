@@ -116,6 +116,10 @@
     "capabilities": {
       "settingsManage": "Manage site settings",
       "usersRead": "View all user accounts",
+      "pagesReadDrafts": "Read draft pages",
+      "pagesWrite": "Create and edit pages, and send them to review",
+      "pagesPublish": "Publish pages",
+      "pagesDelete": "Delete pages",
       "group": "Supabase"
     },
     "envWarning": {

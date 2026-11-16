@@ -116,6 +116,10 @@
     "capabilities": {
       "settingsManage": "Gerenciar as configurações do site",
       "usersRead": "Ver todas as contas de usuário",
+      "pagesReadDrafts": "Ler as páginas em rascunho",
+      "pagesWrite": "Criar e editar páginas e enviá-las para revisão",
+      "pagesPublish": "Publicar páginas",
+      "pagesDelete": "Excluir páginas",
       "group": "Supabase"
     },
     "envWarning": {
