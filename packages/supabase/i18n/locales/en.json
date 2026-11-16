@@ -120,6 +120,8 @@
       "pagesWrite": "Create and edit pages, and send them to review",
       "pagesPublish": "Publish pages",
       "pagesDelete": "Delete pages",
+      "menusWrite": "Create, edit and delete menus",
+      "areasWrite": "Create, edit and delete areas such as the footer",
       "group": "Supabase"
     },
     "envWarning": {

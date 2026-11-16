@@ -25,6 +25,11 @@ policies shared by every project here.
   publish, review, capability policies). A site turns it on with core `plutoPages: { enabled: true }`; the
   layer then registers the type on the server and the client, with the capabilities `pages:read_drafts`,
   `pages:write`, `pages:publish` and `pages:delete`. @.claude/skills/pages/SKILL.md
+- Menus and areas: the `menu` and `area` content types in the base layer (migration 015, the `menus` and
+  `areas` tables: handle, title, block body, trash, no status). A site turns them on with core
+  `plutoMenus: { enabled: true }` and `plutoAreas: { enabled: true }`; the layer then registers each type on
+  the server and the client, with the capabilities `menus:write` and `areas:write` (each also covers the
+  delete). Anon reads the rows that are not in the trash. @.claude/skills/menus-and-areas/SKILL.md
 - Auth driver: plugs Supabase sign-in into the admin shell that pluto core owns (navbar, sign-in
   page, route guard), keeps the setup guard in the driver, and registers the backend badge
   ("Database · Supabase", with the project and a dashboard link).

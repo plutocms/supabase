@@ -103,8 +103,10 @@ export default defineNuxtPlugin(() => {
     )
   }
 
-  const pagesEnabled =
-    useRuntimeConfig().public.plutoPages?.enabled === true
+  const config = useRuntimeConfig().public
+  const menusEnabled = config.plutoMenus?.enabled === true
+  const areasEnabled = config.plutoAreas?.enabled === true
+  const pagesEnabled = config.plutoPages?.enabled === true
 
   definePlutoExtension({
     id: 'supabase',
@@ -276,9 +278,32 @@ export default defineNuxtPlugin(() => {
             },
           ]
         : []),
+      ...(menusEnabled
+        ? [
+            {
+              id: 'menus-write',
+              key: 'menus:write',
+              label: 'supabase.capabilities.menusWrite',
+            },
+          ]
+        : []),
+      ...(areasEnabled
+        ? [
+            {
+              id: 'areas-write',
+              key: 'areas:write',
+              label: 'supabase.capabilities.areasWrite',
+            },
+          ]
+        : []),
     ],
-    // The page type, when the site turns pages on (`plutoPages.enabled`).
-    contentTypes: pagesEnabled ? [{ id: 'page', type: supabasePageType }] : [],
+    // The page, menu and area types, when the site turns each on (`plutoPages.enabled`,
+    // `plutoMenus.enabled` and `plutoAreas.enabled`).
+    contentTypes: [
+      ...(pagesEnabled ? [{ id: 'page', type: supabasePageType }] : []),
+      ...(menusEnabled ? [{ id: 'menu', type: supabaseMenuType }] : []),
+      ...(areasEnabled ? [{ id: 'area', type: supabaseAreaType }] : []),
+    ],
     // The admin language of the signed-in user, stored in profiles.locale
     // (005_profile_locale.sql). A save error carries the translated server
     // text, so the Settings language card can show it in a toast.
