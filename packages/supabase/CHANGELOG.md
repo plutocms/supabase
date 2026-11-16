@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.33.0](https://github.com/plutocms/supabase/compare/v0.32.0...v0.33.0) (2026-11-16)
+
+
+### Features
+
+* **supabase:** the layout column of pages ([#335](https://github.com/plutocms/supabase/issues/335)) ([76ba1ae](https://github.com/plutocms/supabase/commit/76ba1ae690003cbc1d4fafcd9baca4015c8b8bce))
+
 ## [0.32.0](https://github.com/plutocms/supabase/compare/v0.31.2...v0.32.0) (2026-11-16)
 
 
