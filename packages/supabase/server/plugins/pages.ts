@@ -1,4 +1,3 @@
-import { supabasePageType } from '../../shared/utils/content-page'
 
 /**
  * Registers the `page` content type with core's generic content routes and with the public API,

@@ -1,5 +1,4 @@
 import { defineAsyncComponent } from 'vue'
-import { supabasePageType } from '../../shared/utils/content-page'
 
 // The four components load on demand. They stay out of the entry chunk. Core
 // shows a skeleton while each chunk loads.
