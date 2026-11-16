@@ -1,7 +1,7 @@
 # Pages
 
 The base layer has the `page` content type: pages with a block body and a nested path
-(`about/team`). Every Supabase site has the table (migration `013_pages.sql`). A site uses it
+(`about/team`). Every Supabase site has the table (migration `013_pages.sql`). Migration `014_page_layout.sql` adds the `layout` column (`default` or `full`, default `default`), the `layout` field of core's page type. A site uses it
 only when it turns pages on.
 
 ## Turn pages on
@@ -61,6 +61,6 @@ The definition is the same for every backend; see the content-model skill of cor
   `pages:delete` changes `deleted_at` only.
 - Grants: anon select; authenticated and service_role select, insert, update and delete.
 
-Tests: `test/pages-migration.test.ts` runs migrations 001 to 013 in PGlite (Postgres in memory,
+Tests: `test/pages-migration.test.ts` runs migrations 001 to 014 in PGlite (Postgres in memory,
 with stub roles and auth functions; no real database), `test/content-page.test.ts` and
 `test/data-api-grants.test.ts`.

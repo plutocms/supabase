@@ -100,16 +100,27 @@ afterAll(async () => {
 })
 
 describe('013_pages.sql in PGlite', () => {
-  it('is the thirteenth base migration, and the thirteen files applied', () => {
-    expect(files).toHaveLength(13)
-    expect(files.at(-1)).toBe('013_pages.sql')
+  it('is the thirteenth base migration, and 014 adds the layout', () => {
+    expect(files).toHaveLength(14)
+    expect(files[12]).toBe('013_pages.sql')
+    expect(files.at(-1)).toBe('014_page_layout.sql')
   })
 
-  it('applies a second time with no error', async () => {
+  it('applies 013 and 014 a second time with no error', async () => {
     await db.exec(readFileSync(join(dir, '013_pages.sql'), 'utf8'))
+    await db.exec(readFileSync(join(dir, '014_page_layout.sql'), 'utf8'))
   })
 
-  it('has the table with the columns of a post and the description', async () => {
+  it('gives a page the default layout, takes full, and refuses another layout', async () => {
+    await db.exec(`insert into public.pages (slug, title) values ('layout-check', 'Layout')`)
+    const row = await db.query<{ layout: string }>(`select layout from public.pages where slug = 'layout-check'`)
+    expect(row.rows[0]?.layout).toBe('default')
+    await db.exec(`update public.pages set layout = 'full' where slug = 'layout-check'`)
+    await expect(db.exec(`update public.pages set layout = 'wide' where slug = 'layout-check'`)).rejects.toThrow()
+    await db.exec(`delete from public.pages where slug = 'layout-check'`)
+  })
+
+  it('has the table with the columns of a post, the description and the layout', async () => {
     const result = await db.query<{ column_name: string }>(
       `select column_name from information_schema.columns
        where table_schema = 'public' and table_name = 'pages'
@@ -121,6 +132,7 @@ describe('013_pages.sql in PGlite', () => {
       'deleted_at',
       'description',
       'id',
+      'layout',
       'published_at',
       'slug',
       'status',
