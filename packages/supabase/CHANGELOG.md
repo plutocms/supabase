@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.32.0](https://github.com/plutocms/supabase/compare/v0.31.2...v0.32.0) (2026-11-16)
+
+
+### Features
+
+* **supabase:** pages, with the pages table ([#330](https://github.com/plutocms/supabase/issues/330)) ([c3eadd6](https://github.com/plutocms/supabase/commit/c3eadd695e725bba5992d1735fc326ad051e361f))
+
 ## [0.31.2](https://github.com/plutocms/supabase/compare/v0.31.1...v0.31.2) (2026-11-14)
 
 
