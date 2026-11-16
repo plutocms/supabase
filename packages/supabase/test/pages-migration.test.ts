@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import { PGlite } from '@electric-sql/pglite'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
-// The copy test of 013_pages.sql. It runs every base migration, 001 to 013, in PGlite (Postgres
+// The copy test of 013_pages.sql. It runs every base migration, 001 to 015, in PGlite (Postgres
 // in memory). It never connects to a real database. The Supabase parts that the migrations need
 // (the roles, the auth and storage schemas, auth.uid) are stubs.
 const dir = join(__dirname, '..', 'db', 'migrations')
@@ -100,10 +100,10 @@ afterAll(async () => {
 })
 
 describe('013_pages.sql in PGlite', () => {
-  it('is the thirteenth base migration, and 014 adds the layout', () => {
-    expect(files).toHaveLength(14)
+  it('is the thirteenth base migration, 014 adds the layout, and 015 follows', () => {
+    expect(files).toHaveLength(15)
     expect(files[12]).toBe('013_pages.sql')
-    expect(files.at(-1)).toBe('014_page_layout.sql')
+    expect(files[13]).toBe('014_page_layout.sql')
   })
 
   it('applies 013 and 014 a second time with no error', async () => {

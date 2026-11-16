@@ -120,6 +120,8 @@
       "pagesWrite": "Criar e editar páginas e enviá-las para revisão",
       "pagesPublish": "Publicar páginas",
       "pagesDelete": "Excluir páginas",
+      "menusWrite": "Criar, editar e excluir menus",
+      "areasWrite": "Criar, editar e excluir áreas, como o rodapé",
       "group": "Supabase"
     },
     "envWarning": {
