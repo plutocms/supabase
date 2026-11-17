@@ -1,7 +1,7 @@
 import type { PostgrestError, SupabaseClient } from '@supabase/supabase-js'
 import type { H3Event } from 'h3'
 import { createClient } from '@supabase/supabase-js'
-import { serverSupabaseClient } from '#supabase/server'
+import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
 import { requireCapability } from './capability-guard'
 import { getBackup, putBackup, removeBackup } from './content-backups'
 import {
@@ -935,6 +935,22 @@ async function authorize(event: H3Event, capability: string): Promise<void> {
   await requireCapability(event, capability)
 }
 
+/**
+ * Throws a 401 for an anonymous caller. The admin read routes of core call it for a type with no
+ * read or write capability. Row-level security still decides what a signed-in user sees.
+ */
+async function requireSignedIn(event: H3Event): Promise<void> {
+  const user = await serverSupabaseUser(event)
+
+  if (!user) {
+    throw createPlutoError({
+      statusCode: 401,
+      message: 'You must be logged in.',
+      key: 'supabase.errors.notLoggedIn',
+    })
+  }
+}
+
 /** Builds the Supabase/PostgREST-backed `PlutoContentAdapter`. Register it with `registerContentAdapter` from a `server/plugins/*.ts` file. */
 /**
  * Publishes the scheduled rows whose time is `at` or earlier, and keeps their time. The scheduled
@@ -984,6 +1000,7 @@ export function createSupabaseContentAdapter(): PlutoContentAdapter {
     },
     publishDue,
     authorize,
+    requireSignedIn,
     countCreated,
     timestampKeys,
     listRevisions,
